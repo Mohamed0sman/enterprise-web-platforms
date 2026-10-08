@@ -1,7 +1,6 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "destination": "/site12-sahab-fintech/index.html" }
+  "redirects": [
+    { "source": "/", "destination": "/site12-sahab-fintech/", "permanent": false }
   ]
 }
-
