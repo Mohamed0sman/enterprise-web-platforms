@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krate - Design and Motion Studio</title>
+  <!-- Google Fonts: Syne & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            krateVoid: '#070709',
+            krateCard: '#101014',
+            krateBorder: '#1F1F27',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #070709;
+      color: #FFFFFF;
+      overflow-x: hidden;
+    }
+    .font-display {
+      font-family: 'Syne', sans-serif;
+    }
+    /* Vertical Slat Window Effect */
+    .slat-container {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 5px;
+      height: 220px;
+      position: relative;
+    }
+    @media (min-width: 640px) {
+      .slat-container {
+        gap: 8px;
+        height: 320px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .slat-container {
+        gap: 12px;
+        height: 390px;
+      }
+    }
+    .slat {
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+      background-color: #121218;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.4s ease;
+    }
+    .slat:hover {
+      transform: translateY(-8px);
+    }
+    .slat-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 900%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80') center center / cover no-repeat;
+      filter: saturate(1.4) contrast(1.1);
+    }
+    /* Shift each slat's inner image so they form a continuous wave */
+    .slat:nth-child(1) .slat-bg { left: 0%; }
+    .slat:nth-child(2) .slat-bg { left: -100%; }
+    .slat:nth-child(3) .slat-bg { left: -200%; }
+    .slat:nth-child(4) .slat-bg { left: -300%; }
+    .slat:nth-child(5) .slat-bg { left: -400%; }
+    .slat:nth-child(6) .slat-bg { left: -500%; }
+    .slat:nth-child(7) .slat-bg { left: -600%; }
+    .slat:nth-child(8) .slat-bg { left: -700%; }
+    .slat:nth-child(9) .slat-bg { left: -800%; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="max-w-6xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between border-b border-krateBorder relative z-20">
+    <!-- Studio Mark -->
+    <a href="#" class="flex items-center gap-2 text-white font-display font-bold text-base tracking-wider uppercase">
+      <span class="w-6 h-6 rounded-full border border-white/40 flex items-center justify-center text-xs">◎</span>
+      <span>Krate</span>
+    </a>
+
+    <!-- Nav Links -->
+    <nav class="hidden md:flex items-center space-x-8 text-xs font-medium text-neutral-400">
+      <a href="#services" class="hover:text-white transition">Services</a>
+      <a href="#work" class="hover:text-white transition">Work</a>
+      <a href="#team" class="hover:text-white transition">Team</a>
+      <a href="#contact" class="hover:text-white transition">Contact</a>
+    </nav>
+
+    <!-- Email CTA & Mobile Menu Button -->
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="hidden sm:inline-block text-xs font-semibold px-4 py-1.5 rounded-full border border-neutral-700 hover:border-white transition text-neutral-200">
+        hello@krate.io
+      </a>
+      <button id="mobileMenuBtn" aria-label="Toggle navigation" class="md:hidden w-9 h-9 rounded-full bg-neutral-900 border border-neutral-800 text-white flex items-center justify-center">
+        <i data-lucide="menu" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobileDrawer" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden transition-opacity">
+    <div class="bg-krateVoid border-r border-krateBorder h-full w-4/5 max-w-sm p-6 flex flex-col justify-between shadow-2xl">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-krateBorder">
+          <div class="flex items-center gap-2 text-white font-display font-bold text-base uppercase">
+            <span>◎ Krate</span>
+          </div>
+          <button id="closeDrawerBtn" class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold font-display text-neutral-300">
+          <a href="#services" class="mobile-nav-link hover:text-white transition">Services</a>
+          <a href="#work" class="mobile-nav-link hover:text-white transition">Work & Motion</a>
+          <a href="#team" class="mobile-nav-link hover:text-white transition">Creative Team</a>
+          <a href="#contact" class="mobile-nav-link hover:text-white transition">Contact Studio</a>
+        </nav>
+      </div>
+      <div class="space-y-3 pt-6 border-t border-krateBorder">
+        <a href="#contact" class="mobile-nav-link block w-full text-center bg-white text-black font-bold py-3 rounded-full text-xs shadow-xl">
+          Start A Project
+        </a>
+        <a href="../index.html" class="block w-full text-center bg-neutral-900 border border-neutral-800 text-neutral-300 font-bold py-2.5 rounded-full text-xs hover:text-white transition">
+          ← معرض المواقع الرئيسي
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 pt-16 pb-20 space-y-12">
+    <!-- Big Headline -->
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold font-display tracking-tight text-white leading-[1.05]">
+      Krate design and<br>motion studio
+    </h1>
+
+    <!-- 9-Slice Iridescent Slat Grid -->
+    <div class="slat-container">
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+      <div class="slat"><div class="slat-bg"></div></div>
+    </div>
+
+    <!-- Description & Clients Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-8 items-start">
+      <!-- Left Paragraph -->
+      <div class="lg:col-span-7">
+        <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-xl font-normal">
+          We are passionate about creating visually stunning and functional solutions that communicate effectively. I have a keen eye for detail and a deep understanding of design principles, which I use to deliver projects that exceed my clients' expectations.
+        </p>
+      </div>
+
+      <!-- Right Partners Grid -->
+      <div class="lg:col-span-5 grid grid-cols-2 gap-y-3 gap-x-6 text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Krate</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Raia</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Maccan</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Axon</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Intel</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">⨂</span> <span class="font-semibold text-neutral-300">Trezo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== OUR SERVICES SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 py-16 border-t border-krateBorder" id="services">
+    <div class="space-y-6">
+      <span class="text-[10px] font-bold tracking-widest text-neutral-500 uppercase">OUR SERVICES</span>
+
+      <div class="space-y-3 max-w-md">
+        <!-- Service Pill 1 -->
+        <div class="flex items-center gap-4 p-2 rounded-2xl border border-krateBorder hover:border-neutral-700 bg-krateCard/50 transition cursor-pointer group">
+          <div class="w-12 h-6 rounded-full bg-gradient-to-r from-blue-600 to-indigo-500 shadow-sm"></div>
+          <span class="text-xs font-semibold text-neutral-200 group-hover:text-white transition">Web & Mobile Design</span>
+        </div>
+
+        <!-- Service Pill 2 -->
+        <div class="flex items-center gap-4 p-2 rounded-2xl border border-krateBorder hover:border-neutral-700 bg-krateCard/50 transition cursor-pointer group">
+          <div class="w-12 h-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 shadow-sm"></div>
+          <span class="text-xs font-semibold text-neutral-200 group-hover:text-white transition">Brand Identity</span>
+        </div>
+
+        <!-- Service Pill 3 -->
+        <div class="flex items-center gap-4 p-2 rounded-2xl border border-krateBorder hover:border-neutral-700 bg-krateCard/50 transition cursor-pointer group">
+          <div class="w-12 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-sm"></div>
+          <span class="text-xs font-semibold text-neutral-200 group-hover:text-white transition">App Development</span>
+        </div>
+
+        <!-- Service Pill 4 -->
+        <div class="flex items-center gap-4 p-2 rounded-2xl border border-krateBorder hover:border-neutral-700 bg-krateCard/50 transition cursor-pointer group">
+          <div class="w-12 h-6 rounded-full bg-gradient-to-r from-rose-500 to-amber-500 shadow-sm"></div>
+          <span class="text-xs font-semibold text-neutral-200 group-hover:text-white transition">Consultancy</span>
+        </div>
+
+        <!-- Service Pill 5 -->
+        <div class="flex items-center gap-4 p-2 rounded-2xl border border-krateBorder hover:border-neutral-700 bg-krateCard/50 transition cursor-pointer group">
+          <div class="w-12 h-6 rounded-full bg-gradient-to-r from-slate-300 via-indigo-200 to-cyan-300 shadow-sm"></div>
+          <span class="text-xs font-semibold text-neutral-200 group-hover:text-white transition">Packaging</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== RECENT WORK SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 py-20 border-t border-krateBorder" id="work">
+    <div class="space-y-10">
+      <span class="text-[10px] font-bold tracking-widest text-neutral-500 uppercase">RECENT WORK</span>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Work Card 1 -->
+        <div class="space-y-3 group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-neutral-800 relative">
+            <img 
+              src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80" 
+              alt="Galaxia Branding" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+          </div>
+          <div class="px-1">
+            <h3 class="text-xs font-bold text-neutral-200 group-hover:text-white">Galaxia Branding</h3>
+          </div>
+        </div>
+
+        <!-- Work Card 2 -->
+        <div class="space-y-3 group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-neutral-800 relative">
+            <img 
+              src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" 
+              alt="John Meyer NYC" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+          </div>
+          <div class="px-1">
+            <h3 class="text-xs font-bold text-neutral-200 group-hover:text-white">John Meyer NYC</h3>
+          </div>
+        </div>
+
+        <!-- Work Card 3 -->
+        <div class="space-y-3 group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-neutral-800 relative">
+            <img 
+              src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80" 
+              alt="Kayrock Patterns" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500 filter contrast-125"
+            />
+          </div>
+          <div class="px-1">
+            <h3 class="text-xs font-bold text-neutral-200 group-hover:text-white">Kayrock Patterns</h3>
+          </div>
+        </div>
+
+        <!-- Work Card 4 -->
+        <div class="space-y-3 group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-neutral-800 relative">
+            <img 
+              src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80" 
+              alt="Crave Chips" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+          </div>
+          <div class="px-1">
+            <h3 class="text-xs font-bold text-neutral-200 group-hover:text-white">Crave Chips</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- View All Work Button -->
+      <div class="pt-4 text-center">
+        <button class="px-8 py-3 rounded-full border border-neutral-800 hover:border-neutral-500 text-xs font-bold text-neutral-300 hover:text-white transition">
+          View all work ↗
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== OUR TEAM SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 py-20 border-t border-krateBorder" id="team">
+    <div class="space-y-12">
+      <div>
+        <span class="text-[10px] font-bold tracking-widest text-neutral-500 uppercase">OUR TEAM</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-white mt-4 max-w-xl leading-tight">
+          We are passionate about creating visually stunning and functional solutions that communicate effectively.
+        </h2>
+      </div>
+
+      <!-- Team Grid -->
+      <div class="space-y-8">
+        <!-- Top Row: 2 Leaders -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl">
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Louisa Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-2 pb-2">
+              <p class="text-xs font-bold text-white">Louisa Schaller</p>
+              <p class="text-[10px] text-neutral-500">Managing Partner</p>
+            </div>
+          </div>
+
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="Louisa Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-2 pb-2">
+              <p class="text-xs font-bold text-white">Louisa Schaller</p>
+              <p class="text-[10px] text-neutral-500">Creative Director</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: 4 Specialists -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Joseph Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-1 pb-1">
+              <p class="text-[11px] font-bold text-white">Joseph Schaller</p>
+              <p class="text-[9px] text-neutral-500">Principal Designer</p>
+            </div>
+          </div>
+
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=400&q=80" alt="Joseph Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-1 pb-1">
+              <p class="text-[11px] font-bold text-white">Joseph Schaller</p>
+              <p class="text-[9px] text-neutral-500">Art Director</p>
+            </div>
+          </div>
+
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80" alt="Joseph Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-1 pb-1">
+              <p class="text-[11px] font-bold text-white">Joseph Schaller</p>
+              <p class="text-[9px] text-neutral-500">Technical Lead</p>
+            </div>
+          </div>
+
+          <div class="bg-krateCard rounded-3xl p-3 border border-krateBorder space-y-3">
+            <div class="rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-800">
+              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80" alt="Joseph Schaller" class="w-full h-full object-cover grayscale">
+            </div>
+            <div class="px-1 pb-1">
+              <p class="text-[11px] font-bold text-white">Joseph Schaller</p>
+              <p class="text-[9px] text-neutral-500">Motion Director</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meet All Team Button -->
+      <div class="text-center pt-2">
+        <button class="px-8 py-3 rounded-full border border-neutral-800 hover:border-neutral-500 text-xs font-bold text-neutral-300 hover:text-white transition">
+          Meet all team ↗
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA BANNER ==================== -->
+  <section class="max-w-6xl mx-auto px-6 py-12" id="contact">
+    <div class="relative rounded-3xl overflow-hidden p-12 sm:p-20 text-center space-y-6 border border-neutral-800 bg-neutral-950">
+      <!-- Background Fluid Wave Ribbon -->
+      <div class="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center filter saturate-150"></div>
+      <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-sm"></div>
+
+      <!-- Content -->
+      <div class="relative z-10 space-y-4 max-w-xl mx-auto">
+        <h2 class="text-3xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
+          Have an idea?<br>Let's talk.
+        </h2>
+        <p class="text-xs sm:text-sm text-neutral-300 font-medium leading-relaxed">
+          Your challenge is our passion. Let's make something that will stand out and deliver results.
+        </p>
+        <div class="pt-4">
+          <button class="bg-white hover:bg-neutral-200 text-black text-xs font-bold px-8 py-3 rounded-full transition shadow-xl">
+            Start A Project
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="max-w-6xl mx-auto px-6 py-12 border-t border-krateBorder text-xs text-neutral-500 space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <!-- Logo -->
+      <div class="flex items-center gap-2 font-display font-bold text-white uppercase tracking-wider">
+        <span>◎ Composer</span>
+      </div>
+
+      <!-- Nav -->
+      <div class="flex gap-6 text-[11px] font-medium text-neutral-400">
+        <a href="#services" class="hover:text-white">Services</a>
+        <a href="#work" class="hover:text-white">Work</a>
+        <a href="#team" class="hover:text-white">Team</a>
+        <a href="#contact" class="hover:text-white">Contact</a>
+      </div>
+
+      <!-- Email box -->
+      <div class="px-5 py-2.5 rounded-2xl bg-krateCard border border-krateBorder text-white font-mono text-xs">
+        hello@Composer.io
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row justify-between items-center text-[11px] text-neutral-600 gap-4 pt-4 border-t border-krateBorder">
+      <p>© 2026 Krate & Composer Studio. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-neutral-400">Dribbble</a>
+        <a href="#" class="hover:text-neutral-400">Behance</a>
+        <a href="#" class="hover:text-neutral-400">Instagram</a>
+        <a href="#" class="hover:text-neutral-400">Twitter / X</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Project Inquiry Modal -->
+  <div id="projectModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-krateCard border border-krateBorder rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-krateBorder">
+        <h3 class="text-sm sm:text-base font-bold font-display text-white">Start A Project With Krate</h3>
+        <button onclick="closeProjectModal()" class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <form id="projectForm" class="space-y-4">
+        <div>
+          <label class="block text-[11px] font-semibold text-neutral-400 mb-1">Your Name</label>
+          <input type="text" required placeholder="Alexander Vance" class="w-full bg-neutral-900 border border-krateBorder rounded-xl px-4 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-white">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-neutral-400 mb-1">Company / Studio</label>
+          <input type="text" placeholder="Vance Dynamics" class="w-full bg-neutral-900 border border-krateBorder rounded-xl px-4 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-white">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-neutral-400 mb-1">Project Scope</label>
+          <select class="w-full bg-neutral-900 border border-krateBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white">
+            <option>3D Motion & Visual Identity</option>
+            <option>Brand Identity & Design System</option>
+            <option>Web Experience & Interactive Development</option>
+            <option>Product Teaser & Commercial 3D</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-neutral-400 mb-1">Estimated Budget</label>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <button type="button" onclick="setBudget(this)" class="budget-btn p-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-300 hover:border-white">$5k - $15k</button>
+            <button type="button" onclick="setBudget(this)" class="budget-btn p-2 rounded-xl bg-white text-black font-bold">$15k - $50k</button>
+            <button type="button" onclick="setBudget(this)" class="budget-btn p-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-300 hover:border-white">$50k+</button>
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 rounded-full bg-white text-black font-bold text-xs hover:bg-neutral-200 transition shadow-xl mt-2">
+          Send Project Brief
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Return to Hub Button -->
+  <a href="../index.html" class="fixed bottom-6 left-6 z-40 bg-neutral-900 text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold hover:bg-black hover:scale-105 transition border border-krateBorder">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    <span>معرض المواقع الرئيسي</span>
+  </a>
+
+  <!-- Floating Toast Notification -->
+  <div id="toastBox" class="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2.5 border border-neutral-700 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+    <span id="toastMsg">تم بنجاح!</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Mobile Drawer Handlers
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+
+    if (mobileBtn && mobileDrawer) {
+      mobileBtn.addEventListener('click', () => {
+        mobileDrawer.classList.remove('hidden');
+      });
+      closeDrawerBtn.addEventListener('click', () => {
+        mobileDrawer.classList.add('hidden');
+      });
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.add('hidden');
+        });
+      });
+    }
+
+    // Project Modal
+    const projectModal = document.getElementById('projectModal');
+    function openProjectModal() {
+      if (projectModal) projectModal.classList.remove('hidden');
+    }
+    function closeProjectModal() {
+      if (projectModal) projectModal.classList.add('hidden');
+    }
+
+    // Hook buttons to open project modal
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.innerText.includes('Start A Project') || btn.innerText.includes('View Work') || btn.innerText.includes('Explore Case Study')) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openProjectModal();
+        });
+      }
+    });
+
+    function setBudget(btn) {
+      document.querySelectorAll('.budget-btn').forEach(b => {
+        b.className = 'budget-btn p-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-300 hover:border-white';
+      });
+      btn.className = 'budget-btn p-2 rounded-xl bg-white text-black font-bold';
+    }
+
+    // Toast Notification helper
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const text = document.getElementById('toastMsg');
+      text.innerText = msg;
+      box.classList.remove('translate-y-24', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        box.classList.add('translate-y-24', 'opacity-0');
+        box.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    const projectForm = document.getElementById('projectForm');
+    if (projectForm) {
+      projectForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        closeProjectModal();
+        showToast('Brief received! The studio team will get back to you in 24 hours.');
+        projectForm.reset();
+      });
+    }
+  </script>
+</body>
+</html>
+

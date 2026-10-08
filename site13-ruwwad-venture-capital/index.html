@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>روّاد كابيتال — منصة استثمارات رأس المال الجريء وإدارة الصفقات | Ruwwad Capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            vcDark: '#0A0E1A',
+            vcSurface: '#121829',
+            vcCard: '#1A2238',
+            vcBorder: '#27334D',
+            vcCyan: '#06B6D4',
+            vcEmerald: '#10B981',
+            vcViolet: '#8B5CF6',
+            vcAmber: '#F59E0B'
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'Cairo', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0A0E1A;
+      color: #F8FAFC;
+      font-family: 'Cairo', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .num {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+      font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+    }
+    .mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27334D;
+      border-radius: 6px;
+    }
+    .deal-card {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .deal-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.15);
+      border-color: rgba(6, 182, 212, 0.5);
+    }
+    .custom-range {
+      accent-color: #06B6D4;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#0A0E1A] text-slate-100 selection:bg-cyan-500 selection:text-black">
+
+  <!-- ==================== INSTITUTIONAL VC TOP BAR ==================== -->
+  <header class="bg-[#121829]/95 backdrop-blur-md border-b border-vcBorder sticky top-0 z-50 px-4 lg:px-8 py-3">
+    <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & License Identity -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-cyan-600/30 flex-shrink-0">
+            ر
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-extrabold text-base tracking-tight text-white">روّاد كابيتال — Ruwwad Ventures</h1>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3 h-3 text-cyan-400"></i>
+                مرخص CMA: VC-2024-88
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400">صندوق روّاد للنمو التقني II (Ruwwad Tech Growth Fund II) • الرياض</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Institutional Fund Performance Strip -->
+      <div class="hidden xl:flex items-center gap-6 text-xs">
+        <div class="bg-vcCard px-3.5 py-1.5 rounded-xl border border-vcBorder">
+          <span class="text-slate-400 block text-[10px]">حجم الصندوق (Fund Size):</span>
+          <span class="num font-bold text-white text-sm">250,000,000 ر.س</span>
+        </div>
+        <div class="bg-vcCard px-3.5 py-1.5 rounded-xl border border-vcBorder">
+          <span class="text-slate-400 block text-[10px]">المستثمر فعلياً (Deployed):</span>
+          <span class="num font-bold text-cyan-400 text-sm">165M ر.س (66%)</span>
+        </div>
+        <div class="bg-vcCard px-3.5 py-1.5 rounded-xl border border-vcBorder">
+          <span class="text-slate-400 block text-[10px]">السيولة المتبقية (Dry Powder):</span>
+          <span class="num font-bold text-slate-200 text-sm">85M ر.س</span>
+        </div>
+        <div class="bg-vcCard px-3.5 py-1.5 rounded-xl border border-vcBorder">
+          <span class="text-slate-400 block text-[10px]">العائد الداخلي (Net IRR):</span>
+          <span class="num font-bold text-emerald-400 text-sm">34.2%</span>
+        </div>
+        <div class="bg-vcCard px-3.5 py-1.5 rounded-xl border border-vcBorder">
+          <span class="text-slate-400 block text-[10px]">مضاعف القيمة (TVPI):</span>
+          <span class="num font-bold text-cyan-300 text-sm">2.45x</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button onclick="openNewDealModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-xs transition flex items-center gap-1.5 shadow-lg shadow-cyan-600/25 active:scale-95">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>إضافة صفقة جديدة</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== PLATFORM NAVIGATION TABS ==================== -->
+  <nav class="bg-[#121829] border-b border-vcBorder px-4 lg:px-8">
+    <div class="max-w-[1700px] mx-auto flex items-center gap-2 overflow-x-auto py-2">
+      <button onclick="switchTab('pipeline')" id="tab-btn-pipeline" class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-cyan-600/10 text-cyan-400 border border-cyan-500/20">
+        <i data-lucide="kanban" class="w-4 h-4"></i>
+        <span>مسار تدفق الصفقات (Deal Flow Pipeline)</span>
+        <span class="text-[10px] px-2 py-0.2 bg-cyan-500/20 text-cyan-300 rounded-full font-mono font-bold" id="totalDealsBadge">12 صفقة</span>
+      </button>
+
+      <button onclick="switchTab('captable')" id="tab-btn-captable" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+        <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i>
+        <span>محاكي الحصص وتخفيف الملكية (Cap Table Modeler)</span>
+      </button>
+
+      <button onclick="switchTab('portfolio')" id="tab-btn-portfolio" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+        <i data-lucide="briefcase" class="w-4 h-4 text-violet-400"></i>
+        <span>شركات المحفظة ومضاعفات التخارج (Portfolio & MOIC)</span>
+        <span class="text-[10px] px-2 py-0.2 bg-emerald-500/20 text-emerald-300 rounded-full font-mono font-bold">28 شركة</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN VIEWPORT ==================== -->
+  <main class="flex-1 max-w-[1700px] mx-auto w-full p-4 lg:p-6 space-y-6">
+
+    <!-- ==================== TAB 1: DEAL FLOW KANBAN PIPELINE ==================== -->
+    <div id="view-pipeline" class="tab-view space-y-4">
+      
+      <!-- Sector Filters & Search Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-vcSurface p-3.5 rounded-2xl border border-vcBorder">
+        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+          <span class="text-slate-400 text-xs font-bold whitespace-nowrap">القطاع التقني:</span>
+          <button onclick="filterBySector('all')" class="sector-chip active px-3 py-1 rounded-lg bg-cyan-600 text-white text-xs font-bold transition">كافة الفرص (All)</button>
+          <button onclick="filterBySector('FinTech')" class="sector-chip px-3 py-1 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-300 text-xs transition">تقنية مالية (FinTech)</button>
+          <button onclick="filterBySector('AI')" class="sector-chip px-3 py-1 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-300 text-xs transition">ذكاء اصطناعي (AI)</button>
+          <button onclick="filterBySector('Logistics')" class="sector-chip px-3 py-1 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-300 text-xs transition">سلاسل الإمداد (Logistics)</button>
+          <button onclick="filterBySector('PropTech')" class="sector-chip px-3 py-1 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-300 text-xs transition">عقارات وتقنية (PropTech)</button>
+        </div>
+
+        <div class="relative w-full sm:w-64">
+          <i data-lucide="search" class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+          <input type="text" id="dealSearchInput" oninput="searchDeals()" placeholder="ابحث باسم الشركة أو المؤسس…" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-9 pl-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+        </div>
+      </div>
+
+      <!-- 5-Stage VC Pipeline Kanban -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 overflow-x-auto pb-4">
+        
+        <!-- Stage 1: Sourcing & Inbound -->
+        <div class="bg-vcSurface border border-vcBorder rounded-2xl flex flex-col max-h-[750px]">
+          <div class="p-3 border-b border-vcBorder flex items-center justify-between bg-slate-900/60 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <h3 class="font-extrabold text-xs text-slate-200">1. وارد جديد (Sourcing)</h3>
+            </div>
+            <span class="text-[11px] font-mono text-slate-400 bg-vcCard px-2 py-0.5 rounded-full border border-vcBorder stage-count">3</span>
+          </div>
+
+          <div class="p-3 space-y-3 overflow-y-auto flex-1 stage-container" id="stage-1">
+            
+            <!-- Card 1 -->
+            <div class="deal-card bg-vcCard border border-vcBorder rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('sahab')" data-name="سحابة ذكاء" data-sector="AI" data-round="Pre-Seed">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">سحابة ذكاء (Sahab AI)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Pre-Seed</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">وكلاء الذكاء الاصطناعي لأتمتة خدمة العملاء والمبيعات</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">الجولة المطلوبة:</span>
+                  <span class="num font-bold text-white">3.5M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">تقييم Pre-Money:</span>
+                  <span class="num font-bold text-slate-300">14M ر.س</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-slate-400">الرياض • 4 مؤسسين</span>
+                <button onclick="event.stopPropagation();advanceDealStage(this, 'stage-2')" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1">
+                  <span>الفحص DD</span>
+                  <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="deal-card bg-vcCard border border-vcBorder rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('valuekitchen')" data-name="فاليو كيتشن" data-sector="Logistics" data-round="Seed">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">فاليو كيتشن (Value Kitchen)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Seed</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">شبكة مطابخ سحابية مؤتمتة في 5 مدن رئيسية</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">الجولة المطلوبة:</span>
+                  <span class="num font-bold text-white">6.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">ARR الحالي:</span>
+                  <span class="num font-bold text-emerald-400">4.8M ر.س</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-slate-400">جدة • نمو سنوي 180%</span>
+                <button onclick="event.stopPropagation();advanceDealStage(this, 'stage-2')" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1">
+                  <span>الفحص DD</span>
+                  <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Stage 2: Deep Due Diligence (DD) -->
+        <div class="bg-vcSurface border border-vcBorder rounded-2xl flex flex-col max-h-[750px]">
+          <div class="p-3 border-b border-vcBorder flex items-center justify-between bg-slate-900/60 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <h3 class="font-extrabold text-xs text-cyan-300">2. فحص نافٍ للجهالة (Due Diligence)</h3>
+            </div>
+            <span class="text-[11px] font-mono text-cyan-400 bg-vcCard px-2 py-0.5 rounded-full border border-vcBorder stage-count">2</span>
+          </div>
+
+          <div class="p-3 space-y-3 overflow-y-auto flex-1 stage-container" id="stage-2">
+            
+            <!-- Card 3 -->
+            <div class="deal-card bg-vcCard border border-cyan-500/40 rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('watheeq')" data-name="وثيق القانونية" data-sector="FinTech" data-round="Seed">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">وثيق (Watheeq LegalTech)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Seed</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">منصة أتمتة العقود والاستشارات بنماذج لغوية سيادية</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">الجولة المطلوبة:</span>
+                  <span class="num font-bold text-white">8.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">تقييم Pre-Money:</span>
+                  <span class="num font-bold text-slate-300">32M ر.س</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-emerald-400 font-bold">فحص تقني: 94/100</span>
+                <button onclick="event.stopPropagation();advanceDealStage(this, 'stage-3')" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1">
+                  <span>رفع للجنة IC</span>
+                  <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Stage 3: Investment Committee (IC Review) -->
+        <div class="bg-vcSurface border border-vcBorder rounded-2xl flex flex-col max-h-[750px]">
+          <div class="p-3 border-b border-vcBorder flex items-center justify-between bg-slate-900/60 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <h3 class="font-extrabold text-xs text-amber-300">3. لجنة الاستثمار (IC Review)</h3>
+            </div>
+            <span class="text-[11px] font-mono text-amber-400 bg-vcCard px-2 py-0.5 rounded-full border border-vcBorder stage-count">1</span>
+          </div>
+
+          <div class="p-3 space-y-3 overflow-y-auto flex-1 stage-container" id="stage-3">
+            
+            <!-- Card 4 -->
+            <div class="deal-card bg-vcCard border border-amber-500/40 rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('madar')" data-name="مدار للدرونز" data-sector="Logistics" data-round="Series A">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">مدار (Madar Drone Tech)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">Series A</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">توصيل العينات الطبية والشحنات السريعة بالدرونز</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">الجولة المطلوبة:</span>
+                  <span class="num font-bold text-white">18.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">موافقة GACA:</span>
+                  <span class="text-emerald-400 font-bold">معتمد تجارياً</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-amber-400 font-bold">تصويت IC: 2/3 موافقة</span>
+                <button onclick="event.stopPropagation();advanceDealStage(this, 'stage-4')" class="text-violet-400 hover:text-violet-300 font-bold flex items-center gap-1">
+                  <span>إصدار Term Sheet</span>
+                  <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Stage 4: Term Sheet & Negotiation -->
+        <div class="bg-vcSurface border border-vcBorder rounded-2xl flex flex-col max-h-[750px]">
+          <div class="p-3 border-b border-vcBorder flex items-center justify-between bg-slate-900/60 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-violet-400 animate-pulse"></span>
+              <h3 class="font-extrabold text-xs text-violet-300">4. مذكرة الشروط (Term Sheet)</h3>
+            </div>
+            <span class="text-[11px] font-mono text-violet-400 bg-vcCard px-2 py-0.5 rounded-full border border-vcBorder stage-count">1</span>
+          </div>
+
+          <div class="p-3 space-y-3 overflow-y-auto flex-1 stage-container" id="stage-4">
+            
+            <!-- Card 5 -->
+            <div class="deal-card bg-vcCard border border-violet-500/40 rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('rasmala')" data-name="رسملة لحلول الدين" data-sector="FinTech" data-round="Series A">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">رسملة (Rasmala Debt)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">Series A</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">التمويل الجماعي بالدين للشركات متناهية الصغر والمتوسطة</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">استثمار الصندوق:</span>
+                  <span class="num font-bold text-white">12.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">حصة الصندوق:</span>
+                  <span class="num font-bold text-violet-300">14.5% + مقعد</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-violet-300">صياغة العقود النهائية</span>
+                <button onclick="event.stopPropagation();advanceDealStage(this, 'stage-5')" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1">
+                  <span>إغلاق الصفقة ✓</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Stage 5: Closed & Portfolio Active -->
+        <div class="bg-vcSurface border border-vcBorder rounded-2xl flex flex-col max-h-[750px]">
+          <div class="p-3 border-b border-vcBorder flex items-center justify-between bg-slate-900/60 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h3 class="font-extrabold text-xs text-emerald-300">5. مغلقة بالمحفظة (Closed)</h3>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-vcCard px-2 py-0.5 rounded-full border border-vcBorder stage-count">2</span>
+          </div>
+
+          <div class="p-3 space-y-3 overflow-y-auto flex-1 stage-container" id="stage-5">
+            
+            <!-- Card 6 -->
+            <div class="deal-card bg-vcCard border border-emerald-500/40 rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('salla')" data-name="سلة للتجارة" data-sector="FinTech" data-round="Series B">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">منصة سلة (Salla)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Growth</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">المنظومة الشاملة للتجارة الرقمية بالتجزئة</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">استثمار الصندوق:</span>
+                  <span class="num font-bold text-white">15.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">مضاعف القيمة MOIC:</span>
+                  <span class="num font-bold text-emerald-400 text-sm">4.8x</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-emerald-400 font-bold">تخارج متوقع: IPO تداول</span>
+                <span class="text-slate-500 text-[10px]">2027</span>
+              </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="deal-card bg-vcCard border border-emerald-500/40 rounded-xl p-3.5 cursor-pointer" onclick="openDueDiligenceModal('tamara')" data-name="تمارا للتقسيط" data-sector="FinTech" data-round="Series C">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-black text-white text-xs">تمارا (Tamara BNPL)</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Unicorn</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2.5">أول يونيكورن تقني مالي مرخص في المملكة</p>
+              
+              <div class="grid grid-cols-2 gap-2 p-2 bg-slate-900/80 rounded-lg text-[11px] mb-2.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">استثمار الصندوق:</span>
+                  <span class="num font-bold text-white">20.0M ر.س</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">مضاعف القيمة MOIC:</span>
+                  <span class="num font-bold text-emerald-400 text-sm">5.6x</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px]">
+                <span class="text-emerald-400 font-bold">Unicorn مكتمل</span>
+                <span class="text-slate-500 text-[10px]">توزيع أرباح DPI</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: CAP TABLE & DILUTION MODELER ==================== -->
+    <div id="view-captable" class="tab-view hidden space-y-6">
+      
+      <div class="bg-vcSurface border border-vcBorder rounded-2xl p-6">
+        <div class="border-b border-vcBorder pb-4 mb-6">
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i data-lucide="calculator" class="w-5 h-5 text-cyan-400"></i>
+            <span>محاكي الحصص وتخفيف الملكية للجولات الاستثمارية (Interactive Cap Table)</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">حساب دقيق لتقييم ما قبل وما بعد الاستثمار (Pre/Post-Money) وتوزيع الحصص وبرنامج خيارات الأسهم (ESOP)</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Sliders Form (5 cols) -->
+          <div class="lg:col-span-5 space-y-5">
+            <!-- Slider 1: Pre-Money Valuation -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="text-slate-300 font-bold">تقييم ما قبل الاستثمار (Pre-Money Valuation):</span>
+                <span class="num font-black text-cyan-400 text-sm" id="preValDisplay">20,000,000 ر.س</span>
+              </div>
+              <input type="range" id="preValSlider" min="5000000" max="100000000" value="20000000" step="1000000" oninput="recalcCapTable()" class="w-full custom-range cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-500 num">
+                <span>5M ر.س</span>
+                <span>50M ر.س</span>
+                <span>100M ر.س</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Investment Size -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="text-slate-300 font-bold">مبلغ الجولة الاستثمارية (Round Check Size):</span>
+                <span class="num font-black text-emerald-400 text-sm" id="roundSizeDisplay">5,000,000 ر.س</span>
+              </div>
+              <input type="range" id="roundSizeSlider" min="1000000" max="30000000" value="5000000" step="500000" oninput="recalcCapTable()" class="w-full custom-range cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-500 num">
+                <span>1M ر.س</span>
+                <span>15M ر.س</span>
+                <span>30M ر.س</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: ESOP Pool -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="text-slate-300 font-bold">برنامج حوافز الموظفين (New ESOP Pool):</span>
+                <span class="num font-black text-violet-400 text-sm" id="esopDisplay">10%</span>
+              </div>
+              <input type="range" id="esopSlider" min="5" max="20" value="10" step="1" oninput="recalcCapTable()" class="w-full custom-range cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-500 num">
+                <span>5%</span>
+                <span>10% قياسي</span>
+                <span>20%</span>
+              </div>
+            </div>
+
+            <!-- Post Money KPI Box -->
+            <div class="p-4 bg-slate-900 border border-vcBorder rounded-xl space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400">تقييم ما بعد الاستثمار (Post-Money Valuation):</span>
+                <span class="num font-black text-white text-base" id="postValDisplay">25,000,000 ر.س</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400">حصة المستثمر الجديد (Investor Ownership):</span>
+                <span class="num font-bold text-cyan-400 text-sm" id="investorShareDisplay">20.0%</span>
+              </div>
+            </div>
+
+            <button onclick="exportTermSheetSummary()" class="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/25 active:scale-95">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>توليد مسودة مذكرة الشروط (Term Sheet Draft)</span>
+            </button>
+          </div>
+
+          <!-- Cap Table Visual Bar & Table (7 cols) -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Stacked Color Bar Visualization -->
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>توزيع ملكية أسهم الشركة بعد الجولة (Post-Money Ownership Stack):</span>
+                <span class="num font-bold text-white">100%</span>
+              </div>
+              <div class="h-6 w-full rounded-xl overflow-hidden flex bg-slate-900 border border-vcBorder">
+                <div id="barFounders" style="width: 70%" class="bg-blue-600 h-full transition-all duration-300" title="المؤسسون"></div>
+                <div id="barInvestor" style="width: 20%" class="bg-cyan-400 h-full transition-all duration-300" title="روّاد كابيتال"></div>
+                <div id="barEsop" style="width: 10%" class="bg-violet-500 h-full transition-all duration-300" title="برنامج ESOP"></div>
+              </div>
+              <div class="flex items-center gap-4 text-[11px] mt-2 text-slate-400">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-600"></span> المؤسسون</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-cyan-400"></span> روّاد كابيتال (المستثمر الرئيسي)</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-violet-500"></span> برنامج الموظفين ESOP</span>
+              </div>
+            </div>
+
+            <!-- Cap Table Data -->
+            <div class="overflow-hidden rounded-xl border border-vcBorder">
+              <table class="w-full text-right text-xs">
+                <thead>
+                  <tr class="bg-slate-900/80 border-b border-vcBorder text-slate-400 font-bold">
+                    <th class="p-3">المساهم (Shareholder)</th>
+                    <th class="p-3">نوع الأسهم</th>
+                    <th class="p-3 num">القيمة السوقية</th>
+                    <th class="p-3 num">النسبة بعد التخفيف</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-vcBorder text-slate-200">
+                  <tr>
+                    <td class="p-3 font-bold text-white">المؤسسون وفريق العمل الأساسي</td>
+                    <td class="p-3 text-slate-400">عادية (Common)</td>
+                    <td class="p-3 num font-bold text-slate-200" id="founderValDisplay">17,500,000 ر.س</td>
+                    <td class="p-3 num font-black text-blue-400 text-sm" id="founderPctDisplay">70.0%</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-bold text-white">صندوق روّاد كابيتال (Lead Investor)</td>
+                    <td class="p-3 text-cyan-400">ممتازة Series A Preferred</td>
+                    <td class="p-3 num font-bold text-slate-200" id="investorValDisplay">5,000,000 ر.س</td>
+                    <td class="p-3 num font-black text-cyan-400 text-sm" id="investorPctDisplay">20.0%</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-bold text-white">محفظة خيارات الأسهم للموظفين (ESOP)</td>
+                    <td class="p-3 text-violet-400">خيارات أسهم محجوزة</td>
+                    <td class="p-3 num font-bold text-slate-200" id="esopValDisplay">2,500,000 ر.س</td>
+                    <td class="p-3 num font-black text-violet-400 text-sm" id="esopPctDisplay">10.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: PORTFOLIO & REALISED RETURNS ==================== -->
+    <div id="view-portfolio" class="tab-view hidden space-y-6">
+      
+      <div class="bg-vcSurface border border-vcBorder rounded-2xl overflow-hidden">
+        <div class="p-5 border-b border-vcBorder flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i data-lucide="award" class="w-5 h-5 text-emerald-400"></i>
+              <span>شركات المحفظة الاستثمارية والعوائد المحققة (Active Portfolio)</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">28 شركة ناشئة بالمملكة والشرق الأوسط مع مؤشرات الأداء ومضاعفات التقييم (MOIC)</p>
+          </div>
+
+          <button onclick="exportPortfolioAuditReport()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-vcBorder transition flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>تصدير تقرير المستثمرين LPs Report</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead>
+              <tr class="bg-slate-900/60 border-b border-vcBorder text-slate-400 font-bold">
+                <th class="p-4">اسم الشركة</th>
+                <th class="p-4">سنة الاستثمار</th>
+                <th class="p-4">القطاع</th>
+                <th class="p-4 num">رأس المال المستثمر</th>
+                <th class="p-4 num">التقييم الحالي</th>
+                <th class="p-4 num">مضاعف القيمة MOIC</th>
+                <th class="p-4">حالة التخارج المتوقعة</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-vcBorder text-slate-200">
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold">سلـ</div>
+                  <div>
+                    <div>منصة سلة (Salla)</div>
+                    <div class="text-[11px] text-slate-400">مكة المكرمة • تجارة إلكترونية</div>
+                  </div>
+                </td>
+                <td class="p-4 num text-slate-400">2021 (Series A)</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">FinTech & Commerce</span></td>
+                <td class="p-4 num font-bold text-white">15,000,000 ر.س</td>
+                <td class="p-4 num font-bold text-emerald-400">72,000,000 ر.س</td>
+                <td class="p-4 num font-black text-emerald-400 text-sm">4.8x</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">طرح عام في تداول IPO (2027)</span></td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold">تمـ</div>
+                  <div>
+                    <div>تمارا (Tamara BNPL)</div>
+                    <div class="text-[11px] text-slate-400">الرياض • تقسيط ومدفوعات</div>
+                  </div>
+                </td>
+                <td class="p-4 num text-slate-400">2022 (Series B)</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">FinTech Unicorn</span></td>
+                <td class="p-4 num font-bold text-white">20,000,000 ر.س</td>
+                <td class="p-4 num font-bold text-emerald-400">112,000,000 ر.س</td>
+                <td class="p-4 num font-black text-emerald-400 text-sm">5.6x</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">توزيع أرباح وتخارج ثانوي</span></td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30 flex items-center justify-center font-bold">نعـ</div>
+                  <div>
+                    <div>نعناع (Nana Grocery)</div>
+                    <div class="text-[11px] text-slate-400">الرياض • مقاضي سريعة</div>
+                  </div>
+                </td>
+                <td class="p-4 num text-slate-400">2023 (Series B)</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">Quick Commerce</span></td>
+                <td class="p-4 num font-bold text-white">12,500,000 ر.س</td>
+                <td class="p-4 num font-bold text-emerald-400">38,750,000 ر.س</td>
+                <td class="p-4 num font-black text-emerald-400 text-sm">3.1x</td>
+                <td class="p-4"><span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold">استحواذ استراتيجي M&A</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== DUE DILIGENCE SLIDE-OVER DRAWER ==================== -->
+  <div id="ddDrawer" class="fixed inset-y-0 left-0 w-full md:w-[600px] bg-vcSurface border-r border-vcBorder shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Header -->
+    <div class="p-5 border-b border-vcBorder flex items-center justify-between bg-slate-900/80">
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="font-black text-white text-base" id="ddCompanyName">سحابة ذكاء (Sahab AI)</h3>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30" id="ddRoundBadge">Pre-Seed</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-0.5" id="ddSectorHQ">الذكاء الاصطناعي المؤسسي • الرياض، المملكة العربية السعودية</p>
+      </div>
+
+      <button onclick="closeDueDiligenceModal()" class="p-1.5 rounded-xl bg-vcCard hover:bg-slate-800 text-slate-400 hover:text-white transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="flex-1 p-5 overflow-y-auto space-y-5 text-xs">
+      
+      <!-- Key Unit Economics Grid -->
+      <div>
+        <h4 class="font-bold text-slate-300 mb-2.5 flex items-center gap-1.5">
+          <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i>
+          <span>المؤشرات المالية واقتصاديات الوحدة (Unit Economics):</span>
+        </h4>
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">الإيراد السنوي المتكرر (ARR):</span>
+            <span class="num font-black text-white text-sm" id="ddArr">1.8M ر.س</span>
+          </div>
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">النمو الشهري (MoM):</span>
+            <span class="num font-black text-emerald-400 text-sm" id="ddGrowth">+24.5%</span>
+          </div>
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">مدرج السيولة (Runway):</span>
+            <span class="num font-black text-cyan-300 text-sm" id="ddRunway">16 شهراً</span>
+          </div>
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">كلفة الاستحواذ (CAC):</span>
+            <span class="num font-bold text-slate-200 text-xs" id="ddCac">420 ر.س</span>
+          </div>
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">القيمة الدائمة (LTV):</span>
+            <span class="num font-bold text-slate-200 text-xs" id="ddLtv">3,800 ر.س</span>
+          </div>
+          <div class="p-3 bg-vcCard rounded-xl border border-vcBorder text-center">
+            <span class="text-[10px] text-slate-400 block">نسبة LTV/CAC:</span>
+            <span class="num font-black text-emerald-400 text-sm" id="ddLtvCac">9.0x</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem & Solution Brief -->
+      <div class="p-4 bg-slate-900/60 rounded-xl border border-vcBorder space-y-2">
+        <h4 class="font-bold text-slate-200 flex items-center gap-1.5">
+          <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+          <span>ملخص دراسة الفرصة الاستثمارية:</span>
+        </h4>
+        <p class="text-slate-400 leading-relaxed" id="ddSummaryText">
+          تمتلك الشركة برمجيات وكلاء ذكاء اصطناعي سيادية تعالج استفسارات الدعم الفني وتستكمل عمليات البيع لمنصات التجارة والاتصالات، مع تكامل مباشر مع بوابات الدفع وهيئة الاتصالات.
+        </p>
+      </div>
+
+      <!-- Pitch Deck Slide Carousel Simulator -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-bold text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="presentation" class="w-4 h-4 text-violet-400"></i>
+            <span>معاينة العرض التقديمي (Pitch Deck):</span>
+          </h4>
+          <span class="text-[11px] text-slate-500 font-mono">Slide 1 of 4</span>
+        </div>
+        
+        <div class="bg-black/60 border border-vcBorder rounded-xl p-6 text-center space-y-3 relative overflow-hidden">
+          <div class="text-[10px] uppercase font-mono text-cyan-400 tracking-wider">Traction & Market Opportunity</div>
+          <div class="text-lg font-black text-white" id="ddDeckTitle">حجم السوق المتاح في المملكة TAM: 4.8 مليار ريال</div>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto">أكثر من 120 ألف منشأة صغيرة ومتوسطة بحاجة لأتمتة خدمة العملاء وإصدار الفواتير الآلية.</p>
+          <div class="pt-2 flex justify-center gap-2">
+            <button onclick="showToast('تم تحميل ملف الـ Pitch Deck كاملاً بصيغة PDF')" class="px-3 py-1.5 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-200 text-[11px] font-bold border border-vcBorder transition">
+              تحميل الـ Pitch Deck كاملاً (PDF)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investment Committee (IC) Voting Simulator -->
+      <div class="p-4 bg-vcCard rounded-xl border border-vcBorder space-y-3">
+        <h4 class="font-bold text-slate-200 flex items-center gap-1.5">
+          <i data-lucide="vote" class="w-4 h-4 text-cyan-400"></i>
+          <span>تصويت لجنة الاستثمار (Investment Committee Voting):</span>
+        </h4>
+
+        <!-- Existing Partner Votes -->
+        <div class="space-y-2 text-[11px]">
+          <div class="flex items-center justify-between p-2 bg-slate-900/80 rounded-lg">
+            <span>د. سلطان الراشد (Managing Partner)</span>
+            <span class="text-emerald-400 font-bold flex items-center gap-1">
+              <i data-lucide="check" class="w-3 h-3"></i> موافقة بالاستثمار
+            </span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-slate-900/80 rounded-lg">
+            <span>م. ريم العبدالله (General Partner)</span>
+            <span class="text-amber-400 font-bold flex items-center gap-1">
+              <i data-lucide="clock" class="w-3 h-3"></i> طلب تدقيق إضافي للعقود
+            </span>
+          </div>
+        </div>
+
+        <!-- User Vote Action -->
+        <div class="pt-2 border-t border-slate-800 flex items-center gap-2">
+          <button onclick="castIcVote('approve')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition active:scale-95 flex items-center justify-center gap-1">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+            <span>موافقة (Approve)</span>
+          </button>
+          <button onclick="castIcVote('diligence')" class="flex-1 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-lg transition active:scale-95 flex items-center justify-center gap-1">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+            <span>طلب فحص (DD)</span>
+          </button>
+          <button onclick="castIcVote('reject')" class="flex-1 py-2 bg-slate-800 hover:bg-red-900/60 text-slate-300 hover:text-red-200 font-bold text-xs rounded-lg transition active:scale-95">
+            <span>اعتذار (Pass)</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toast" class="fixed bottom-6 left-6 z-50 bg-vcSurface border border-cyan-500/40 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" id="toastDot"></div>
+    <span id="toastMsg">تمت العملية بنجاح</span>
+  </div>
+
+
+
+  <!-- ==================== JAVASCRIPT & LOGIC ==================== -->
+  <script>
+    // Tab switching logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-cyan-600/10', 'text-cyan-400', 'border-cyan-500/20');
+        btn.classList.add('text-slate-400', 'border-transparent');
+      });
+
+      const activeView = document.getElementById(`view-${tabId}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.add('bg-cyan-600/10', 'text-cyan-400', 'border-cyan-500/20');
+        activeBtn.classList.remove('text-slate-400', 'border-transparent');
+      }
+      lucide.createIcons();
+    }
+
+    // Toast helper
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastDot = document.getElementById('toastDot');
+
+      toastMsg.textContent = message;
+      toastDot.className = `w-2 h-2 rounded-full ${isSuccess ? 'bg-cyan-400' : 'bg-amber-400'} animate-pulse`;
+      toast.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // Deal Stage advance
+    function advanceDealStage(btnElement, targetStageId) {
+      const card = btnElement.closest('.deal-card');
+      const targetContainer = document.getElementById(targetStageId);
+      if (card && targetContainer) {
+        targetContainer.insertBefore(card, targetContainer.firstChild);
+        showToast("تم ترقية الصفقة إلى المرحلة الاستثمارية التالية بنجاح!");
+        updatePipelineCounts();
+      }
+    }
+
+    function updatePipelineCounts() {
+      for (let i = 1; i <= 5; i++) {
+        const col = document.getElementById(`stage-${i}`);
+        if (col) {
+          const header = col.closest('.bg-vcSurface').querySelector('.stage-count');
+          if (header) header.textContent = col.children.length;
+        }
+      }
+      const total = document.querySelectorAll('.deal-card').length;
+      document.getElementById('totalDealsBadge').textContent = `${total} صفقة`;
+    }
+
+    // Filter deals by sector
+    function filterBySector(sector) {
+      document.querySelectorAll('.sector-chip').forEach(c => {
+        c.className = "sector-chip px-3 py-1 rounded-lg bg-vcCard hover:bg-slate-800 text-slate-300 text-xs transition";
+      });
+      event.target.className = "sector-chip active px-3 py-1 rounded-lg bg-cyan-600 text-white text-xs font-bold transition";
+
+      document.querySelectorAll('.deal-card').forEach(card => {
+        const s = card.getAttribute('data-sector');
+        if (sector === 'all' || s === sector) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Search Deals
+    function searchDeals() {
+      const q = document.getElementById('dealSearchInput').value.toLowerCase();
+      document.querySelectorAll('.deal-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    // Due Diligence Modal
+    const dealsDatabase = {
+      sahab: {
+        name: "سحابة ذكاء (Sahab AI)",
+        round: "Pre-Seed",
+        hq: "الذكاء الاصطناعي المؤسسي • الرياض",
+        arr: "1.8M ر.س",
+        growth: "+24.5%",
+        runway: "16 شهراً",
+        cac: "420 ر.س",
+        ltv: "3,800 ر.س",
+        ltvCac: "9.0x",
+        summary: "بناء وكلاء ذكاء اصطناعي للمؤسسات الحكومية والشركات لمعالجة المعاملات المالية وقنوات خدمة العملاء بدقة 99.4%."
+      },
+      valuekitchen: {
+        name: "فاليو كيتشن (Value Kitchen)",
+        round: "Seed",
+        hq: "المطابخ السحابية الذكية • جدة",
+        arr: "4.8M ر.س",
+        growth: "+18.2%",
+        runway: "14 شهراً",
+        cac: "950 ر.س",
+        ltv: "8,200 ر.س",
+        ltvCac: "8.6x",
+        summary: "سلسلة مطابخ سحابية في 5 مدن سعودية تخدم أكثر من 30 براند طعام افتراضي بتشغيل مركزي متكامل."
+      },
+      watheeq: {
+        name: "وثيق (Watheeq LegalTech)",
+        round: "Seed",
+        hq: "التقنية القانونية والمالية • الرياض",
+        arr: "3.2M ر.س",
+        growth: "+31.0%",
+        runway: "18 شهراً",
+        cac: "680 ر.س",
+        ltv: "7,500 ر.س",
+        ltvCac: "11.0x",
+        summary: "أتمتة وصياغة العقود التجارية والامتثال للأنظمة السعودية باستخدام نماذج لغوية مدربة قانونياً."
+      },
+      madar: {
+        name: "مدار (Madar Drone Tech)",
+        round: "Series A",
+        hq: "اللوجستيات والدرونز • الرياض",
+        arr: "7.5M ر.س",
+        growth: "+15.8%",
+        runway: "22 شهراً",
+        cac: "1,200 ر.س",
+        ltv: "14,000 ر.س",
+        ltvCac: "11.6x",
+        summary: "مرخصة من هيئة الطيران المدني GACA لتوصيل العينات المخبرية وبنوك الدم بين المستشفيات في زمن قياسي."
+      },
+      rasmala: {
+        name: "رسملة (Rasmala Debt)",
+        round: "Series A",
+        hq: "التمويل الجماعي بالدين • الرياض",
+        arr: "12.0M ر.س",
+        growth: "+22.4%",
+        runway: "24 شهراً",
+        cac: "850 ر.س",
+        ltv: "11,500 ر.س",
+        ltvCac: "13.5x",
+        summary: "منصة تمويل جماعي بالصكوك وأدوات الدين للشركات متناهية الصغر مع تحصيل بنكي مباشر."
+      },
+      salla: {
+        name: "منصة سلة (Salla)",
+        round: "Growth",
+        hq: "التجارة الإلكترونية الموحدة • مكة المكرمة",
+        arr: "180M ر.س",
+        growth: "+45.0%",
+        runway: "مربحة (Cashflow Positive)",
+        cac: "150 ر.س",
+        ltv: "4,500 ر.س",
+        ltvCac: "30.0x",
+        summary: "رائدة التجارة الإلكترونية في الشرق الأوسط، تمكن أكثر من 45 ألف متجر من البيع وإدارة المدفوعات."
+      },
+      tamara: {
+        name: "تمارا (Tamara BNPL)",
+        round: "Unicorn",
+        hq: "التقنية المالية والتقسيط • الرياض",
+        arr: "450M ر.س",
+        growth: "+62.0%",
+        runway: "يونيكورن مكتمل",
+        cac: "45 ر.س",
+        ltv: "890 ر.س",
+        ltvCac: "19.7x",
+        summary: "أول يونيكورن تقني سعودي مرخص، يقدم حلول الدفع الآجل والتسوق لأكثر من 9 ملايين مستخدم."
+      }
+    };
+
+    function openDueDiligenceModal(dealKey) {
+      const data = dealsDatabase[dealKey] || dealsDatabase.sahab;
+      document.getElementById('ddCompanyName').textContent = data.name;
+      document.getElementById('ddRoundBadge').textContent = data.round;
+      document.getElementById('ddSectorHQ').textContent = data.hq;
+      document.getElementById('ddArr').textContent = data.arr;
+      document.getElementById('ddGrowth').textContent = data.growth;
+      document.getElementById('ddRunway').textContent = data.runway;
+      document.getElementById('ddCac').textContent = data.cac;
+      document.getElementById('ddLtv').textContent = data.ltv;
+      document.getElementById('ddLtvCac').textContent = data.ltvCac;
+      document.getElementById('ddSummaryText').textContent = data.summary;
+
+      document.getElementById('ddDrawer').classList.remove('-translate-x-full');
+      lucide.createIcons();
+    }
+
+    function closeDueDiligenceModal() {
+      document.getElementById('ddDrawer').classList.add('-translate-x-full');
+    }
+
+    function castIcVote(decision) {
+      if (decision === 'approve') {
+        showToast("تم تسجيل صوتك: (موافقة مع الصندوق) بنجاح!");
+      } else if (decision === 'diligence') {
+        showToast("تم تسجيل طلب تدقيق مالي إضافي للعقود");
+      } else {
+        showToast("تم تسجيل قرار الاعتذار عن الفرصة");
+      }
+    }
+
+    // Cap Table Modeler Logic
+    function recalcCapTable() {
+      const preVal = parseFloat(document.getElementById('preValSlider').value);
+      const roundSize = parseFloat(document.getElementById('roundSizeSlider').value);
+      const esopPct = parseFloat(document.getElementById('esopSlider').value);
+
+      document.getElementById('preValDisplay').textContent = `${(preVal / 1000000).toLocaleString('en-US')}M ر.س`;
+      document.getElementById('roundSizeDisplay').textContent = `${(roundSize / 1000000).toLocaleString('en-US')}M ر.س`;
+      document.getElementById('esopDisplay').textContent = `${esopPct}%`;
+
+      const postVal = preVal + roundSize;
+      const investorPct = (roundSize / postVal) * 100;
+      const founderPct = 100 - investorPct - esopPct;
+
+      document.getElementById('postValDisplay').textContent = `${(postVal / 1000000).toLocaleString('en-US', {maximumFractionDigits: 1})}M ر.س`;
+      document.getElementById('investorShareDisplay').textContent = `${investorPct.toFixed(1)}%`;
+
+      // Update progress bars
+      document.getElementById('barFounders').style.width = `${Math.max(0, founderPct)}%`;
+      document.getElementById('barInvestor').style.width = `${investorPct}%`;
+      document.getElementById('barEsop').style.width = `${esopPct}%`;
+
+      // Update table
+      document.getElementById('founderPctDisplay').textContent = `${Math.max(0, founderPct).toFixed(1)}%`;
+      document.getElementById('investorPctDisplay').textContent = `${investorPct.toFixed(1)}%`;
+      document.getElementById('esopPctDisplay').textContent = `${esopPct.toFixed(1)}%`;
+
+      document.getElementById('founderValDisplay').textContent = `${((postVal * (founderPct / 100)) / 1000000).toFixed(1)}M ر.س`;
+      document.getElementById('investorValDisplay').textContent = `${(roundSize / 1000000).toFixed(1)}M ر.س`;
+      document.getElementById('esopValDisplay').textContent = `${((postVal * (esopPct / 100)) / 1000000).toFixed(1)}M ر.س`;
+    }
+
+    function exportTermSheetSummary() {
+      showToast("تم تصدير مسودة مذكرة الشروط Term Sheet الاستثمارية بنجاح!");
+    }
+
+    function exportPortfolioAuditReport() {
+      showToast("تم تصدير تقرير مدققي الحسابات LPs بنجاح بصيغة PDF");
+    }
+
+    function openNewDealModal() {
+      showToast("فُتحت استمارة تسجيل فرصة استثمارية جديدة وفحص البيانات");
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      recalcCapTable();
+      updatePipelineCounts();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketBase – Cloud Admin & Database Console | Official Project</title>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pbDark: '#121824',
+            pbSurface: '#1B2332',
+            pbCard: '#222C3F',
+            pbBorder: '#2C384F',
+            pbTeal: '#20D5D2',
+            pbTealHover: '#1AB5B3'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #121824;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2C384F;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pbTeal selection:text-black antialiased">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="bg-pbSurface border-b border-pbBorder sticky top-0 z-40">
+    <div class="px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <a href="https://pocketbase.io/_/#/login" target="_blank" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-pbTeal text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-pbTeal/20">
+            PB
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold text-white tracking-tight">PocketBase</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-pbTeal/20 text-pbTeal border border-pbTeal/30">v0.22.4</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Status -->
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>SQLite Engine: Connected (4.2 MB)</span>
+        </div>
+
+        <a href="https://pocketbase.io/_/#/login" target="_blank" class="px-3.5 py-1.5 rounded-lg bg-pbCard hover:bg-slate-700 text-slate-200 border border-pbBorder text-xs font-semibold flex items-center gap-1.5 transition">
+          <span>pocketbase.io/_/#/login</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5 text-pbTeal"></i>
+        </a>
+
+        <div class="w-8 h-8 rounded-full bg-pbCard border border-pbBorder flex items-center justify-center text-xs font-bold text-white">
+          OP
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Sidebar: Collections -->
+    <aside class="w-64 bg-pbSurface border-r border-pbBorder flex flex-col shrink-0">
+      <div class="p-3 border-b border-pbBorder flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Collections</span>
+        <button onclick="newCollectionPrompt()" class="p-1 rounded bg-pbCard hover:bg-slate-700 text-pbTeal text-xs" title="New Collection">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Collection List -->
+      <div class="flex-1 overflow-y-auto p-2 space-y-1 text-xs" id="collectionsList">
+        <button onclick="switchCollection('users', this)" class="col-item w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium text-white bg-pbCard border border-pbBorder">
+          <div class="flex items-center gap-2">
+            <i data-lucide="users" class="w-4 h-4 text-pbTeal"></i>
+            <span>users</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-400">auth</span>
+        </button>
+        <button onclick="switchCollection('products', this)" class="col-item w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-pbCard transition">
+          <div class="flex items-center gap-2">
+            <i data-lucide="package" class="w-4 h-4 text-slate-400"></i>
+            <span>products</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">base</span>
+        </button>
+        <button onclick="switchCollection('orders', this)" class="col-item w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-pbCard transition">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-cart" class="w-4 h-4 text-slate-400"></i>
+            <span>orders</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">base</span>
+        </button>
+        <button onclick="switchCollection('api_tokens', this)" class="col-item w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-pbCard transition">
+          <div class="flex items-center gap-2">
+            <i data-lucide="key" class="w-4 h-4 text-slate-400"></i>
+            <span>api_tokens</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">base</span>
+        </button>
+      </div>
+
+      <!-- Footer system tabs -->
+      <div class="p-3 border-t border-pbBorder space-y-1 text-xs text-slate-400">
+        <button onclick="showLogsModal()" class="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-pbCard hover:text-white transition">
+          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+          <span>Logs & Request Profiler</span>
+        </button>
+        <button onclick="showSettingsModal()" class="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-pbCard hover:text-white transition">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          <span>Mail & Storage Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Center Content: Records & Data Table -->
+    <main class="flex-1 flex flex-col bg-pbDark overflow-hidden">
+      
+      <!-- Top Action Bar -->
+      <div class="p-4 border-b border-pbBorder bg-pbSurface/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+            <span id="currentColTitle">users</span>
+            <span class="text-xs font-normal text-slate-400" id="recordsCountTag">(4 records)</span>
+          </h2>
+          <button onclick="openApiRulesModal()" class="text-[11px] px-2 py-0.5 rounded bg-pbCard border border-pbBorder text-slate-300 hover:text-white flex items-center gap-1">
+            <i data-lucide="lock" class="w-3 h-3 text-amber-400"></i>
+            <span>API Rules</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Search filter -->
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="recordSearchInput" placeholder="Filter records..." oninput="filterRecords()" class="bg-pbCard border border-pbBorder rounded-lg pl-8 pr-3 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-pbTeal w-48">
+          </div>
+
+          <button onclick="openNewRecordModal()" class="px-3 py-1.5 rounded-lg bg-pbTeal hover:bg-pbTealHover text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>New Record</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="flex-1 overflow-auto p-4">
+        <div class="border border-pbBorder rounded-xl overflow-hidden bg-pbSurface">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-pbCard text-slate-400 font-mono text-[11px] border-b border-pbBorder uppercase tracking-wider" id="tableHead">
+              <!-- Dynamically populated -->
+            </thead>
+            <tbody class="divide-y divide-pbBorder font-mono text-slate-300" id="tableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- cURL / API Code Preview Drawer Footer -->
+      <div class="bg-pbSurface border-t border-pbBorder p-3 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-slate-400">
+          <i data-lucide="code" class="w-4 h-4 text-pbTeal"></i>
+          <span>SDK Request Example:</span>
+          <code class="bg-pbDark px-2 py-0.5 rounded text-pbTeal font-mono text-[11px]" id="sdkExampleCode">pb.collection('users').getList(1, 20)</code>
+        </div>
+        <a href="https://pocketbase.io/_/#/login" target="_blank" class="text-pbTeal hover:underline text-xs flex items-center gap-1">
+          <span>Open Live Console</span>
+          <i data-lucide="external-link" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    const database = {
+      users: {
+        cols: ["id", "email", "name", "verified", "created"],
+        records: [
+          { id: "usr_948f21a", email: "admin@app.com", name: "Osman (Owner)", verified: "true", created: "2026-09-10 14:22" },
+          { id: "usr_20fa91c", email: "sarah.client@gmail.com", name: "Sarah Al-Rashid", verified: "true", created: "2026-09-15 09:12" },
+          { id: "usr_55ee83b", email: "khalid.dev@sa.org", name: "Khalid Mansoor", verified: "true", created: "2026-09-20 18:40" },
+          { id: "usr_77dd12a", email: "demo.tester@test.com", name: "Demo Guest", verified: "false", created: "2026-10-01 11:05" }
+        ]
+      },
+      products: {
+        cols: ["id", "title", "price", "stock", "created"],
+        records: [
+          { id: "prd_01a", title: "Modern Minimal Table Lamp", price: "$29.00", stock: "142", created: "2026-09-12" },
+          { id: "prd_02b", title: "Smart Speaker Space Gray", price: "$49.00", stock: "88", created: "2026-09-14" },
+          { id: "prd_03c", title: "Hi-Res Wireless Headphones", price: "$99.00", stock: "45", created: "2026-09-18" },
+          { id: "prd_04d", title: "Smart Fitness Watch", price: "$79.00", stock: "60", created: "2026-09-22" }
+        ]
+      },
+      orders: {
+        cols: ["id", "user_id", "total", "status", "created"],
+        records: [
+          { id: "ord_1001", user_id: "usr_948f21a", total: "$128.00", status: "completed", created: "2026-10-05 10:14" },
+          { id: "ord_1002", user_id: "usr_20fa91c", total: "$49.00", status: "processing", created: "2026-10-06 14:30" },
+          { id: "ord_1003", user_id: "usr_55ee83b", total: "$99.00", status: "completed", created: "2026-10-07 16:55" }
+        ]
+      },
+      api_tokens: {
+        cols: ["id", "name", "token_hash", "last_used", "created"],
+        records: [
+          { id: "tok_prod", name: "Production Gateway", token_hash: "pb_live_...94fa", last_used: "Just now", created: "2026-09-01" },
+          { id: "tok_test", name: "Local Staging Key", token_hash: "pb_test_...12bb", last_used: "Yesterday", created: "2026-09-15" }
+        ]
+      }
+    };
+
+    let activeCollection = 'users';
+
+    function switchCollection(colName, btn) {
+      activeCollection = colName;
+      document.querySelectorAll('.col-item').forEach(b => {
+        b.classList.remove('bg-pbCard', 'text-white', 'border', 'border-pbBorder');
+        b.classList.add('text-slate-400');
+      });
+      btn.classList.add('bg-pbCard', 'text-white', 'border', 'border-pbBorder');
+      btn.classList.remove('text-slate-400');
+
+      document.getElementById('currentColTitle').textContent = colName;
+      document.getElementById('sdkExampleCode').textContent = `pb.collection('${colName}').getList(1, 20)`;
+      renderTable();
+    }
+
+    function renderTable() {
+      const data = database[activeCollection];
+      const thead = document.getElementById('tableHead');
+      const tbody = document.getElementById('tableBody');
+      const q = document.getElementById('recordSearchInput').value.toLowerCase().trim();
+
+      document.getElementById('recordsCountTag').textContent = `(${data.records.length} records)`;
+
+      // Head
+      thead.innerHTML = `
+        <tr>
+          ${data.cols.map(c => `<th class="py-2.5 px-3">${c}</th>`).join('')}
+          <th class="py-2.5 px-3 text-right">actions</th>
+        </tr>
+      `;
+
+      // Filter
+      const filtered = data.records.filter(r => {
+        return Object.values(r).some(val => val.toLowerCase().includes(q));
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="${data.cols.length + 1}" class="py-8 text-center text-slate-500 font-sans">
+              No matching records found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(row => `
+        <tr class="hover:bg-pbCard/50 transition">
+          ${data.cols.map(c => `<td class="py-2 px-3 text-slate-300">${row[c] || '-'}</td>`).join('')}
+          <td class="py-2 px-3 text-right">
+            <button onclick="viewRecordDetails('${row.id}')" class="text-pbTeal hover:underline text-[11px] mr-2">view</button>
+            <button onclick="deleteRecordPrompt('${row.id}')" class="text-rose-400 hover:underline text-[11px]">delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterRecords() {
+      renderTable();
+    }
+
+    function openNewRecordModal() {
+      const title = prompt(`Enter new record title or identifier for collection [${activeCollection}]:`);
+      if (!title) return;
+      const newId = 'rec_' + Math.floor(10000 + Math.random() * 90000);
+      const newRec = { id: newId, created: 'Just now' };
+      if (activeCollection === 'users') {
+        newRec.email = `${title.toLowerCase().replace(/\s+/g,'')}@example.com`;
+        newRec.name = title;
+        newRec.verified = 'true';
+      } else if (activeCollection === 'products') {
+        newRec.title = title;
+        newRec.price = '$39.00';
+        newRec.stock = '50';
+      } else {
+        newRec.name = title;
+      }
+      database[activeCollection].records.unshift(newRec);
+      renderTable();
+      alert(`✅ Record created in collection [${activeCollection}]!`);
+    }
+
+    function viewRecordDetails(id) {
+      const rec = database[activeCollection].records.find(r => r.id === id);
+      alert(`Record JSON:\n${JSON.stringify(rec, null, 2)}`);
+    }
+
+    function deleteRecordPrompt(id) {
+      if (!confirm(`Are you sure you want to delete record ${id}?`)) return;
+      database[activeCollection].records = database[activeCollection].records.filter(r => r.id !== id);
+      renderTable();
+    }
+
+    function openApiRulesModal() {
+      alert(`PocketBase Collection API Rules [${activeCollection}]:\n• List/Search: @request.auth.id != ""\n• View Rule: true (public)\n• Create: @request.auth.id != ""\n• Update: @request.auth.id == id\n• Delete: @request.auth.role == "admin"`);
+    }
+
+    function showLogsModal() {
+      alert("HTTP 200 GET /api/collections/users/records - 2.4ms\nHTTP 200 POST /api/collections/orders/records - 4.1ms\nAll services operational.");
+    }
+
+    function showSettingsModal() {
+      alert("Storage engine: Local SQLite & S3 Object Store compatible.\nLive production auth available at pocketbase.io/_/#/login");
+    }
+
+    function newCollectionPrompt() {
+      const name = prompt("Enter new collection name:");
+      if (!name) return;
+      alert(`Collection "${name}" created with base fields (id, created, updated).`);
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
+

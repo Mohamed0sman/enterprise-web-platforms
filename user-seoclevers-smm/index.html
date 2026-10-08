@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سيوكليفرز | سيرفر بيع وزيادة متابعين | المشروع الرسمي</title>
+  <!-- Google Fonts: Cairo & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            smmDark: '#0B0D19',
+            smmCard: '#13182C',
+            smmBorder: '#1E2746',
+            smmPurple: '#7C3AED',
+            smmPink: '#EC4899',
+            smmCyan: '#06B6D4',
+            smmEmerald: '#10B981'
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'Cairo', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0B0D19;
+      color: #F8FAFC;
+      font-family: 'Cairo', sans-serif;
+    }
+    .neon-border {
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+    }
+    .neon-border:hover {
+      border-color: rgba(124, 58, 237, 0.6);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-purple-600 selection:text-white antialiased">
+
+  <!-- ==================== TOP TICKER ==================== -->
+  <div class="bg-gradient-to-r from-purple-900 via-indigo-950 to-purple-900 py-1.5 px-4 text-center text-xs text-purple-200 border-b border-purple-800/40 font-semibold">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>سيرفر سيوكليفرز الأول في الوطن العربي — أكثر من 65,000 تاجر معتمد</span>
+      </div>
+      <a href="https://seoclevers.com/en" target="_blank" class="hidden sm:inline-flex items-center gap-1 text-white bg-purple-600 hover:bg-purple-500 px-3 py-0.5 rounded-full text-[11px] font-bold transition">
+        <span>زيارة السيرفر الحي</span>
+        <i data-lucide="external-link" class="w-3 h-3"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="sticky top-0 z-40 bg-[#0B0D19]/95 backdrop-blur-md border-b border-smmBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="https://seoclevers.com/en" target="_blank" class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-purple-600/30 font-black text-xl">
+            S
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-black text-white tracking-tight">سيوكليفرز</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">SEOClevers</span>
+            </div>
+            <p class="text-[11px] text-neutral-400">سيرفر بيع وزيادة المتابعين والتفاعل</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-6 text-xs font-bold text-neutral-300">
+        <a href="#orderEngine" class="text-purple-400 hover:text-white transition">حاسبة الطلب الفوري</a>
+        <a href="#services" class="hover:text-white transition">قائمة الخدمات والأسعار</a>
+        <a href="#status" class="hover:text-white transition">حالة خوادم السيرفر</a>
+        <a href="#guarantee" class="hover:text-white transition">الضمان والأمان</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="https://seoclevers.com/en" target="_blank" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/25 flex items-center gap-1.5 transition transform hover:-translate-y-0.5">
+          <span>الموقع الحي (seoclevers.com)</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="py-12 lg:py-16 text-center relative overflow-hidden border-b border-smmBorder">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold mb-4">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <span>الأساليب الآمنة بنسبة 100% المعتمدة لدى خوارزميات المنصات</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto">
+        السيرفر الأول والأسرع لزيادة <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300">
+          المتابعين والتفاعل في الوطن العربي
+        </span>
+      </h1>
+
+      <p class="text-neutral-400 text-xs sm:text-sm max-w-2xl mx-auto mt-4 leading-relaxed">
+        انستقرام • تيك توك • تويتر X • يوتيوب • سناب شات. أسعار الجملة المباشرة، تسليم فوري وتلقائي عبر خوادم مخصصة بدون الحاجة لكلمات المرور.
+      </p>
+
+      <!-- Trust Metrics Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-10">
+        <div class="bg-smmCard border border-smmBorder rounded-2xl p-4">
+          <span class="text-2xl sm:text-3xl font-black text-purple-400 font-sans">+65,000</span>
+          <p class="text-xs text-neutral-400 mt-1">تاجر وصانع محتوى</p>
+        </div>
+        <div class="bg-smmCard border border-smmBorder rounded-2xl p-4">
+          <span class="text-2xl sm:text-3xl font-black text-pink-400 font-sans">+14.8M</span>
+          <p class="text-xs text-neutral-400 mt-1">طلب مكتمل بنجاح</p>
+        </div>
+        <div class="bg-smmCard border border-smmBorder rounded-2xl p-4">
+          <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-sans">0%</span>
+          <p class="text-xs text-neutral-400 mt-1">نسبة الحظر أو المخاطرة</p>
+        </div>
+        <div class="bg-smmCard border border-smmBorder rounded-2xl p-4">
+          <span class="text-2xl sm:text-3xl font-black text-cyan-400 font-sans">99.98%</span>
+          <p class="text-xs text-neutral-400 mt-1">جهوزية الخوادم (Uptime)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ORDER CALCULATOR ENGINE ==================== -->
+  <section id="orderEngine" class="py-14 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold border border-purple-500/20 mb-2">
+        <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+        <span>محرك الطلب الفوري وحساب التكلفة</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black text-white">اختر الخدمة واحسب السعر فورياً</h2>
+    </div>
+
+    <div class="bg-smmCard border border-smmBorder rounded-3xl p-6 sm:p-8 neon-border shadow-2xl space-y-6">
+      
+      <!-- Platform Tabs -->
+      <div>
+        <label class="block text-xs font-bold text-neutral-400 mb-2">1. اختر منصة التواصل:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="platformTabs">
+          <button onclick="changePlatform('Instagram', this)" class="platform-tab active px-3 py-2.5 rounded-xl border border-purple-500 bg-purple-600/20 text-white font-bold text-xs flex items-center justify-center gap-2">
+            <i data-lucide="instagram" class="w-4 h-4 text-pink-400"></i>
+            <span>انستقرام</span>
+          </button>
+          <button onclick="changePlatform('TikTok', this)" class="platform-tab px-3 py-2.5 rounded-xl border border-smmBorder bg-slate-900/60 text-neutral-300 font-bold text-xs flex items-center justify-center gap-2 hover:border-slate-600">
+            <i data-lucide="video" class="w-4 h-4 text-cyan-400"></i>
+            <span>تيك توك</span>
+          </button>
+          <button onclick="changePlatform('Twitter', this)" class="platform-tab px-3 py-2.5 rounded-xl border border-smmBorder bg-slate-900/60 text-neutral-300 font-bold text-xs flex items-center justify-center gap-2 hover:border-slate-600">
+            <i data-lucide="twitter" class="w-4 h-4 text-blue-400"></i>
+            <span>منصة X</span>
+          </button>
+          <button onclick="changePlatform('YouTube', this)" class="platform-tab px-3 py-2.5 rounded-xl border border-smmBorder bg-slate-900/60 text-neutral-300 font-bold text-xs flex items-center justify-center gap-2 hover:border-slate-600">
+            <i data-lucide="youtube" class="w-4 h-4 text-red-400"></i>
+            <span>يوتيوب</span>
+          </button>
+          <button onclick="changePlatform('Snapchat', this)" class="platform-tab px-3 py-2.5 rounded-xl border border-smmBorder bg-slate-900/60 text-neutral-300 font-bold text-xs flex items-center justify-center gap-2 hover:border-slate-600">
+            <i data-lucide="ghost" class="w-4 h-4 text-amber-300"></i>
+            <span>سناب شات</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Service Package Dropdown -->
+      <div>
+        <label class="block text-xs font-bold text-neutral-400 mb-2">2. اختر نوع الخدمة الدقيقة:</label>
+        <select id="serviceSelect" onchange="recalculatePrice()" class="w-full bg-slate-900 border border-smmBorder rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <!-- Dynamically populated -->
+        </select>
+      </div>
+
+      <!-- Link and Quantity Inputs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1.5">3. رابط الحساب أو المنشور:</label>
+          <input type="url" id="targetLink" placeholder="https://instagram.com/your_account" class="w-full bg-slate-900 border border-smmBorder rounded-xl px-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1.5">4. الكمية المطلوبة (العدد):</label>
+          <input type="number" id="orderQty" value="1000" min="100" max="100000" step="100" oninput="recalculatePrice()" class="w-full bg-slate-900 border border-smmBorder rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-purple-500">
+        </div>
+      </div>
+
+      <!-- Price & Order Action Strip -->
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-purple-950/60 to-indigo-950/60 border border-purple-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="text-xs text-neutral-400 block">الإجمالي النهائي للطلب:</span>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <span id="finalPriceSAR" class="text-2xl font-black text-emerald-400 font-sans">15.00 ريال</span>
+            <span id="finalPriceUSD" class="text-xs text-neutral-400 font-sans">($4.00 USD)</span>
+          </div>
+          <span class="text-[11px] text-purple-300 mt-1 block flex items-center gap-1">
+            <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
+            <span>بدء التسليم: فوري خلال 1 - 5 دقائق</span>
+          </span>
+        </div>
+
+        <button onclick="submitTestOrder()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-xl shadow-purple-600/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 active:scale-95">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>تنفيذ وتأكيد الطلب الفوري</span>
+        </button>
+      </div>
+
+      <!-- Order Result Box -->
+      <div id="orderResult" class="hidden p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>تم إرسال الطلب بنجاح إلى خوادم السيرفر!</span>
+          </div>
+          <span class="font-mono text-neutral-400" id="orderIdTag">#ORD-9824</span>
+        </div>
+        <p class="text-neutral-300 mt-2">جاري بدء ضخ الخدمة تلقائياً. يمكنك متابعة حالة الطلب في السيرفر الرسمي الحي: <a href="https://seoclevers.com/en" target="_blank" class="text-purple-400 underline font-bold">seoclevers.com</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#070810] border-t border-smmBorder py-10 mt-auto text-xs text-neutral-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <span class="text-white font-black text-base">سيوكليفرز SEOClevers</span>
+        <span class="text-slate-600">|</span>
+        <p>مشروع رسمي مطور بواسطة Osman. متاح على <a href="https://seoclevers.com/en" target="_blank" class="text-purple-400 underline">seoclevers.com</a></p>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://seoclevers.com/en" target="_blank" class="text-purple-400 hover:text-white transition flex items-center gap-1">
+          <span>السيرفر المباشر الحي</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    const servicesData = {
+      Instagram: [
+        { name: "متابعين انستقرام خليجيين وعرب حقيقيين مع ضمان التعويض", rate1k: 4.00, speed: "5,000 / يوم" },
+        { name: "لايكات انستقرام فورية عالية الجودة مع ظهور في الاكسبلور", rate1k: 0.90, speed: "10,000 / ساعة" },
+        { name: "مشاهدات انستقرام ريلز وفيديوهات فائقة السرعة", rate1k: 0.25, speed: "50,000 / ساعة" },
+        { name: "تعليقات عربية مخصصة وإيجابية لحسابات الأنشطة التجارية", rate1k: 12.00, speed: "500 / يوم" }
+      ],
+      TikTok: [
+        { name: "متابعين تيك توك نشطين حقيقيين لحسابات اللايف والبث", rate1k: 3.50, speed: "3,000 / يوم" },
+        { name: "مشاهدات تيك توك لدخول قائمة التريند والاكسبلور", rate1k: 0.15, speed: "100,000 / ساعة" },
+        { name: "لايكات وحركات إكسبلور تيك توك متناسقة", rate1k: 0.80, speed: "15,000 / ساعة" }
+      ],
+      Twitter: [
+        { name: "متابعين منصة X (تويتر) عرب وسعوديين موثوقين", rate1k: 6.00, speed: "2,000 / يوم" },
+        { name: "إعادة تغريد (Retweets) ولايكات تغريدات فورية", rate1k: 2.20, speed: "5,000 / ساعة" },
+        { name: "تصويت استطلاعات تويتر سريعة ومضمونة", rate1k: 1.50, speed: "10,000 / ساعة" }
+      ],
+      YouTube: [
+        { name: "مشاهدات يوتيوب حقيقية لتحقيق شروط الربح من أدسنس", rate1k: 3.80, speed: "2,000 / يوم" },
+        { name: "مشتركون يوتيوب حقيقيون مع ضمان عدم النقصان", rate1k: 15.00, speed: "300 / يوم" },
+        { name: "ساعات مشاهدة يوتيوب (4000 ساعة للمبتدئين)", rate1k: 25.00, speed: "1,000 / يوم" }
+      ],
+      Snapchat: [
+        { name: "إضافات سناب شات حقيقية لحسابات النجوم والتجار", rate1k: 8.50, speed: "1,000 / يوم" },
+        { name: "مشاهدات ستوري وقصص سناب شات خليجية", rate1k: 4.00, speed: "5,000 / ساعة" }
+      ]
+    };
+
+    let activePlatform = 'Instagram';
+
+    function changePlatform(platform, btn) {
+      activePlatform = platform;
+      document.querySelectorAll('.platform-tab').forEach(b => {
+        b.classList.remove('active', 'border-purple-500', 'bg-purple-600/20', 'text-white');
+        b.classList.add('border-smmBorder', 'bg-slate-900/60', 'text-neutral-300');
+      });
+      btn.classList.add('active', 'border-purple-500', 'bg-purple-600/20', 'text-white');
+      btn.classList.remove('border-smmBorder', 'bg-slate-900/60', 'text-neutral-300');
+
+      updateServiceOptions();
+    }
+
+    function updateServiceOptions() {
+      const select = document.getElementById('serviceSelect');
+      const list = servicesData[activePlatform] || [];
+      select.innerHTML = list.map((item, idx) => `
+        <option value="${item.rate1k}" data-speed="${item.speed}">
+          ${item.name} — ($${item.rate1k.toFixed(2)} لكل 1,000 | سرعة: ${item.speed})
+        </option>
+      `).join('');
+      recalculatePrice();
+    }
+
+    function recalculatePrice() {
+      const select = document.getElementById('serviceSelect');
+      const rate1k = parseFloat(select.value) || 4.0;
+      const qty = parseInt(document.getElementById('orderQty').value) || 1000;
+      
+      const usdTotal = (qty / 1000) * rate1k;
+      const sarTotal = usdTotal * 3.75;
+
+      document.getElementById('finalPriceSAR').textContent = `${sarTotal.toFixed(2)} ريال`;
+      document.getElementById('finalPriceUSD').textContent = `($${usdTotal.toFixed(2)} USD)`;
+    }
+
+    function submitTestOrder() {
+      const link = document.getElementById('targetLink').value.trim();
+      if (!link) {
+        alert("يرجى إدخال رابط الحساب أو المنشور للمتابعة.");
+        return;
+      }
+      const randomOrd = Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('orderIdTag').textContent = `#ORD-${randomOrd}`;
+      const resultBox = document.getElementById('orderResult');
+      resultBox.classList.remove('hidden');
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateServiceOptions();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
+

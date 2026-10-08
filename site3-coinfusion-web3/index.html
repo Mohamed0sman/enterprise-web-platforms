@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoinFusion - Unleash Bitcoin Full Potential</title>
+  <!-- Google Fonts: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cfDark: '#08080C',
+            cfCard: '#111118',
+            cfCardHover: '#181822',
+            cfPurple: '#5546FF',
+            cfPurpleLight: '#6E61FF',
+            cfPurpleDark: '#3A2CD9'
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #08080C;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .glow-purple {
+      box-shadow: 0 0 50px -10px rgba(85, 70, 255, 0.4);
+    }
+    .glow-bitcoin {
+      box-shadow: 0 0 35px -5px rgba(247, 147, 26, 0.45);
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-cfPurple selection:text-white">
+
+  <!-- ==================== FLOATING NAVBAR ==================== -->
+  <header class="fixed top-6 left-0 right-0 z-50 px-4 sm:px-8">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="font-display font-bold text-lg text-white flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-cfPurple to-indigo-400 flex items-center justify-center font-bold text-sm shadow">
+          ⚡
+        </span>
+        <span class="tracking-tight text-neutral-100">CoinFusion</span>
+      </a>
+
+      <!-- Floating Frosted Pill Nav -->
+      <nav class="hidden md:flex items-center space-x-7 bg-neutral-900/80 backdrop-blur-md px-6 py-2 rounded-full border border-neutral-800 text-xs font-semibold text-neutral-300 shadow-xl">
+        <a href="#hero" class="hover:text-white transition">Home</a>
+        <a href="#stacking" class="hover:text-white transition">Build</a>
+        <a href="#features" class="hover:text-white transition">Security</a>
+        <a href="#apps" class="hover:text-white transition">App</a>
+        <a href="#explore" class="hover:text-white transition">Help</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Connect Wallet Button -->
+        <button onclick="openWalletModal()" id="walletBtn" class="bg-cfPurple hover:bg-cfPurpleLight text-white text-xs font-bold px-5 py-2 rounded-full transition shadow-lg glow-purple flex items-center gap-2">
+          <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+          <span id="walletBtnText">Connect Wallet</span>
+        </button>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobileMenuBtn" aria-label="Toggle navigation" class="md:hidden w-9 h-9 rounded-full bg-neutral-900 border border-neutral-800 text-white flex items-center justify-center">
+          <i data-lucide="menu" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer Overlay -->
+  <div id="mobileDrawer" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden transition-opacity">
+    <div class="bg-cfDark border-r border-neutral-800 h-full w-4/5 max-w-sm p-6 flex flex-col justify-between shadow-2xl">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-neutral-800">
+          <div class="font-display font-bold text-lg text-white flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-gradient-to-tr from-cfPurple to-indigo-400 flex items-center justify-center font-bold text-xs">⚡</span>
+            <span>CoinFusion</span>
+          </div>
+          <button id="closeDrawerBtn" class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-base font-semibold text-neutral-300">
+          <a href="#hero" class="mobile-nav-link hover:text-white transition">Home</a>
+          <a href="#stacking" class="mobile-nav-link hover:text-white transition">Build & Stacking</a>
+          <a href="#features" class="mobile-nav-link hover:text-white transition">Security</a>
+          <a href="#apps" class="mobile-nav-link hover:text-white transition">Ecosystem Apps</a>
+          <a href="#explore" class="mobile-nav-link hover:text-white transition">Help & Docs</a>
+        </nav>
+      </div>
+      <div class="space-y-3 pt-6 border-t border-neutral-800">
+        <button onclick="openWalletModal(); mobileDrawer.classList.add('hidden');" class="w-full text-center bg-cfPurple hover:bg-cfPurpleLight text-white font-bold py-3 rounded-full text-xs shadow-lg glow-purple">
+          Connect Wallet
+        </button>
+        <a href="../index.html" class="block w-full text-center bg-neutral-900 border border-neutral-800 text-neutral-300 font-bold py-2.5 rounded-full text-xs hover:text-white transition">
+          ← معرض المواقع الرئيسي
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web3 Wallet Selector Modal -->
+  <div id="walletModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-cfCard border border-neutral-800 rounded-3xl max-w-sm w-full p-6 space-y-5 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <h3 class="text-sm font-bold font-display text-white">Select Web3 Wallet</h3>
+        </div>
+        <button onclick="closeWalletModal()" class="w-7 h-7 rounded-full bg-neutral-900 text-neutral-400 hover:text-white flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2.5">
+        <!-- Hiro / Leather Wallet -->
+        <button onclick="selectWallet('Leather / Hiro (Stacks)')" class="w-full p-3.5 rounded-2xl bg-neutral-900 hover:bg-cfPurple/20 border border-neutral-800 hover:border-cfPurple flex items-center justify-between text-left transition group">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">H</span>
+            <div>
+              <p class="text-xs font-bold text-white group-hover:text-cfPurpleLight">Leather (Hiro)</p>
+              <p class="text-[10px] text-neutral-400">Popular Stacks & Bitcoin wallet</p>
+            </div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Detected</span>
+        </button>
+
+        <!-- Xverse Wallet -->
+        <button onclick="selectWallet('Xverse Bitcoin Wallet')" class="w-full p-3.5 rounded-2xl bg-neutral-900 hover:bg-cfPurple/20 border border-neutral-800 hover:border-cfPurple flex items-center justify-between text-left transition group">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">X</span>
+            <div>
+              <p class="text-xs font-bold text-white group-hover:text-cfPurpleLight">Xverse Wallet</p>
+              <p class="text-[10px] text-neutral-400">Ordinals & Stacks support</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-neutral-500"></i>
+        </button>
+
+        <!-- MetaMask -->
+        <button onclick="selectWallet('MetaMask Snaps')" class="w-full p-3.5 rounded-2xl bg-neutral-900 hover:bg-cfPurple/20 border border-neutral-800 hover:border-cfPurple flex items-center justify-between text-left transition group">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">🦊</span>
+            <div>
+              <p class="text-xs font-bold text-white group-hover:text-cfPurpleLight">MetaMask (Snaps)</p>
+              <p class="text-[10px] text-neutral-400">EVM & Stacks connector</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-neutral-500"></i>
+        </button>
+      </div>
+
+      <p class="text-[10px] text-neutral-500 text-center">
+        By connecting, you agree to CoinFusion Terms of Service & Privacy Policy.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="pt-36 pb-20 px-6 sm:px-12 text-center relative overflow-hidden" id="hero">
+    <!-- Background Glow Aura -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cfPurple/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto space-y-6 relative z-10">
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold font-display tracking-tight text-white leading-[1.08]">
+        Unleash Bitcoin<br>full potential
+      </h1>
+      <p class="text-neutral-400 text-sm sm:text-base font-normal max-w-xl mx-auto leading-relaxed">
+        Stacks unlocks DeFi, NFTs apps and smart contracts for Bitcoin. Bringing smart contract capability to the most secure blockchain.
+      </p>
+
+      <div class="pt-4">
+        <a href="#stacking" class="inline-block bg-cfPurple hover:bg-cfPurpleLight text-white text-xs font-bold px-8 py-3.5 rounded-full transition shadow-lg glow-purple">
+          Explore the ecosystem
+        </a>
+      </div>
+
+      <!-- Ecosystem Partner Pills Row -->
+      <div class="pt-16 max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-3.5 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
+            H
+          </div>
+          <div class="text-left">
+            <p class="text-xs font-bold text-white">Hiro System</p>
+            <p class="text-[10px] text-neutral-400">Bitcoin Dev Tools</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-3.5 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
+            X
+          </div>
+          <div class="text-left">
+            <p class="text-xs font-bold text-white">Xverse</p>
+            <p class="text-[10px] text-neutral-400">Bitcoin Web3 Wallet</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-3.5 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs">
+            F
+          </div>
+          <div class="text-left">
+            <p class="text-xs font-bold text-white">Foundation</p>
+            <p class="text-[10px] text-neutral-400">Stacks Governance</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-3.5 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+            B
+          </div>
+          <div class="text-left">
+            <p class="text-xs font-bold text-white">Bitcoin DeFi</p>
+            <p class="text-[10px] text-neutral-400">ALEX Protocols</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STACKING SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 sm:px-12 py-24" id="stacking">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <!-- Left Content -->
+      <div class="lg:col-span-6 space-y-6">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display leading-tight">
+          Stacking, a<br>new way to<br>earn bitcoin
+        </h2>
+        <p class="text-neutral-400 text-xs sm:text-sm leading-relaxed max-w-md">
+          Lock your Stacks (STX) tokens temporarily to support the network's consensus and security, and earn native Bitcoin rewards directly in your self-custody wallet without slashing risk.
+        </p>
+        <div>
+          <button class="bg-cfPurple hover:bg-cfPurpleLight text-white text-xs font-bold px-7 py-3 rounded-full transition shadow-md glow-purple">
+            Start Stacking
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Visual Widget Cards -->
+      <div class="lg:col-span-6 relative flex flex-col items-center">
+        <!-- Floating 9.5% APY Card -->
+        <div class="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl relative space-y-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-xs text-neutral-400 font-medium">Estimated Annual Yield</p>
+              <p class="text-3xl font-extrabold font-display text-white mt-0.5">9.5% APY</p>
+            </div>
+            <!-- Spinning Gold Bitcoin Coin Graphic -->
+            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-0.5 glow-bitcoin animate-spin" style="animation-duration: 16s;">
+              <div class="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center font-display font-black text-amber-400 text-xl">
+                ₿
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Value Locked Purple Card -->
+          <div class="bg-cfPurple rounded-2xl p-5 shadow-lg space-y-1">
+            <p class="text-xs text-white/80 font-medium">Total value locked</p>
+            <p class="text-2xl sm:text-3xl font-black font-display text-white">$864,896,126</p>
+          </div>
+
+          <!-- Interactive Calculator -->
+          <div class="bg-black/50 border border-neutral-800 rounded-2xl p-4 space-y-3">
+            <div class="flex justify-between items-center text-xs font-semibold text-neutral-300">
+              <span>Calculate Stacking Yield</span>
+              <span class="text-amber-400 font-bold">~9.5% APY</span>
+            </div>
+            <div class="flex items-center bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 gap-2">
+              <input 
+                type="number" 
+                id="stxInput" 
+                value="2500" 
+                min="100" 
+                step="100" 
+                oninput="calcYield()" 
+                class="w-full bg-transparent text-white font-mono text-sm focus:outline-none"
+              >
+              <span class="text-xs font-bold text-cfPurpleLight">STX</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1 text-left">
+              <div class="bg-neutral-900/80 p-2.5 rounded-xl border border-neutral-800/80">
+                <p class="text-[10px] text-neutral-400 font-medium">Est. Annual BTC</p>
+                <p id="estBtc" class="text-xs font-extrabold text-amber-400 font-mono mt-0.5">0.0038 BTC</p>
+              </div>
+              <div class="bg-neutral-900/80 p-2.5 rounded-xl border border-neutral-800/80">
+                <p class="text-[10px] text-neutral-400 font-medium">Monthly Payout</p>
+                <p id="estMonthly" class="text-xs font-extrabold text-emerald-400 font-mono mt-0.5">~0.00031 BTC</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer of widget -->
+          <div class="flex justify-between items-center text-[11px] text-neutral-400 pt-1">
+            <div class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-cfPurple text-white flex items-center justify-center text-[10px]">✣</span>
+              <span>Stats courtesy of Stacking Club</span>
+            </div>
+            <span class="text-emerald-400 font-bold">● Network Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STACKS UNLEASHED BITCOIN (3 CARDS) ==================== -->
+  <section class="max-w-6xl mx-auto px-6 sm:px-12 py-20" id="features">
+    <div class="text-center space-y-3 pb-14">
+      <h2 class="text-3xl sm:text-4xl font-extrabold font-display text-white">
+        Stacks unleashed<br>Bitcoin
+      </h2>
+    </div>
+
+    <!-- 3 Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <div class="bg-neutral-100 text-neutral-900 rounded-3xl p-7 space-y-8 flex flex-col justify-between hover:shadow-2xl transition">
+        <div class="space-y-4">
+          <div class="w-10 h-10 rounded-full bg-cfPurple text-white flex items-center justify-center shadow">
+            <i data-lucide="activity" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display">Proof of<br>transfer</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            The unique consensus mechanism connecting Bitcoin and Stacks, providing 100% Bitcoin finality without modifying Bitcoin core.
+          </p>
+        </div>
+        <a href="#" class="text-xs font-bold text-cfPurple flex items-center gap-1 hover:underline">
+          Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-neutral-100 text-neutral-900 rounded-3xl p-7 space-y-8 flex flex-col justify-between hover:shadow-2xl transition">
+        <div class="space-y-4">
+          <div class="w-10 h-10 rounded-full bg-cfPurple text-white flex items-center justify-center shadow">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display">Bitcoin to<br>NFTs</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            Mint, collect and trade secure digital artifacts and digital property natively registered to Bitcoin's indelible ledger.
+          </p>
+        </div>
+        <a href="#" class="text-xs font-bold text-cfPurple flex items-center gap-1 hover:underline">
+          Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-neutral-100 text-neutral-900 rounded-3xl p-7 space-y-8 flex flex-col justify-between hover:shadow-2xl transition">
+        <div class="space-y-4">
+          <div class="w-10 h-10 rounded-full bg-cfPurple text-white flex items-center justify-center shadow">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display">Bitcoin to<br>DeFi</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            Borrow, lend, provide liquidity, and trade with decentralized non-custodial Bitcoin applications powered by Clarity smart contracts.
+          </p>
+        </div>
+        <a href="#" class="text-xs font-bold text-cfPurple flex items-center gap-1 hover:underline">
+          Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== BUILD POWERFUL APPS SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 sm:px-12 py-16" id="apps">
+    <div class="bg-cfCard border border-neutral-800 rounded-3xl p-8 sm:p-14 relative overflow-hidden">
+      <!-- Glow Aura in background -->
+      <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-cfPurple/20 rounded-full blur-[90px] pointer-events-none"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-6">
+          <span class="text-xs font-bold text-cfPurple tracking-wider uppercase">Stacks For Developers</span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold font-display text-white leading-tight">
+            Build powerful<br>apps, secured<br>by bitcoin
+          </h2>
+          <p class="text-neutral-400 text-xs sm:text-sm leading-relaxed max-w-md">
+            Write predictable smart contracts using Clarity language, where what you see is what you execute. Enjoy Bitcoin's uncompromised security.
+          </p>
+          <button class="bg-cfPurple hover:bg-cfPurpleLight text-white text-xs font-bold px-7 py-3 rounded-full transition shadow-md glow-purple">
+            Start Building
+          </button>
+        </div>
+
+        <!-- Right 3D Visual Mockup -->
+        <div class="lg:col-span-5 flex justify-center relative">
+          <div class="relative w-64 h-72 sm:w-72 sm:h-80 flex items-center justify-center">
+            <!-- 3D Glowing Shield -->
+            <div class="absolute -top-2 -left-2 w-28 h-40 bg-gradient-to-br from-cfPurple to-indigo-700 rounded-2xl shadow-2xl p-4 flex flex-col justify-between z-20 transform -rotate-6 border border-white/20">
+              <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <p class="text-[10px] font-bold text-white">Bitcoin Proof Security</p>
+            </div>
+
+            <!-- Dark Phone Card Mockup -->
+            <div class="w-48 h-64 bg-neutral-900 border border-neutral-700 rounded-3xl p-3 shadow-2xl relative z-10 space-y-3">
+              <div class="w-10 h-1 bg-neutral-700 rounded-full mx-auto"></div>
+              <div class="bg-neutral-800 rounded-xl p-3 text-center space-y-1">
+                <p class="text-[10px] text-neutral-400">Total Balance</p>
+                <p class="text-sm font-bold text-white">4.8210 BTC</p>
+              </div>
+              <div class="grid grid-cols-2 gap-1.5 text-[9px] text-center font-bold">
+                <div class="bg-cfPurple text-white py-1.5 rounded-lg">Deposit</div>
+                <div class="bg-neutral-800 text-neutral-300 py-1.5 rounded-lg">Withdraw</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEE WHAT'S BEING BUILT ==================== -->
+  <section class="max-w-6xl mx-auto px-6 sm:px-12 py-20">
+    <div class="space-y-8">
+      <h2 class="text-3xl font-extrabold font-display text-white">See what<br>being built</h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-4 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+            ❊
+          </div>
+          <div>
+            <p class="text-xs font-bold text-white">Trust Machines</p>
+            <p class="text-[10px] text-neutral-400">Bitcoin ecosystem</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-4 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+            ⌘
+          </div>
+          <div>
+            <p class="text-xs font-bold text-white">Traffic Solutions</p>
+            <p class="text-[10px] text-neutral-400">L2 bridging</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-4 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+            ⨁
+          </div>
+          <div>
+            <p class="text-xs font-bold text-white">Xverse App</p>
+            <p class="text-[10px] text-neutral-400">Bitcoin wallet</p>
+          </div>
+        </div>
+
+        <div class="bg-cfCard border border-neutral-800 rounded-2xl p-4 flex items-center gap-3 hover:border-neutral-700 transition">
+          <div class="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold">
+            ∆
+          </div>
+          <div>
+            <p class="text-xs font-bold text-white">ALEX DeFi</p>
+            <p class="text-[10px] text-neutral-400">DEX & Liquidity</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STACKS MISSION SECTION ==================== -->
+  <section class="max-w-6xl mx-auto px-6 sm:px-12 py-20 border-t border-neutral-800/80">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-8 space-y-6">
+        <p class="text-sm sm:text-base text-neutral-300 font-medium leading-relaxed max-w-xl">
+          Stacks mission: to create a better, user-owned decentralized internet. To do it we're unleashing Bitcoin, the most battle-tested and valuable blockchain in the world.
+        </p>
+
+        <div class="flex items-center gap-4">
+          <button class="bg-cfPurple hover:bg-cfPurpleLight text-white text-xs font-bold px-6 py-2.5 rounded-full transition shadow">
+            Learn about us
+          </button>
+          <a href="#" class="text-xs text-neutral-400 hover:text-white transition">Read Whitepaper</a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 flex justify-center">
+        <!-- Abstract Pill Emblem -->
+        <div class="flex items-center gap-3 bg-neutral-900 border border-neutral-800 rounded-full p-2 pr-6 shadow-xl">
+          <div class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-black font-extrabold text-lg">
+            ₿
+          </div>
+          <span class="text-neutral-500 font-bold">⇄</span>
+          <div class="w-12 h-12 rounded-full bg-cfPurple flex items-center justify-center text-white font-bold text-lg">
+            ✣
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EXPLORE STACKS & FOOTER ==================== -->
+  <footer class="bg-black text-white pt-20 pb-12 px-6 sm:px-12 border-t border-neutral-900" id="explore">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Tag Cloud -->
+      <div class="space-y-4">
+        <h3 class="text-2xl sm:text-3xl font-extrabold font-display">Explore Stacks</h3>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Wallets</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Docs</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Get STX</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Apps</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Learning resources</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Prototypes</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Forum</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Blog</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Resources</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Videos Learning</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Software Learning</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">Smart contracts</a>
+          <a href="#" class="px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 hover:border-cfPurple transition">NFTs</a>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="border-t border-neutral-900 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-neutral-500 gap-4">
+        <span class="font-bold text-sm text-white">CoinFusion</span>
+        <div class="flex flex-wrap gap-6 text-[11px]">
+          <a href="#" class="hover:text-white">Terms & Conditions</a>
+          <a href="#" class="hover:text-white">Sitemap</a>
+          <a href="#" class="hover:text-white">Privacy Policy</a>
+          <a href="#" class="hover:text-white">Cookies Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Return to Hub Button -->
+  <a href="../index.html" class="fixed bottom-6 left-6 z-40 bg-neutral-900 text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold hover:bg-black hover:scale-105 transition border border-neutral-700">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    <span>معرض المواقع الرئيسي</span>
+  </a>
+
+  <!-- Floating Toast Notification -->
+  <div id="toastBox" class="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2.5 border border-cfPurple/40 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <span class="w-2.5 h-2.5 rounded-full bg-cfPurpleLight animate-ping"></span>
+    <span id="toastMsg">تم بنجاح!</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Mobile Drawer Handlers
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+
+    if (mobileBtn && mobileDrawer) {
+      mobileBtn.addEventListener('click', () => {
+        mobileDrawer.classList.remove('hidden');
+      });
+      closeDrawerBtn.addEventListener('click', () => {
+        mobileDrawer.classList.add('hidden');
+      });
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.add('hidden');
+        });
+      });
+    }
+
+    // Web3 Wallet Modal & Connection
+    const walletModal = document.getElementById('walletModal');
+    function openWalletModal() {
+      if (walletModal) walletModal.classList.remove('hidden');
+    }
+    function closeWalletModal() {
+      if (walletModal) walletModal.classList.add('hidden');
+    }
+
+    let isConnected = false;
+    function selectWallet(walletName) {
+      closeWalletModal();
+      const btnText = document.getElementById('walletBtnText');
+      const btn = document.getElementById('walletBtn');
+      isConnected = true;
+      btnText.innerText = 'SP3K...7Q4B';
+      btn.classList.remove('bg-cfPurple', 'hover:bg-cfPurpleLight');
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      showToast(`Connected via ${walletName}! Balance: 2,500 STX`);
+    }
+
+    // Staking Yield Calculator
+    function calcYield() {
+      const input = document.getElementById('stxInput');
+      const estBtc = document.getElementById('estBtc');
+      const estMonthly = document.getElementById('estMonthly');
+      const amount = parseFloat(input.value) || 0;
+      
+      // Assume 1 STX = $1.90, BTC = $63,000, APY = 9.5%
+      const annualStxRewardValue = (amount * 1.90) * 0.095;
+      const btcReward = (annualStxRewardValue / 63000).toFixed(5);
+      const monthlyBtc = (btcReward / 12).toFixed(6);
+
+      estBtc.innerText = `${btcReward} BTC`;
+      estMonthly.innerText = `~${monthlyBtc} BTC`;
+    }
+
+    // Toast Notification helper
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const text = document.getElementById('toastMsg');
+      text.innerText = msg;
+      box.classList.remove('translate-y-24', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        box.classList.add('translate-y-24', 'opacity-0');
+        box.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+</body>
+</html>
+

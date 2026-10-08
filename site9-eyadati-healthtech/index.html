@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عيادتي — نظام إدارة العيادات الطبية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#F1F3F3;
+  --surface:#FFFFFF;
+  --ink:#17201E;
+  --ink-2:#3E4A46;
+  --muted:#77837E;
+  --rule:#DFE3E2;
+  --rule-soft:#ECEEED;
+  --brand:#154C77;
+  --brand-2:#1D6390;
+  --brand-soft:#E6EEF4;
+  --gold:#B9902E;
+  --gold-soft:#FBF2DC;
+  --red:#9A3324;
+  --red-soft:#FBEBE8;
+  --green:#2C6B4F;
+  --green-soft:#E7F1EB;
+  --r:5px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,"Segoe UI",sans-serif;
+  background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#C9CFC9;border-radius:9px;border:2px solid var(--canvas)}
+::-webkit-scrollbar-track{background:transparent}
+
+.app{display:grid;grid-template-columns:246px 1fr;min-height:100vh}
+.nav{background:var(--brand);color:#CFDCE6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 18px 14px}
+.mark{width:34px;height:34px;border-radius:7px;background:var(--gold);color:#1B1403;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.brand b{color:#fff;font-weight:600;font-size:16px;letter-spacing:.2px;display:block}
+.brand span{font-size:11.5px;color:#8FAAC0;display:block;margin-top:-2px}
+.org{margin:2px 12px 10px;padding:9px 11px;border-radius:var(--r);background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07)}
+.org b{display:block;color:#EAF1F1;font-size:12.5px;font-weight:500}
+.org i{display:block;font-style:normal;font-size:11px;color:#8FAAC0;margin-top:1px}
+.navscroll{flex:1;overflow-y:auto;padding:2px 10px 14px}
+.navscroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-color:transparent}
+.navgrp{font-size:10.5px;color:#6F8CA4;padding:14px 8px 6px;font-weight:500}
+.navitem{display:flex;align-items:center;gap:9px;width:100%;text-align:right;padding:8px 10px;border-radius:var(--r);color:#B9CBD8;font-size:13.5px;border-right:2px solid transparent;margin-bottom:1px}
+.navitem:hover{background:rgba(255,255,255,.06);color:#fff}
+.navitem.on{background:rgba(255,255,255,.1);color:#fff;border-right-color:var(--gold);font-weight:500}
+.navitem svg{width:16px;height:16px;flex:none;opacity:.85}
+.navitem .tag{margin-inline-start:auto;font-size:10.5px;background:var(--gold);color:#1B1403;border-radius:20px;padding:0 6px;font-weight:600}
+.navfoot{padding:10px 14px 14px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#7E96A6;display:flex;justify-content:space-between;align-items:center}
+.dot-ok{width:7px;height:7px;border-radius:50%;background:#5FD0A5;display:inline-block;margin-inline-end:5px}
+
+main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(241,243,243,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:11px 22px;display:flex;align-items:center;gap:14px}
+.crumb{display:flex;align-items:baseline;gap:8px;min-width:0}
+.crumb h1{font-size:17px;font-weight:600;letter-spacing:-.2px;white-space:nowrap}
+.crumb em{font-style:normal;color:var(--muted);font-size:12.5px;white-space:nowrap}
+.search{margin-inline-start:auto;position:relative;width:270px;max-width:32vw}
+.search input{width:100%;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:7px 32px 7px 10px;font-size:13px}
+.search input::placeholder{color:#9AA5A0}
+.search svg{position:absolute;right:10px;top:8px;width:14px;height:14px;color:#9AA5A0}
+.pick{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:6px 10px;font-size:12.5px;white-space:nowrap}
+.pick b{font-weight:500}
+.pick svg{width:15px;height:15px;flex:none;color:var(--muted)}
+.pick select{border:none;background:none;font-size:12.5px;font-weight:500;cursor:pointer;max-width:150px}
+.iconbtn{width:32px;height:32px;border:1px solid var(--rule);background:var(--surface);border-radius:var(--r);display:grid;place-items:center;position:relative;color:var(--ink-2)}
+.iconbtn:hover{border-color:#C6CCC5}
+.iconbtn svg{width:16px;height:16px}
+.bell-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+.me{display:flex;align-items:center;gap:8px;padding-inline-start:12px;border-inline-start:1px solid var(--rule)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:600;font-size:12px}
+.me small{display:block;color:var(--muted);font-size:11px;margin-top:-2px}
+.me b{font-size:12.5px;font-weight:500}
+
+.view{padding:20px 22px 46px;flex:1}
+.view.flush{padding:0}
+
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r)}
+.phead{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule-soft)}
+.phead h2{font-size:13.5px;font-weight:600}
+.phead .sub{font-size:11.5px;color:var(--muted)}
+.phead .right{margin-inline-start:auto;display:flex;gap:6px;align-items:center}
+.pad{padding:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g-main{grid-template-columns:1fr 316px;align-items:start}
+.g-hero{grid-template-columns:1.62fr 1fr}
+
+.btn{background:var(--brand);color:#fff;border-radius:var(--r);padding:7px 13px;font-size:12.5px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--brand)}
+.btn:hover{background:var(--brand-2)}
+.btn svg{width:14px;height:14px}
+.btn.ghost{background:var(--surface);color:var(--ink-2);border-color:var(--rule)}
+.btn.ghost:hover{background:#F7F8F6;border-color:#C6CCC5}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.gold:hover{filter:brightness(1.06)}
+.btn.sm{padding:5px 9px;font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 7px;border-radius:20px;font-weight:500}
+.chip.pos{background:var(--green-soft);color:var(--green)}
+.chip.neg{background:var(--red-soft);color:var(--red)}
+.chip.warn{background:var(--gold-soft);color:var(--gold)}
+.chip.mute{background:#F0F2EF;color:var(--muted)}
+.lbl{font-size:11.5px;color:var(--muted)}
+.sep{height:1px;background:var(--rule-soft)}
+
+table{width:100%;border-collapse:collapse}
+.tbl th{text-align:right;font-size:11.5px;font-weight:500;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--rule);white-space:nowrap;background:#FAFBFB}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--rule-soft);font-size:13px;vertical-align:middle}
+.tbl tbody tr:hover{background:#FAFBFB}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .t-l{text-align:left}
+.tbl .t-c{text-align:center}
+.tbl tfoot td{background:#FAFBFB;font-weight:600;border-top:1px solid var(--rule);font-size:13px}
+.t-scroll{overflow:auto;max-height:420px}
+.mini{font-size:11.5px;color:var(--muted);display:block}
+
+.field{display:block;margin-bottom:11px}
+.field span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--rule);border-radius:4px;padding:7px 9px;font-size:13px;background:var(--surface)}
+.field input:focus,.field select:focus{border-color:var(--brand-2);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+.inline-in{border:1px solid transparent;border-radius:4px;padding:4px 6px;font-size:13px;width:100%;background:transparent}
+.inline-in:hover{border-color:var(--rule)}
+.inline-in:focus{border-color:var(--brand-2);background:#fff;outline:none}
+
+.bar{height:6px;background:var(--rule-soft);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand-2);border-radius:6px}
+.bar i.gold{background:var(--gold)}
+.bar i.red{background:var(--red)}
+
+.hero{position:relative;overflow:hidden;min-height:224px;display:flex;flex-direction:column}
+.hero .top{padding:16px 16px 0;position:relative;z-index:2}
+.hero .fig{font-size:42px;font-weight:600;letter-spacing:-1.4px;line-height:1.1;margin-top:2px}
+.hero .fig small{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0;margin-inline-start:4px}
+.hero .meta{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.hero svg.area{width:100%;height:120px;display:block;margin-top:auto}
+.hero .months{display:flex;justify-content:space-between;padding:0 14px 10px;font-size:10.5px;color:#9AA5A0}
+
+.cells{display:grid;grid-template-columns:repeat(4,1fr)}
+.cell{padding:13px 15px;border-inline-start:1px solid var(--rule-soft)}
+.cell:first-child{border:none}
+.cell b{display:block;font-size:20px;font-weight:600;letter-spacing:-.5px;margin:3px 0 2px}
+.cell .lbl{font-size:11.5px}
+
+.stack{display:flex;flex-direction:column}
+.row-i{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--rule-soft);font-size:13px}
+.row-i:last-child{border-bottom:none}
+.row-i .amt{margin-inline-start:auto;font-weight:500}
+.swatch{width:26px;height:26px;border-radius:5px;display:grid;place-items:center;flex:none;background:var(--brand-soft);color:var(--brand)}
+.swatch svg{width:14px;height:14px}
+.swatch.g{background:var(--gold-soft);color:var(--gold)}
+.swatch.r{background:var(--red-soft);color:var(--red)}
+.swatch.v{background:var(--green-soft);color:var(--green)}
+
+.rank{display:flex;align-items:center;gap:10px;padding:8px 14px}
+.rank .nm{width:118px;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .bar{flex:1}
+.rank .vl{font-size:12px;color:var(--muted);width:62px;text-align:left}
+
+.posv{display:grid;grid-template-columns:1fr 372px;height:calc(100vh - 55px)}
+.pos-left{display:flex;flex-direction:column;min-width:0;background:var(--canvas)}
+.pos-bar{display:flex;gap:8px;padding:12px 16px;align-items:center;border-bottom:1px solid var(--rule);background:var(--surface);flex-wrap:wrap}
+.cats{display:flex;gap:6px;overflow:auto;padding-bottom:2px}
+.cat{padding:5px 11px;border:1px solid var(--rule);border-radius:20px;font-size:12.5px;white-space:nowrap;background:var(--surface)}
+.cat.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;padding:14px 16px;overflow:auto}
+.pcard{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:10px;text-align:right;position:relative;transition:transform .08s}
+.pcard:hover{border-color:var(--brand-2)}
+.pcard:active{transform:scale(.975)}
+.pcard .ic{height:46px;border-radius:4px;background:var(--brand-soft);display:grid;place-items:center;color:var(--brand);font-size:13px;font-weight:600;margin-bottom:8px;text-align:center;padding:0 4px;line-height:1.2}
+.pcard b{display:block;font-size:12.5px;font-weight:500;line-height:1.35;min-height:34px}
+.pcard .pr{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12.5px}
+.pcard .st{color:var(--muted);font-size:11px}
+.pcard .st.low{color:var(--red)}
+.cart{background:var(--surface);border-inline-start:1px solid var(--rule);display:flex;flex-direction:column;height:100%}
+.cart-head{padding:12px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px}
+.cart-lines{flex:1;overflow:auto}
+.cline{display:grid;grid-template-columns:1fr auto;gap:4px 8px;padding:10px 14px;border-bottom:1px solid var(--rule-soft)}
+.cline b{font-size:12.5px;font-weight:500}
+.qty{display:flex;align-items:center;gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;width:fit-content}
+.qty button{width:24px;height:24px;font-size:14px;color:var(--ink-2);line-height:1}
+.qty button:hover{background:#F2F4F1}
+.qty span{width:30px;text-align:center;font-size:12.5px;border-inline:1px solid var(--rule)}
+.cart-sum{border-top:1px solid var(--rule);padding:12px 14px;background:#FAFBFB}
+.sum-r{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;color:var(--ink-2)}
+.sum-r.total{font-size:18px;font-weight:600;color:var(--ink);padding-top:8px;margin-top:6px;border-top:1px dashed var(--rule)}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:11px}
+.empty{display:grid;place-items:center;height:100%;text-align:center;color:var(--muted);font-size:12.5px;padding:26px;gap:8px}
+.empty svg{width:34px;height:34px;color:#C4CCC7}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--rule);margin-bottom:16px;overflow:auto}
+.tab{padding:8px 13px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--brand);font-weight:500}
+
+.toast{position:fixed;bottom:20px;left:20px;z-index:90;background:var(--ink);color:#fff;padding:11px 15px;border-radius:var(--r);font-size:13px;display:flex;gap:9px;align-items:center;box-shadow:0 8px 26px rgba(20,30,28,.22);transform:translateY(14px);opacity:0;pointer-events:none;transition:.22s}
+.toast.show{transform:none;opacity:1}
+.toast svg{width:15px;height:15px;color:#6FD3A8}
+.modal-bg{position:fixed;inset:0;background:rgba(18,26,24,.4);z-index:80;display:none;place-items:center;padding:20px}
+.modal-bg.show{display:grid}
+.modal{background:var(--surface);border-radius:7px;width:min(440px,100%);overflow:hidden;box-shadow:0 22px 60px rgba(15,25,22,.3)}
+.modal-h{padding:14px 16px;border-bottom:1px solid var(--rule-soft);display:flex;align-items:center}
+.modal-h b{font-size:14px}
+.modal-h button{margin-inline-start:auto;color:var(--muted);font-size:18px;line-height:1}
+.pop{position:absolute;top:46px;left:22px;width:326px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);box-shadow:0 14px 40px rgba(15,25,22,.16);z-index:40;display:none;overflow:hidden}
+.pop.show{display:block}
+.note{display:flex;gap:10px;padding:11px 13px;border-bottom:1px solid var(--rule-soft);font-size:12.5px;align-items:flex-start}
+.note:last-child{border:none}
+.note time{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+
+@media (prefers-reduced-motion:no-preference){
+  .app{animation:fade .3s ease}
+  .view>*{animation:rise .34s cubic-bezier(.22,.7,.3,1) backwards}
+  .view>*:nth-child(2){animation-delay:.05s}
+  .view>*:nth-child(3){animation-delay:.1s}
+  .view>*:nth-child(4){animation-delay:.14s}
+}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}}
+
+@media(max-width:1180px){
+  .g-main,.g-hero{grid-template-columns:1fr}
+  .posv{grid-template-columns:1fr 320px}
+}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .nav{position:fixed;inset-inline-start:0;top:0;width:246px;z-index:60;transform:translateX(100%);transition:.2s}
+  .nav.open{transform:none;box-shadow:-10px 0 40px rgba(0,0,0,.2)}
+  .burger{display:grid!important}
+  .search{display:none}
+  .g2,.g3,.cells{grid-template-columns:1fr 1fr}
+  .posv{grid-template-columns:1fr;height:auto}
+  .cart{border-inline-start:none;border-top:1px solid var(--rule)}
+  .me small{display:none}
+}
+.burger{display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modalbg"><div class="modal" id="modal"></div></div>
+<script>
+/* ============ بيانات تجريبية ============ */
+const DB = {
+  org:"مجمع عيادات الشفاء التخصصي", lic:"ترخيص وزارة الصحة رقم 2204471", taxRate:.15,
+  branches:[
+    {id:"b1",name:"الفرع الرئيسي — الرياض (الملقا)",f:1},
+    {id:"b2",name:"فرع جدة (الروضة)",f:.61},
+    {id:"b3",name:"فرع الدمام (الشاطئ)",f:.37},
+  ],
+  months:["أكتوبر","نوفمبر","ديسمبر","يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر"],
+  revenue:[86,92,101,97,108,118,112,124,119,131,138,149],
+  services:[
+    {n:"كشف عام",c:"كشوفات",p:180,dur:"15 دقيقة",code:"CNS-01"},
+    {n:"كشف تخصصي",c:"كشوفات",p:280,dur:"20 دقيقة",code:"CNS-02"},
+    {n:"استشارة متابعة",c:"كشوفات",p:120,dur:"10 دقائق",code:"CNS-03"},
+    {n:"تحليل دم شامل",c:"مختبر",p:240,dur:"عيّنة + نتيجة يومين",code:"LAB-11"},
+    {n:"تحليل سكر صائم",c:"مختبر",p:60,dur:"عيّنة فورية",code:"LAB-14"},
+    {n:"أشعة سينية",c:"أشعة",p:190,dur:"20 دقيقة",code:"RAD-02"},
+    {n:"أشعة موجات صوتية",c:"أشعة",p:260,dur:"25 دقيقة",code:"RAD-05"},
+    {n:"تنظيف أسنان",c:"أسنان",p:220,dur:"30 دقيقة",code:"DNT-01"},
+    {n:"حشو ضرس",c:"أسنان",p:350,dur:"45 دقيقة",code:"DNT-04"},
+    {n:"جلسة علاج طبيعي",c:"علاج طبيعي",p:150,dur:"40 دقيقة",code:"PHY-02"},
+    {n:"تطعيم أطفال",c:"أطفال",p:90,dur:"10 دقائق",code:"PED-03"},
+    {n:"متابعة حمل",c:"نساء وولادة",p:220,dur:"20 دقيقة",code:"GYN-02"},
+  ],
+  doctors:[
+    {n:"د. سلطان العنزي",spec:"باطنة عامة",today:14,next:"11:20 ص",b:"b1"},
+    {n:"د. هند الشمري",spec:"جلدية",today:9,next:"12:00 م",b:"b1"},
+    {n:"د. فيصل الغامدي",spec:"أسنان",today:11,next:"11:40 ص",b:"b2"},
+    {n:"د. لمى القحطاني",spec:"أطفال",today:16,next:"11:10 ص",b:"b1"},
+    {n:"د. عبدالله الحربي",spec:"عظام",today:7,next:"12:30 م",b:"b3"},
+    {n:"د. ريم الدوسري",spec:"نساء وولادة",today:10,next:"11:50 ص",b:"b2"},
+  ],
+  patients:[
+    ["P-3301","محمد ياسر القرني","0501122334","تأمين — بوبا العربية","28/08/2026",0],
+    ["P-3312","نورة عبدالعزيز السبيعي","0559988776","تأمين — التعاونية","02/09/2026",140],
+    ["P-3327","خالد سعود المطيري","0533221100","نقدي","30/08/2026",0],
+    ["P-3340","سارة فهد العتيبي","0544332211","تأمين — بوبا العربية","05/09/2026",0],
+    ["P-3355","عمر ناصر الزهراني","0567788990","نقدي","01/09/2026",320],
+    ["P-3361","منيرة خالد الحربي","0512233445","تأمين — ميدغلف","09/09/2026",0],
+  ],
+  moves:[
+    ["INV-2026-2210","فاتورة كشف + مختبر","محمد ياسر القرني",420,"مسددة","b1"],
+    ["INV-2026-2209","فاتورة أسنان","فيصل الغامدي — تحويل",570,"مسددة","b2"],
+    ["CLM-2026-0181","مطالبة تأمين — بوبا","نورة عبدالعزيز السبيعي",280,"قيد المراجعة","b1"],
+    ["INV-2026-2208","فاتورة كشف عام","خالد سعود المطيري",180,"مسددة","b3"],
+    ["CLM-2026-0180","مطالبة تأمين — التعاونية","سارة فهد العتيبي",460,"مرفوضة جزئيًا","b1"],
+    ["INV-2026-2207","فاتورة علاج طبيعي",  "عمر ناصر الزهراني",450,"جزئي","b1"],
+    ["INV-2026-2206","فاتورة متابعة حمل","منيرة خالد الحربي",220,"مسددة","b2"],
+  ],
+  top:[["كشف عام",64800],["تحليل دم شامل",41200],["تنظيف أسنان",33900],["أشعة سينية",27600],["جلسة علاج طبيعي",19800]],
+  alerts:[
+    ["r","3 مطالبات تأمين مرفوضة جزئيًا تحتاج مراجعة قبل نهاية الأسبوع","شركات التأمين"],
+    ["g","موعد صيانة دورية لجهاز الأشعة خلال 5 أيام","قسم الأشعة"],
+    ["r","معدل عدم الحضور اليوم 12% — أعلى من المتوسط المعتاد","كل الفروع"],
+    ["v","تقرير المطالبات الشهري مع شركات التأمين جاهز للمراجعة","سبتمبر 2026"],
+  ],
+  notes:[
+    ["r","فاتورة CLM-2026-0180 رجعت من التأمين بخصم جزئي","قبل 25 دقيقة"],
+    ["g","حجز جديد — د. لمى القحطاني الساعة 1:00 م","قبل ساعة"],
+    ["v","تم إغلاق يوم العمل — فرع جدة","أمس 9:10 م"],
+  ],
+  staff:[
+    ["طبيب",[2,2,1,1,0]],
+    ["ممرض / فني",[1,2,1,0,0]],
+    ["استقبال",[2,1,2,1,0]],
+    ["محاسب",[0,1,2,2,0]],
+    ["مدير الفرع",[2,2,2,2,2]],
+  ],
+};
+const T = {
+  dash:["لوحة التحكم","نظرة عامة على أداء المجمع الطبي"],
+  queue:["قائمة الانتظار اليوم","الحجز والاستقبال — الدور الحالي وحالة كل مريض"],
+  patients:["سجل المرضى","الملفات الطبية وبيانات التواصل والرصيد"],
+  doctors:["الأطباء والجدول","التخصصات، الحمل اليومي، وأقرب موعد متاح"],
+  billing:["الفواتير والتحصيل","فواتير الزيارات ومطالبات التأمين"],
+  reports:["التقارير","الإيرادات حسب القسم واتجاه عدد المرضى"],
+  settings:["الإعدادات","البيانات الأساسية والفروع والصلاحيات"],
+};
+
+/* ============ أدوات ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const money=(n,d=0)=>(n<0?"−":"")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let state={view:"dash",branch:"b1",queue:[
+  {p:"محمد ياسر القرني",doc:"د. سلطان العنزي",time:"10:40 ص",status:"داخل الكشف"},
+  {p:"نورة عبدالعزيز السبيعي",doc:"د. هند الشمري",time:"11:00 ص",status:"منتظر"},
+  {p:"خالد سعود المطيري",doc:"د. سلطان العنزي",time:"11:20 ص",status:"منتظر"},
+],cat:"الكل",tab:0};
+const F=()=>DB.branches.find(b=>b.id===state.branch).f;
+function toast(m){const t=$("#toast");t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>${m}</span>`;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2600);}
+function modal(html){$("#modal").innerHTML=html;$("#modalbg").classList.add("show");}
+function closeModal(){$("#modalbg").classList.remove("show");}
+$("#modalbg").addEventListener("click",e=>{if(e.target.id==="modalbg")closeModal()});
+
+function spark(vals,w=680,h=120){
+  const mn=Math.min(...vals)*.86,mx=Math.max(...vals)*1.04,rg=mx-mn||1;
+  const pt=i=>[ (i/(vals.length-1))*w, h-((vals[i]-mn)/rg)*(h-10)-6 ];
+  let d="",a="";
+  vals.forEach((v,i)=>{const[x,y]=pt(i);if(i){const[px,py]=pt(i-1);const cx=(px+x)/2;d+=` C${cx},${py} ${cx},${y} ${x},${y}`}else d=`M${x},${y}`});
+  a=d+` L${w},${h} L0,${h} Z`;
+  const[lx,ly]=pt(vals.length-1);
+  return `<svg class="area" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1D6390" stop-opacity=".17"/><stop offset="1" stop-color="#1D6390" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${a}" fill="url(#ag)"/><path d="${d}" fill="none" stroke="#1D6390" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <circle cx="${lx}" cy="${ly}" r="3.4" fill="#B9902E"/></svg>`;
+}
+function donut(parts){
+  let a=0,R=52,C=2*Math.PI*R,tot=parts.reduce((s,p)=>s+p[1],0);
+  const segs=parts.map(p=>{const len=p[1]/tot*C,s=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${p[2]}" stroke-width="17" stroke-dasharray="${len-2} ${C-len+2}" stroke-dashoffset="${-a}" transform="rotate(-90 70 70)"/>`;a+=len;return s}).join("");
+  return `<svg viewBox="0 0 140 140" style="width:140px;height:140px;flex:none">${segs}</svg>`;
+}
+const ico={
+  dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 7h8V3h-8zM3 21h8v-4H3z"/>',
+  queue:'<circle cx="12" cy="8" r="3.2"/><path d="M5 21c0-3.6 3-6 7-6s7 2.4 7 6"/><path d="M19 8h3M20.5 6.5v3"/>',
+  patients:'<path d="M4 21V5a2 2 0 012-2h9l5 5v13z"/><path d="M15 3v5h5M9 13h6M9 17h4"/>',
+  doctors:'<circle cx="12" cy="7" r="3.2"/><path d="M4 21c0-4 3.6-6.8 8-6.8s8 2.8 8 6.8"/><path d="M12 11v3M10.5 12.5h3"/>',
+  billing:'<path d="M4 4h16v13H4z"/><path d="M4 9h16M9 21h6"/>',
+  reports:'<path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/>',
+  settings:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+};
+const svg=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+/* ============ الهيكل ============ */
+function shell(){
+  const nav=(k,label,tag)=>`<button class="navitem ${state.view===k?'on':''}" data-go="${k}">${svg(ico[k])}<span>${label}</span>${tag?`<span class="tag">${tag}</span>`:""}</button>`;
+  $("#app").innerHTML=`
+  <aside class="nav" id="nav">
+    <div class="brand"><div class="mark">عي</div><div><b>عيادتي</b><span>نظام إدارة العيادات</span></div></div>
+    <div class="org"><b>${DB.org}</b><i>${DB.lic}</i></div>
+    <div class="navscroll">
+      ${nav("dash","لوحة التحكم")}
+      ${nav("queue","قائمة الانتظار","اليوم")}
+      <div class="navgrp">المرضى والأطباء</div>
+      ${nav("patients","سجل المرضى")}
+      ${nav("doctors","الأطباء والجدول")}
+      <div class="navgrp">المالية</div>
+      ${nav("billing","الفواتير والتحصيل")}
+      ${nav("reports","التقارير")}
+      <div class="navgrp">النظام</div>
+      ${nav("settings","الإعدادات والصلاحيات")}
+    </div>
+    <div class="navfoot"><span><span class="dot-ok"></span>متصل — آخر نسخة احتياطية 03:00</span><span>v2.1</span></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <button class="iconbtn burger" id="burger">${svg('<path d="M4 7h16M4 12h16M4 17h16"/>')}</button>
+      <div class="crumb"><h1>${T[state.view][0]}</h1><em>${T[state.view][1]}</em></div>
+      <div class="search">${svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')}
+        <input placeholder="ابحث عن مريض، طبيب، فاتورة…">
+      </div>
+      <div class="pick">${svg('<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/>')}
+        <select id="branchSel">${DB.branches.map(b=>`<option value="${b.id}" ${b.id===state.branch?"selected":""}>${b.name}</option>`).join("")}</select>
+      </div>
+      <div class="pick"><b>السنة المالية 2026</b></div>
+      <button class="iconbtn" id="bell">${svg('<path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/>')}<span class="bell-dot"></span></button>
+      <div class="pop" id="notes">
+        <div class="phead"><h2>التنبيهات</h2><span class="right lbl">3 جديدة</span></div>
+        ${DB.notes.map(n=>`<div class="note"><span class="swatch ${n[0]}">${svg('<path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="9"/>')}</span><div><span>${n[1]}</span><time>${n[2]}</time></div></div>`).join("")}
+      </div>
+      <div class="me"><div class="avatar">ه ر</div><div><b>هيا الرشيد</b><small>مديرة العمليات</small></div></div>
+    </header>
+    <div class="view ${state.view==='queue'?'flush':''}" id="view"></div>
+  </main>`;
+  $("#view").innerHTML=VIEWS[state.view]();
+  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{state.view=b.dataset.go;state.tab=0;shell();window.scrollTo(0,0);$("#nav").classList.remove("open")});
+  $("#branchSel").onchange=e=>{state.branch=e.target.value;shell();toast("تم تبديل الفرع — حُدّثت كل الأرقام والتقارير")};
+  $("#bell").onclick=e=>{e.stopPropagation();$("#notes").classList.toggle("show")};
+  $("#burger").onclick=()=>$("#nav").classList.toggle("open");
+  document.addEventListener("click",()=>$("#notes")?.classList.remove("show"),{once:true});
+  bindView();
+}
+
+/* ============ لوحة التحكم ============ */
+const VIEWS={};
+VIEWS.dash=()=>{
+  const f=F(), r=DB.revenue.map(v=>Math.round(v*f)), last=r.at(-1), prev=r.at(-2);
+  const dl=((last-prev)/prev*100).toFixed(1);
+  return `
+  <div class="grid g-hero" style="margin-bottom:14px">
+    <div class="panel hero">
+      <div class="top">
+        <span class="lbl">إيراد سبتمبر 2026</span>
+        <div class="fig num">${money(last*1000)}<small>ر.س</small></div>
+        <div class="meta">
+          <span class="chip pos">▲ ${dl}% عن أغسطس</span>
+          <span class="lbl">${Math.round(96*f)} زيارة هذا الشهر</span>
+          <span class="lbl">متوسط الفاتورة ${money(Math.round(last*1000/96))} ر.س</span>
+        </div>
+      </div>
+      ${spark(r)}
+      <div class="months"><span>${DB.months[0]}</span><span>${DB.months[3]}</span><span>${DB.months[6]}</span><span>${DB.months[9]}</span><span>${DB.months[11]}</span></div>
+    </div>
+    <div class="panel">
+      <div class="phead"><h2>مصادر التحصيل</h2><span class="right lbl">الرصيد الآن</span></div>
+      <div class="stack">
+        <div class="row-i"><span class="swatch v">${svg('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>')}</span><span>الصندوق النقدي</span><span class="amt num">${money(Math.round(18400*f))}</span></div>
+        <div class="row-i"><span class="swatch">${svg('<path d="M3 10l9-6 9 6M5 10v9h14v-9M3 21h18"/>')}</span><span>تحويلات مدى</span><span class="amt num">${money(Math.round(26900*f))}</span></div>
+        <div class="row-i"><span class="swatch g">${svg('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>')}</span><span>تأمين بوبا (تحت التحصيل)</span><span class="amt num">${money(Math.round(41200*f))}</span></div>
+        <div class="row-i"><span class="swatch g">${svg('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>')}</span><span>تأمين التعاونية (تحت التحصيل)</span><span class="amt num">${money(Math.round(19800*f))}</span></div>
+      </div>
+      <div class="pad" style="border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center">
+        <span class="lbl">الإجمالي المتاح</span><b class="num" style="font-size:16px">${money(Math.round(106300*f))} ر.س</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px">
+    <div class="cells">
+      <div class="cell"><span class="lbl">مرضى اليوم</span><b class="num">${Math.round(34*f)}</b><span class="chip pos">▲ 8%</span></div>
+      <div class="cell"><span class="lbl">في قائمة الانتظار الآن</span><b class="num">${state.queue.filter(q=>q.status!=="مكتمل").length}</b><span class="chip mute">${state.queue.filter(q=>q.status==="داخل الكشف").length} داخل الكشف</span></div>
+      <div class="cell"><span class="lbl">مطالبات تأمين معلّقة</span><b class="num">${money(Math.round(61000*f))}</b><span class="chip warn">2 مطالبة</span></div>
+      <div class="cell"><span class="lbl">معدل عدم الحضور</span><b class="num">12%</b><span class="chip neg">أعلى من المعتاد</span></div>
+    </div>
+  </div>
+
+  <div class="grid g-main">
+    <div class="panel">
+      <div class="phead"><h2>آخر الفواتير والمطالبات</h2>
+        <div class="right"><button class="btn ghost sm" data-toast="جاري تجهيز ملف Excel…">تصدير</button><button class="btn sm" data-go="billing">عرض الكل</button></div>
+      </div>
+      <table class="tbl"><thead><tr><th>المستند</th><th>النوع</th><th>المريض</th><th class="t-l">القيمة</th><th class="t-c">الحالة</th></tr></thead><tbody>
+        ${DB.moves.map(m=>`<tr><td><b style="font-weight:500">${m[0]}</b></td><td>${m[1]}</td><td>${m[2]}</td>
+        <td class="t-l num">${money(Math.round(m[3]*f))}</td>
+        <td class="t-c"><span class="chip ${m[4]==='مسددة'?'pos':m[4].includes('مرفوضة')?'neg':m[4]==='قيد المراجعة'?'warn':'mute'}">${m[4]}</span></td></tr>`).join("")}
+      </tbody></table>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel">
+        <div class="phead"><h2>أعلى الخدمات إيراداً</h2><span class="right lbl">آخر 30 يوم</span></div>
+        <div style="padding:8px 0 12px">
+          ${DB.top.map((t,i)=>`<div class="rank"><span class="nm">${t[0]}</span><span class="bar"><i class="${i===0?'gold':''}" style="width:${t[1]/DB.top[0][1]*100}%"></i></span><span class="vl num">${money(Math.round(t[1]*f/1000))}k</span></div>`).join("")}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>تنبيهات تشغيلية</h2></div>
+        <div class="stack">
+          ${DB.alerts.map(a=>`<div class="row-i"><span class="swatch ${a[0]}">${svg('<path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="9"/>')}</span><div><span>${a[1]}</span><span class="mini">${a[2]}</span></div></div>`).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ============ قائمة الانتظار (نمط نقطة البيع) ============ */
+VIEWS.queue=()=>{
+  const cats=["الكل",...new Set(DB.services.map(s=>s.c))];
+  const list=DB.services.filter(s=>state.cat==="الكل"||s.c===state.cat);
+  return `<div class="posv">
+    <div class="pos-left">
+      <div class="pos-bar">
+        <div class="cats">${cats.map(c=>`<button class="cat ${state.cat===c?'on':''}" data-cat="${c}">${c}</button>`).join("")}</div>
+      </div>
+      <div class="pgrid">
+        ${list.map((s,i)=>`<div class="pcard" data-add="${DB.services.indexOf(s)}">
+          <div class="ic">${s.code}</div>
+          <b>${s.n}</b>
+          <div class="pr"><span class="num">${money(s.p)} ر.س</span><span class="st">${s.dur}</span></div>
+        </div>`).join("")}
+      </div>
+    </div>
+    <div class="cart">
+      <div class="cart-head"><b>قائمة الانتظار اليوم</b><span class="lbl" style="margin-inline-start:auto">${state.queue.length} مريض</span></div>
+      <div class="cart-lines">
+        ${state.queue.length?state.queue.map((q,i)=>`
+          <div class="cline" style="grid-template-columns:1fr auto">
+            <div>
+              <b>${q.p}</b>
+              <span class="mini">${q.doc} — ${q.time}</span>
+              <span class="chip ${q.status==='داخل الكشف'?'warn':q.status==='مكتمل'?'pos':'mute'}" style="margin-top:5px">${q.status}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+              ${q.status==='منتظر'?`<button class="btn ghost sm" data-advance="${i}">استدعاء</button>`:''}
+              ${q.status==='داخل الكشف'?`<button class="btn sm" data-complete="${i}">إنهاء وفوترة</button>`:''}
+              ${q.status==='مكتمل'?`<span class="lbl">تمت الفوترة</span>`:''}
+            </div>
+          </div>`).join(""):`<div class="emple"></div>`}
+      </div>
+      <div class="cart-sum">
+        <label class="field" style="margin-bottom:8px"><span>إضافة مريض جديد للقائمة</span>
+          <select id="newPatientDoc">${DB.doctors.filter(d=>d.b===state.branch).map(d=>`<option>${d.n} — ${d.spec}</option>`).join("")}</select>
+        </label>
+        <button class="btn" style="width:100%" id="addToQueue">إضافة للقائمة</button>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ============ سجل المرضى ============ */
+VIEWS.patients=()=>{
+  return `<div class="panel">
+    <div class="phead"><h2>سجل المرضى</h2><span class="sub">${DB.patients.length} ملف مسجّل</span>
+      <div class="right"><button class="btn ghost sm" data-toast="جاري تجهيز ملف Excel…">تصدير</button><button class="btn sm" data-toast="فُتحت شاشة إضافة مريض جديد">إضافة مريض</button></div>
+    </div>
+    <table class="tbl"><thead><tr><th>رقم الملف</th><th>الاسم</th><th>الجوال</th><th>جهة السداد</th><th>آخر زيارة</th><th class="t-l">الرصيد المستحق</th><th></th></tr></thead><tbody>
+    ${DB.patients.map(p=>`<tr>
+      <td class="num">${p[0]}</td><td><b style="font-weight:500">${p[1]}</b></td><td class="num">${p[2]}</td>
+      <td>${p[3]==='نقدي'?`<span class="chip mute">نقدي</span>`:`<span class="chip pos">${p[3]}</span>`}</td>
+      <td class="num">${p[4]}</td>
+      <td class="t-l num" style="color:${p[5]>0?'var(--red)':'var(--ink)'}">${p[5]>0?money(p[5]):'—'}</td>
+      <td class="t-l"><button class="btn ghost sm" data-toast="فُتح الملف الطبي لـ${p[1]}">فتح الملف</button></td>
+    </tr>`).join("")}
+    </tbody></table>
+  </div>`;
+};
+
+/* ============ الأطباء والجدول ============ */
+VIEWS.doctors=()=>{
+  const f=F();
+  return `<div class="grid g3">
+    ${DB.doctors.map(d=>`<div class="panel">
+      <div class="pad" style="display:flex;gap:12px;align-items:flex-start">
+        <div class="avatar" style="width:44px;height:44px;font-size:14px">${d.n.split(' ')[1]?.[0]||'د'}</div>
+        <div>
+          <b style="display:block;font-size:13.5px">${d.n}</b>
+          <span class="mini">${d.spec}</span>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div class="pad" style="display:flex;justify-content:space-between;font-size:12.5px">
+        <div><span class="lbl">مرضى اليوم</span><b class="num" style="display:block;font-size:16px">${Math.round(d.today*f)}</b></div>
+        <div style="text-align:left"><span class="lbl">أقرب موعد متاح</span><b class="num" style="display:block;font-size:16px">${d.next}</b></div>
+      </div>
+      <div class="pad" style="border-top:1px solid var(--rule)"><button class="btn ghost sm" style="width:100%" data-toast="فُتح جدول ${d.n} الكامل">عرض الجدول الكامل</button></div>
+    </div>`).join("")}
+  </div>`;
+};
+
+/* ============ الفواتير والتحصيل ============ */
+VIEWS.billing=()=>{
+  const f=F();
+  const tabs=["كل الفواتير","مطالبات التأمين","إنشاء فاتورة جديدة"];
+  const t=state.tab||0;
+  let body="";
+  if(t===0){
+    body=`<table class="tbl"><thead><tr><th>المستند</th><th>النوع</th><th>المريض</th><th class="t-l">القيمة</th><th class="t-c">الحالة</th></tr></thead><tbody>
+      ${DB.moves.map(m=>`<tr><td><b style="font-weight:500">${m[0]}</b></td><td>${m[1]}</td><td>${m[2]}</td>
+      <td class="t-l num">${money(Math.round(m[3]*f))}</td>
+      <td class="t-c"><span class="chip ${m[4]==='مسددة'?'pos':m[4].includes('مرفوضة')?'neg':m[4]==='قيد المراجعة'?'warn':'mute'}">${m[4]}</span></td></tr>`).join("")}
+    </tbody></table>`;
+  }else if(t===1){
+    body=`<table class="tbl"><thead><tr><th>رقم المطالبة</th><th>شركة التأمين</th><th>المريض</th><th class="t-l">القيمة</th><th class="t-c">الحالة</th></tr></thead><tbody>
+      ${DB.moves.filter(m=>m[0].startsWith('CLM')).map(m=>`<tr><td><b style="font-weight:500">${m[0]}</b></td><td>${m[1].split('— ')[1]||''}</td><td>${m[2]}</td>
+      <td class="t-l num">${money(Math.round(m[3]*f))}</td>
+      <td class="t-c"><span class="chip ${m[4].includes('مرفوضة')?'neg':'warn'}">${m[4]}</span></td></tr>`).join("")}
+    </tbody></table>`;
+  }else{
+    const inv=state.inv||(state.inv=[{i:0,q:1},{i:3,q:1}]);
+    const sub=inv.reduce((s,l)=>s+DB.services[l.i].p*l.q,0),tax=Math.round(sub*DB.taxRate),tot=sub+tax;
+    body=`<div class="grid g-main">
+      <div>
+        <table class="tbl"><thead><tr><th>الخدمة</th><th class="t-c">الكمية</th><th class="t-l">السعر</th><th class="t-l">الإجمالي</th><th></th></tr></thead><tbody>
+        ${inv.map((l,i)=>`<tr><td>${DB.services[l.i].n}</td>
+          <td class="t-c"><input class="inline-in num" style="text-align:center" data-line="${i}" data-k="q" value="${l.q}"></td>
+          <td class="t-l num">${money(DB.services[l.i].p)}</td>
+          <td class="t-l num">${money(DB.services[l.i].p*l.q)}</td>
+          <td class="t-l"><button class="iconbtn" style="width:26px;height:26px" data-del="${i}">${svg('<path d="M6 6l12 12M18 6L6 18"/>')}</button></td>
+        </tr>`).join("")}
+        </tbody></table>
+        <button class="btn ghost sm" style="margin-top:10px" data-addline="1">+ إضافة خدمة</button>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>ملخص الفاتورة</h2></div>
+        <div class="pad">
+          <label class="field"><span>المريض</span><select>${DB.patients.map(p=>`<option>${p[1]}</option>`).join("")}</select></label>
+          <label class="field"><span>جهة السداد</span><select><option>نقدي</option><option>تأمين — بوبا العربية</option><option>تأمين — التعاونية</option></select></label>
+          <div class="sep" style="margin:10px 0"></div>
+          <div class="sum-r"><span>الإجمالي قبل الضريبة</span><b class="num">${money(sub)}</b></div>
+          <div class="sum-r"><span>ضريبة القيمة المضافة 15%</span><b class="num">${money(tax)}</b></div>
+          <div class="sum-r total"><span>الإجمالي المستحق</span><b class="num">${money(tot)} ر.س</b></div>
+          <button class="btn" style="width:100%;margin-top:12px" data-save-invoice="1">اعتماد الفاتورة</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  return `<div class="panel">
+    <div class="phead" style="border-bottom:none;padding-bottom:0">
+      <div class="tabs" style="border:none;margin:0">
+        ${tabs.map((tb,i)=>`<button class="tab ${t===i?'on':''}" data-tab="${i}">${tb}</button>`).join("")}
+      </div>
+    </div>
+    <div class="pad" style="padding-top:6px">${body}</div>
+  </div>`;
+};
+
+/* ============ التقارير ============ */
+VIEWS.reports=()=>{
+  const f=F();
+  const dept=[["كشوفات",64800,"#154C77"],["مختبر",41200,"#1D6390"],["أسنان",33900,"#B9902E"],["أشعة",27600,"#2C6B4F"],["أخرى",22500,"#9A3324"]];
+  return `<div class="grid g-main">
+    <div class="panel">
+      <div class="phead"><h2>اتجاه الإيرادات الشهري</h2><span class="right lbl">آخر 12 شهر</span></div>
+      <div class="pad">${spark(DB.revenue.map(v=>Math.round(v*f)),640,150)}</div>
+    </div>
+    <div class="panel">
+      <div class="phead"><h2>الإيراد حسب القسم</h2></div>
+      <div class="pad" style="display:flex;gap:16px;align-items:center">
+        ${donut(dept)}
+        <div class="stack" style="flex:1">
+          ${dept.map(d=>`<div class="row-i"><span style="width:10px;height:10px;border-radius:2px;background:${d[2]};flex:none"></span><span>${d[0]}</span><span class="amt num">${money(Math.round(d[1]*f/1000))}k</span></div>`).join("")}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="phead"><h2>مؤشرات الجودة التشغيلية</h2></div>
+    <div class="cells">
+      <div class="cell"><span class="lbl">متوسط وقت الانتظار</span><b class="num">18 دقيقة</b><span class="chip pos">أفضل من الهدف</span></div>
+      <div class="cell"><span class="lbl">معدل عدم الحضور</span><b class="num">12%</b><span class="chip neg">أعلى من المعتاد</span></div>
+      <div class="cell"><span class="lbl">معدل قبول مطالبات التأمين</span><b class="num">87%</b><span class="chip warn">تحت المراجعة</span></div>
+      <div class="cell"><span class="lbl">رضا المرضى (استبيان الخروج)</span><b class="num">4.6 / 5</b><span class="chip pos">ممتاز</span></div>
+    </div>
+  </div>`;
+};
+
+/* ============ الإعدادات ============ */
+VIEWS.settings=()=>{
+  const perms=["الحجز والاستقبال","الملفات الطبية","الفواتير","التقارير","الإعدادات"];
+  const mk=v=>v===2?'<span class="chip pos">كامل</span>':v===1?'<span class="chip warn">عرض</span>':'<span class="lbl">—</span>';
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>مصفوفة الصلاحيات</h2><span class="sub">صلاحيات كل دور وظيفي في المجمع</span>
+        <div class="right"><button class="btn sm" data-toast="فُتحت شاشة إضافة مستخدم">إضافة مستخدم</button></div></div>
+        <table class="tbl"><thead><tr><th>الدور</th>${perms.map(p=>`<th class="t-c">${p}</th>`).join("")}</tr></thead><tbody>
+        ${DB.staff.map(r=>`<tr><td style="font-weight:500">${r[0]}</td>${r[1].map(v=>`<td class="t-c">${mk(v)}</td>`).join("")}</tr>`).join("")}
+        </tbody></table></div>
+      <div class="panel"><div class="phead"><h2>البيانات الأساسية</h2></div>
+        <div class="pad" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
+          <label class="field"><span>اسم المجمع الطبي</span><input value="${DB.org}"></label>
+          <label class="field"><span>رقم الترخيص</span><input value="220-4471"></label>
+          <label class="field"><span>ساعات العمل</span><select><option>9:00 ص — 10:00 م</option><option>8:00 ص — 9:00 م</option></select></label>
+          <label class="field"><span>مدة الموعد الافتراضية</span><select><option>15 دقيقة</option><option>20 دقيقة</option><option>30 دقيقة</option></select></label>
+          <label class="field"><span>لغة الواجهة</span><select><option>العربية</option><option>English</option></select></label>
+          <label class="field"><span>تنبيه المواعيد التلقائي</span><select><option>رسالة نصية قبل ساعتين</option><option>واتساب قبل يوم</option></select></label>
+        </div>
+        <div class="pad" style="border-top:1px solid var(--rule);display:flex;gap:7px"><button class="btn" data-toast="حُفظت الإعدادات">حفظ التغييرات</button><button class="btn ghost" data-toast="تم الرجوع للإعداد الافتراضي">إلغاء</button></div>
+      </div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>الفروع</h2></div>
+        <div class="stack">
+          ${DB.branches.map(b=>`<div class="row-i"><span class="swatch">${svg('<path d="M3 21h18M5 21V7l7-4 7 4v14"/>')}</span><div><span>${b.name}</span><span class="mini">حجز ومخزون مستقل لكل فرع</span></div><span class="amt chip pos">فعّال</span></div>`).join("")}
+        </div>
+        <div class="pad" style="border-top:1px solid var(--rule)"><button class="btn ghost" style="width:100%" data-toast="فُتحت شاشة إضافة فرع">إضافة فرع جديد</button></div>
+      </div>
+      <div class="panel"><div class="phead"><h2>سجل النشاط</h2></div>
+        <div class="stack">
+          ${[["هيا الرشيد","اعتمدت فاتورة INV-2026-2210","قبل 12 دقيقة"],["د. سلطان العنزي","أنهى كشف المريض محمد القرني","قبل ساعة"],["استقبال — جدة","أغلقت يوم العمل"," أمس 9:10 م"]]
+          .map(l=>`<div class="row-i"><div><span><b style="font-weight:500">${l[0]}</b> — ${l[1]}</span><span class="mini">${l[2]}</span></div></div>`).join("")}
+        </div></div>
+    </div>
+  </div>`;
+};
+
+/* ============ التفاعل ============ */
+function bindView(){
+  const v=$("#view");
+  v.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{state.tab=+b.dataset.tab;shell()});
+  v.querySelectorAll("[data-toast]").forEach(b=>b.onclick=()=>toast(b.dataset.toast));
+  v.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;shell()});
+  v.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const s=DB.services[+b.dataset.add];
+    toast(`أُضيفت خدمة "${s.n}" — استخدمها عند إنشاء الفاتورة`);
+  });
+  const addBtn=$("#addToQueue");
+  if(addBtn)addBtn.onclick=()=>{
+    const sel=$("#newPatientDoc").value;
+    state.queue.push({p:"مريض جديد",doc:sel.split(' — ')[0],time:new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}),status:"منتظر"});
+    shell();toast("أُضيف المريض لقائمة الانتظار");
+  };
+  v.querySelectorAll("[data-advance]").forEach(b=>b.onclick=()=>{
+    state.queue[+b.dataset.advance].status="داخل الكشف";shell();toast("تم استدعاء المريض للكشف");
+  });
+  v.querySelectorAll("[data-complete]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.complete;const q=state.queue[i];
+    modal(`<div class="modal-h"><b>إنهاء الزيارة وإصدار الفاتورة</b><button onclick="closeModal()">✕</button></div>
+      <div class="pad" style="text-align:center">
+        <div style="font-size:15px;font-weight:500">${q.p}</div>
+        <div class="lbl">${q.doc}</div>
+        <div class="sep" style="margin:14px 0"></div>
+        <div style="display:grid;gap:5px;font-size:12.5px;text-align:right">
+          <div class="sum-r"><span>رقم الفاتورة</span><b>INV-2026-${2211+i}</b></div>
+          <div class="sum-r"><span>القيمة الإجمالية</span><b class="num">${money(280*DB.taxRate+280)} ر.س</b></div>
+          <div class="sum-r"><span>جهة السداد</span><b>نقدي</b></div>
+          <div class="sum-r"><span>القيد المحاسبي</span><b>رُحّل تلقائيًا</b></div>
+        </div>
+        <div style="display:flex;gap:7px;margin-top:16px">
+          <button class="btn" style="flex:1" onclick="closeModal();toast('تمت طباعة الفاتورة')">طباعة الفاتورة</button>
+          <button class="btn ghost" style="flex:1" onclick="closeModal()">إغلاق</button>
+        </div>
+      </div>`);
+    state.queue[i].status="مكتمل";shell();
+  });
+  v.querySelectorAll("[data-line]").forEach(inp=>inp.oninput=()=>{
+    const i=+inp.dataset.line,val=Math.max(1,+inp.value||1);
+    state.inv[i][inp.dataset.k]=val;
+    const sel=`[data-line="${i}"][data-k="${inp.dataset.k}"]`;shell();
+    const n=$(sel);if(n){n.focus();n.setSelectionRange?.(n.value.length,n.value.length)}
+  });
+  v.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{state.inv.splice(+b.dataset.del,1);shell()});
+  v.querySelectorAll("[data-addline]").forEach(b=>b.onclick=()=>{
+    const used=(state.inv||[]).map(l=>l.i),nx=DB.services.findIndex((s,i)=>!used.includes(i));
+    if(nx<0)return toast("كل الخدمات مضافة للفاتورة");
+    state.inv.push({i:nx,q:1});shell();
+  });
+  v.querySelectorAll("[data-save-invoice]").forEach(b=>b.onclick=()=>toast("اعتُمدت الفاتورة INV-2026-2211 وتم ترحيل القيد"));
+}
+shell();
+</script>
+
+
+
+</body>
+</html>

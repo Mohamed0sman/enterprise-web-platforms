@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سحاب — منصة الفوترة السحابية واشتراكات B2B والربط المالي ZATCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              200: '#C7D2FE',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+              900: '#312E81'
+            },
+            surface: {
+              base: '#0B0F19',
+              card: '#111827',
+              hover: '#1F2937',
+              border: '#1F293D'
+            }
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'Cairo', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0B0F19;
+      color: #F3F4F6;
+      font-family: 'Cairo', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .num {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+      font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+    }
+    .mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2937;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+    .custom-range {
+      accent-color: #6366F1;
+    }
+    .zatca-stamp {
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(16, 185, 129, 0.05),
+        rgba(16, 185, 129, 0.05) 10px,
+        rgba(16, 185, 129, 0.1) 10px,
+        rgba(16, 185, 129, 0.1) 20px
+      );
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#0B0F19] text-slate-100 selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP APP BAR -->
+  <header class="bg-[#111827]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Organization Switcher -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-600/30">
+            سـ
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-base tracking-tight text-white">سحاب للتقنية المالية</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                ZATCA Phase 2 Live
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400">بوابة الفوترة السحابية للشركات B2B والاشتراكات المتكررة</p>
+          </div>
+        </div>
+
+        <!-- Org Badge -->
+        <div class="hidden md:flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 text-xs">
+          <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <span class="text-slate-300 font-semibold">منصة بارق للذكاء الاصطناعي (BARQ AI)</span>
+          <span class="text-slate-500">|</span>
+          <span class="text-[11px] text-slate-400 mono-code">CR: 1010892041</span>
+        </div>
+      </div>
+
+      <!-- Environment Mode & Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Live / Sandbox Pill Switcher -->
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs font-semibold">
+          <button id="envLiveBtn" onclick="switchEnv('live')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white shadow-sm transition">بيئة الإنتاج Live</button>
+          <button id="envTestBtn" onclick="switchEnv('test')" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">التجريبية Sandbox</button>
+        </div>
+
+        <button onclick="openNewSubscriptionModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-indigo-600/25 active:scale-95">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>اشتراك جديد</span>
+        </button>
+
+        <!-- Quick ZATCA QR Modal Trigger -->
+        <button onclick="openZatcaModal('INV-2026-9021')" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition" title="فحص اعتماد ZATCA">
+          <i data-lucide="qr-code" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="bg-[#111827] border-b border-slate-800 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2">
+      <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        <span>لوحة الاشتراكات والمؤشرات المالية</span>
+      </button>
+
+      <button onclick="switchTab('zatca')" id="tab-btn-zatca" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <span>محاكي الربط الضريبي ZATCA المرحلة 2</span>
+        <span class="text-[10px] px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded-full font-mono">100% مطابقة</span>
+      </button>
+
+      <button onclick="switchTab('webhooks')" id="tab-btn-webhooks" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+        <i data-lucide="webhook" class="w-4 h-4 text-amber-400"></i>
+        <span>مختبر الويب هوك وبوابات API</span>
+        <span class="text-[10px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded-full mono-code">&lt;48ms</span>
+      </button>
+
+      <button onclick="switchTab('invoices')" id="tab-btn-invoices" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+        <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
+        <span>سجل الفواتير الضريبية B2B</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 lg:p-8 space-y-8">
+
+    <!-- ==================== TAB 1: DASHBOARD & SUBSCRIPTION CALCULATOR ==================== -->
+    <div id="view-dashboard" class="tab-view space-y-8">
+      
+      <!-- TOP FINANCIAL METRICS STRIP -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1: MRR -->
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>الإيراد الشهري المتكرر (MRR)</span>
+            <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold text-[11px] flex items-center gap-1">
+              <i data-lucide="trending-up" class="w-3 h-3"></i> +14.8%
+            </span>
+          </div>
+          <div class="text-3xl font-black text-white num tracking-tight flex items-baseline gap-2">
+            <span>342,800</span>
+            <span class="text-sm font-semibold text-slate-400">ر.س</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>ARR السنوي المتوقع:</span>
+            <span class="num text-slate-300 font-bold">4,113,600 ر.س</span>
+          </div>
+          <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl group-hover:bg-indigo-500/10 transition"></div>
+        </div>
+
+        <!-- Metric 2: Active Subscriptions -->
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>الاشتراكات النشطة (Active SaaS)</span>
+            <span class="text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full font-bold text-[11px]">
+              +28 منشأة هالشهر
+            </span>
+          </div>
+          <div class="text-3xl font-black text-white num tracking-tight flex items-baseline gap-2">
+            <span>418</span>
+            <span class="text-sm font-semibold text-slate-400">شركة سعودية</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>نسبة الاستمرار (Retention):</span>
+            <span class="num text-emerald-400 font-bold">99.2%</span>
+          </div>
+          <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl group-hover:bg-indigo-500/10 transition"></div>
+        </div>
+
+        <!-- Metric 3: ZATCA Compliance Clearance -->
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>الفواتير المعتمدة من ZATCA</span>
+            <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold text-[11px] flex items-center gap-1">
+              <i data-lucide="check" class="w-3 h-3"></i> 100% نسبة القبول
+            </span>
+          </div>
+          <div class="text-3xl font-black text-white num tracking-tight flex items-baseline gap-2">
+            <span>12,489</span>
+            <span class="text-sm font-semibold text-slate-400">فاتورة رقمية</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>متوسط زمن الفحص والتشفير:</span>
+            <span class="num text-indigo-400 font-bold mono-code">38ms</span>
+          </div>
+          <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition"></div>
+        </div>
+
+        <!-- Metric 4: Net Churn Rate -->
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>معدل الفقد الصافي (Net Churn)</span>
+            <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold text-[11px]">
+              طبيعي ومثالي
+            </span>
+          </div>
+          <div class="text-3xl font-black text-white num tracking-tight flex items-baseline gap-2">
+            <span>0.78%</span>
+            <span class="text-sm font-semibold text-slate-400">شهرياً</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>صافي التوسع (Net Expansion):</span>
+            <span class="num text-emerald-400 font-bold">+118% NRR</span>
+          </div>
+          <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition"></div>
+        </div>
+      </div>
+
+      <!-- WORKSPACE SPLIT: DYNAMIC TIER BUILDER + RECENT ACTIVITY FEED -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- LEFT (COL 7): INTERACTIVE B2B PRICING & TIER SIMULATOR -->
+        <div class="lg:col-span-7 bg-[#111827] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+              <div>
+                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                  <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i>
+                  <span>محدد الباقات والتسعير الديناميكي للشركات</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">حساب تلقائي لقيمة الاشتراك الشهري / السنوي مع ضريبة القيمة المضافة 15%</p>
+              </div>
+              
+              <!-- Billing cycle toggle -->
+              <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs font-semibold">
+                <button id="calcMonthlyBtn" onclick="setBillingCycle('monthly')" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">شهري</button>
+                <button id="calcAnnualBtn" onclick="setBillingCycle('annual')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition flex items-center gap-1">
+                  <span>سنوي</span>
+                  <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded-full font-bold">خصم 20%</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Slider 1: Seats -->
+            <div class="space-y-3 mb-6">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-300 font-bold flex items-center gap-2">
+                  <i data-lucide="users" class="w-4 h-4 text-indigo-400"></i>
+                  <span>مقاعد المستخدمين المتاحة (Enterprise Seats)</span>
+                </span>
+                <span class="num font-black text-indigo-400 text-sm bg-indigo-500/10 px-2.5 py-0.5 rounded-lg border border-indigo-500/20" id="seatsValDisplay">25 مقعد</span>
+              </div>
+              <input type="range" id="seatsSlider" min="5" max="250" value="25" step="5" oninput="recalcPricing()" class="w-full custom-range cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-500 num">
+                <span>5 مقاعد (فريق مصغر)</span>
+                <span>100 مقعد</span>
+                <span>250 مقعد (شركات كبرى)</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: API & AI Tokens -->
+            <div class="space-y-3 mb-6">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-300 font-bold flex items-center gap-2">
+                  <i data-lucide="cpu" class="w-4 h-4 text-violet-400"></i>
+                  <span>حصة استدعاءات الذكاء الاصطناعي (API & AI Credits)</span>
+                </span>
+                <span class="num font-black text-violet-400 text-sm bg-violet-500/10 px-2.5 py-0.5 rounded-lg border border-violet-500/20" id="apiValDisplay">150,000 طلب</span>
+              </div>
+              <input type="range" id="apiSlider" min="20000" max="2000000" value="150000" step="20000" oninput="recalcPricing()" class="w-full custom-range cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-500 num">
+                <span>20 ألف</span>
+                <span>500 ألف</span>
+                <span>2 مليون استدعاء/شهر</span>
+              </div>
+            </div>
+
+            <!-- Add-ons Checkboxes -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              <label class="flex items-center gap-3 p-3 bg-slate-900/80 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" id="addonZatca" checked onchange="recalcPricing()" class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                <div class="text-xs">
+                  <div class="font-bold text-slate-200">ربط مباشر بهيئة الزكاة ZATCA Phase 2</div>
+                  <div class="text-[11px] text-slate-400">+250 ر.س / شهرياً</div>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 p-3 bg-slate-900/80 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" id="addonSla" onchange="recalcPricing()" class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                <div class="text-xs">
+                  <div class="font-bold text-slate-200">اتفاقية مستوى الخدمة 99.99% SLA</div>
+                  <div class="text-[11px] text-slate-400">+450 ر.س / شهرياً</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Total Calculation Breakdown Box -->
+          <div class="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/30 rounded-2xl p-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-4 border-b border-slate-800 text-xs">
+              <div>
+                <span class="text-slate-400 block text-[11px]">المبلغ الأساسي:</span>
+                <span class="num font-bold text-slate-200 text-base" id="subtotalDisplay">2,100 ر.س</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">ضريبة القيمة المضافة (15%):</span>
+                <span class="num font-bold text-slate-300 text-base" id="vatDisplay">315 ر.س</span>
+              </div>
+              <div>
+                <span class="text-indigo-300 block text-[11px] font-bold">الإجمالي المستحق للمنشأة:</span>
+                <span class="num font-black text-indigo-400 text-2xl tracking-tight" id="grandTotalDisplay">2,415 ر.س</span>
+                <span class="text-[10px] text-slate-400 block" id="billingCycleLabel">تدفع شهرياً بنظام الفوترة التلقائية</span>
+              </div>
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row items-center gap-3">
+              <button onclick="generateInstantCheckoutLink()" class="w-full sm:flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 active:scale-95">
+                <i data-lucide="link" class="w-4 h-4"></i>
+                <span>إنشاء رابط سداد B2B فوري (مدى • Apple Pay • سداد)</span>
+              </button>
+
+              <button onclick="createCustomContractDraft()" class="w-full sm:w-auto px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5">
+                <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>تصدير مسودة عرض سعر</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT (COL 5): LIVE EVENT AUDIT LOGS & HEALTH -->
+        <div class="lg:col-span-5 bg-[#111827] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <h3 class="text-sm font-extrabold text-white">البث المالي اللحظي للأحداث (Event Stream)</h3>
+              </div>
+              <span class="text-[11px] text-slate-400 mono-code">استجابة 34ms</span>
+            </div>
+
+            <!-- Feed list -->
+            <div class="space-y-2.5 overflow-y-auto max-h-[360px] pr-1" id="liveActivityFeed">
+              
+              <!-- Item 1 -->
+              <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl hover:border-slate-700 transition flex items-start justify-between gap-3">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-200">سداد اشتراك ناجح — باقة Enterprise</div>
+                    <div class="text-[11px] text-slate-400">شركة تمكين للحلول الرقمية · مدى</div>
+                    <span class="text-[10px] text-slate-500 mono-code">TXN_SAHAB_881902</span>
+                  </div>
+                </div>
+                <div class="text-left">
+                  <span class="num text-xs font-bold text-emerald-400">+3,450 ر.س</span>
+                  <span class="block text-[10px] text-slate-500">منذ 3 دقائق</span>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl hover:border-slate-700 transition flex items-start justify-between gap-3">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-200">اعتماد وختم ضريبي فوري ZATCA</div>
+                    <div class="text-[11px] text-slate-400">فاتورة رقم #INV-2026-9021 معتمدة بنجاح</div>
+                    <span class="text-[10px] text-emerald-400/90 font-mono">Phase 2 Clearance: APPROVED</span>
+                  </div>
+                </div>
+                <div class="text-left">
+                  <span class="num text-xs font-bold text-blue-400">22ms</span>
+                  <span class="block text-[10px] text-slate-500">منذ 7 دقائق</span>
+                </div>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl hover:border-slate-700 transition flex items-start justify-between gap-3">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-200">تجديد اشتراك سنوي تلقائي (Auto-Renew)</div>
+                    <div class="text-[11px] text-slate-400">مجموعة السحاب الطبية القابضة</div>
+                    <span class="text-[10px] text-slate-500 mono-code">SUB-MED-2026-09</span>
+                  </div>
+                </div>
+                <div class="text-left">
+                  <span class="num text-xs font-bold text-indigo-400">+18,900 ر.س</span>
+                  <span class="block text-[10px] text-slate-500">منذ 14 دقيقة</span>
+                </div>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl hover:border-slate-700 transition flex items-start justify-between gap-3">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="bell" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-200">إنشاء جلسة دفع B2B Checkout</div>
+                    <div class="text-[11px] text-slate-400">شركة الرائد للاستشارات الهندسية</div>
+                  </div>
+                </div>
+                <div class="text-left">
+                  <span class="num text-xs font-bold text-amber-400">850 ر.س</span>
+                  <span class="block text-[10px] text-slate-500">منذ 21 دقيقة</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Webhook simulator trigger button -->
+          <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">هل ترغب باختبار إرسال حدث مالي وهمي؟</span>
+            <button onclick="injectSimulatedEvent()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-indigo-300 transition flex items-center gap-1.5">
+              <i data-lucide="play" class="w-3.5 h-3.5"></i>
+              <span>محاكاة حدث فوري</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ACTIVE CUSTOMERS & SUBSCRIPTIONS TABLE -->
+      <div class="bg-[#111827] border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="p-5 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i data-lucide="briefcase" class="w-4 h-4 text-indigo-400"></i>
+              <span>قائمة المنشآت والمشتركين النشطين (B2B Accounts)</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">إدارة الحسابات، حالة الدفع التلقائي، والربط الضريبي المعتمد</p>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-64">
+              <i data-lucide="search" class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input type="text" id="custSearchInput" oninput="filterCustomerTable()" placeholder="ابحث باسم المنشأة أو السجل التجاري…" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pr-9 pl-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <button onclick="exportCsvData()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">تصدير CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead>
+              <tr class="bg-slate-900/60 border-b border-slate-800 text-slate-400 font-bold">
+                <th class="p-4">اسم المنشأة والعميل</th>
+                <th class="p-4">السجل والرقم الضريبي</th>
+                <th class="p-4">الباقة المشترك بها</th>
+                <th class="p-4">قيمة الاشتراك</th>
+                <th class="p-4">وسيلة السداد</th>
+                <th class="p-4">حالة الاشتراك</th>
+                <th class="p-4 text-center">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-200" id="customersTableBody">
+              <!-- Row 1 -->
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-bold text-xs">تم</div>
+                  <div>
+                    <div>شركة تمكين الرقمية المحدودة</div>
+                    <div class="text-[11px] text-slate-400">الرياض • تقنية معلومات</div>
+                  </div>
+                </td>
+                <td class="p-4 mono-code text-[11px] text-slate-300">
+                  <div>CR: 1010772911</div>
+                  <div class="text-slate-500 text-[10px]">VAT: 310928374900003</div>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-bold">باقة الشركات Enterprise</span>
+                </td>
+                <td class="p-4 num font-bold text-white">3,450 ر.س<span class="text-slate-500 font-normal text-[10px]">/شهر</span></td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    بطاقة مدى (Mada)
+                  </span>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> نشط ومجدد
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9021')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+                    معاينة الفاتورة
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-violet-600/20 text-violet-400 border border-violet-500/30 flex items-center justify-center font-bold text-xs">أف</div>
+                  <div>
+                    <div>مؤسسة أفق للحلول السحابية</div>
+                    <div class="text-[11px] text-slate-400">جدة • خدمات سحابية</div>
+                  </div>
+                </td>
+                <td class="p-4 mono-code text-[11px] text-slate-300">
+                  <div>CR: 4030882194</div>
+                  <div class="text-slate-500 text-[10px]">VAT: 310847291100003</div>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/20 font-bold">باقة النمو Growth</span>
+                </td>
+                <td class="p-4 num font-bold text-white">1,200 ر.س<span class="text-slate-500 font-normal text-[10px]">/شهر</span></td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                    Apple Pay
+                  </span>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> نشط ومجدد
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9020')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+                    معاينة الفاتورة
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 font-bold text-white flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs">إم</div>
+                  <div>
+                    <div>شركة إمداد اللوجستية الذكية</div>
+                    <div class="text-[11px] text-slate-400">الدمام • سلاسل الإمداد</div>
+                  </div>
+                </td>
+                <td class="p-4 mono-code text-[11px] text-slate-300">
+                  <div>CR: 2050991823</div>
+                  <div class="text-slate-500 text-[10px]">VAT: 310781267400003</div>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold">باقة النطاق المفتوح Scale</span>
+                </td>
+                <td class="p-4 num font-bold text-white">8,900 ر.س<span class="text-slate-500 font-normal text-[10px]">/شهر</span></td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    نظام سداد المباشر (SADAD)
+                  </span>
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> نشط ومجدد
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9019')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+                    معاينة الفاتورة
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: ZATCA PHASE 2 SIMULATOR ==================== -->
+    <div id="view-zatca" class="tab-view hidden space-y-8">
+      
+      <!-- ZATCA ENGINE STATUS BANNER -->
+      <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-[#111827] border border-emerald-500/40 rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <i data-lucide="shield-check" class="w-8 h-8"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-black text-white">بوابة الربط والاعتماد الضريبي ZATCA — المرحلة الثانية (Clearance & Reporting)</h2>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">معتمد رسمياً FATOORA</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-1">توليد الختم المشفر، توقيع ECDSA، كود الاستجابة السريعة TLV QR، وإرسال الفواتير بصيغة XML UBL 2.1</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="runZatcaSelfCheck()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              <span>فحص حالة الربط مع ZATCA CSID</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800 text-xs">
+          <div>
+            <span class="text-slate-400 block text-[11px]">شهادة الاعتماد Cryptographic Stamp:</span>
+            <span class="font-mono font-bold text-emerald-400 text-xs">VALID (Secp256k1)</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">الرقم المعرف للجهاز EGS UUID:</span>
+            <span class="font-mono text-slate-300 text-xs">9b1deb4d-3b7d-4bad</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">سلسلة تشفير الفواتير (PIH Hash Chain):</span>
+            <span class="font-mono text-slate-300 text-xs">SHA-256 Verifiable</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">متوسط زمن الموافقة (Clearance API):</span>
+            <span class="font-mono font-bold text-indigo-400 text-xs">42ms Response</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE XML & SIGNATURE GENERATOR WORKSPACE -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left 6 cols: Live Invoice Generator Inputs -->
+        <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+              <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
+              <span>مُنشئ الفاتورة المشفرة للاختبار الحي</span>
+            </h3>
+            <span class="text-[11px] text-slate-400">صيغة UBL 2.1 القياسية</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">اسم المشتري (Buyer Name):</label>
+              <input type="text" id="zatcaBuyerName" value="شركة بارق للتقنية والذكاء" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الرقم الضريبي للمشتري (15 رقم):</label>
+              <input type="text" id="zatcaBuyerVat" value="310482910400003" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 mono-code">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">قيمة الخدمة الأساسية (ر.س):</label>
+              <input type="number" id="zatcaBaseAmount" value="5000" oninput="updateZatcaPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">نوع الفاتورة (Invoice Subtype):</label>
+              <select id="zatcaInvType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
+                <option value="0100000">فاتورة ضريبية قياسية Standard (B2B)</option>
+                <option value="0200000">فاتورة ضريبية مبسطة Simplified (B2C)</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="signAndSendToZatca()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 active:scale-95">
+            <i data-lucide="key" class="w-4 h-4"></i>
+            <span>توليد التوقيع الرقمي والرفع لهيئة الزكاة (Clearance Test)</span>
+          </button>
+
+          <!-- Interactive Cryptographic Details -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400 text-[11px]">مفتاح التجزئة (Invoice Hash SHA-256):</span>
+              <button onclick="copyHashText()" class="text-indigo-400 hover:text-indigo-300 text-[10px] flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i> نسخ
+              </button>
+            </div>
+            <div class="mono-code text-[11px] text-emerald-400 bg-black/40 p-2.5 rounded-lg border border-slate-800 break-all" id="zatcaHashDisplay">
+              4e8b39a7b9319e7a2bfa041c2c8f61537b98fbc185213b34df4981bc92
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-slate-400 text-[11px]">توقيع الخاتم الرقمي (ECDSA Signature Base64):</span>
+            </div>
+            <div class="mono-code text-[10px] text-slate-300 bg-black/40 p-2 rounded-lg border border-slate-800 break-all">
+              MEYCIQDx9lP...G2b3qCIdQkGzX8N9s4T2r9100ZkLp8w0A==
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 6 cols: XML Code View & QR Code Output -->
+        <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <i data-lucide="code-2" class="w-4 h-4 text-indigo-400"></i>
+                <h3 class="text-sm font-extrabold text-white">ملف الفاتورة المعتمد XML UBL 2.1</h3>
+              </div>
+              <button onclick="copyXmlCode()" class="text-slate-400 hover:text-white text-xs flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i> نسخ XML
+              </button>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 font-mono text-[11px] text-emerald-300/90 overflow-x-auto max-h-[300px] leading-relaxed text-left" dir="ltr" id="xmlCodeContainer">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"&gt;
+  &lt;cbc:ProfileID&gt;reporting:1.0&lt;/cbc:ProfileID&gt;
+  &lt;cbc:ID&gt;INV-2026-9021&lt;/cbc:ID&gt;
+  &lt;cbc:UUID&gt;3264c70a-00f7-4be7-8b09-fa9271c08&lt;/cbc:UUID&gt;
+  &lt;cbc:IssueDate&gt;2026-10-08&lt;/cbc:IssueDate&gt;
+  &lt;cac:AccountingSupplierParty&gt;
+    &lt;cac:PartyLegalEntity&gt;
+      &lt;cbc:RegistrationName&gt;سحاب للتقنية المالية&lt;/cbc:RegistrationName&gt;
+      &lt;cbc:CompanyID&gt;310482910400003&lt;/cbc:CompanyID&gt;
+    &lt;/cac:PartyLegalEntity&gt;
+  &lt;/cac:AccountingSupplierParty&gt;
+  &lt;cac:TaxTotal&gt;
+    &lt;cbc:TaxAmount currencyID="SAR"&gt;750.00&lt;/cbc:TaxAmount&gt;
+  &lt;/cac:TaxTotal&gt;
+  &lt;cac:LegalMonetaryTotal&gt;
+    &lt;cbc:LineExtensionAmount currencyID="SAR"&gt;5000.00&lt;/cbc:LineExtensionAmount&gt;
+    &lt;cbc:TaxInclusiveAmount currencyID="SAR"&gt;5750.00&lt;/cbc:TaxInclusiveAmount&gt;
+  &lt;/cac:LegalMonetaryTotal&gt;
+&lt;/Invoice&gt;
+            </div>
+          </div>
+
+          <!-- Live QR TLV Generator visual preview -->
+          <div class="mt-4 p-4 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 bg-white p-1 rounded-lg flex items-center justify-center flex-shrink-0 shadow">
+                <!-- SVG QR Mock -->
+                <svg viewBox="0 0 100 100" class="w-full h-full text-black">
+                  <path d="M10 10h30v30h-30zM20 20h10v10h-10zM60 10h30v30h-30zM70 20h10v10h-10zM10 60h30v30h-30zM20 70h10v10h-10zM50 20h5v15h-5zM45 50h15v5h-15zM60 60h10v10h-10zM80 60h10v20h-10zM60 80h15v10h-15z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="text-xs">
+                <span class="font-bold text-white block">رمز الاستجابة السريعة TLV المقروء بهيئة الزكاة</span>
+                <span class="text-[11px] text-slate-400 block">يتضمن التوقيع الرقمي، الرقم الضريبي، والختم المشفر</span>
+              </div>
+            </div>
+            <button onclick="openZatcaModal('INV-2026-9021')" class="px-3 py-2 bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-bold transition flex-shrink-0">
+              معاينة الفاتورة كاملة
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: WEBHOOKS CONSOLE & API LAB ==================== -->
+    <div id="view-webhooks" class="tab-view hidden space-y-8">
+      
+      <div class="bg-[#111827] border border-slate-800 rounded-2xl p-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-6">
+          <div>
+            <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i data-lucide="cpu" class="w-5 h-5 text-amber-400"></i>
+              <span>مختبر الويب هوك وبوابات API الحية (Webhook Dispatcher)</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">اختبر إرسال أحداث الاشتراكات، الفواتير، وحالات الربط إلى نظامك البرمجي بصيغة JSON الحية</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-mono">السرعة: 42ms</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Dispatch Form (5 cols) -->
+          <div class="lg:col-span-5 space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">نوع الحدث المالي (Webhook Event):</label>
+              <select id="webhookEventType" onchange="loadWebhookPayloadTemplate()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="invoice.payment_succeeded">invoice.payment_succeeded (سداد ناجح)</option>
+                <option value="subscription.created">subscription.created (اشتراك جديد)</option>
+                <option value="invoice.payment_failed">invoice.payment_failed (فشل سداد)</option>
+                <option value="zatca.clearance_approved">zatca.clearance_approved (اعتماد زاتكا)</option>
+                <option value="customer.subscription.canceled">customer.subscription.canceled (إلغاء اشتراك)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">عنوان الرابط المستلم (Webhook Endpoint):</label>
+              <div class="flex items-center bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
+                <span class="mono-code text-indigo-400 text-[11px] ml-2">POST</span>
+                <input type="text" id="webhookUrlInput" value="https://api.yourcompany.sa/v1/sahab-webhooks" class="w-full bg-transparent border-0 focus:outline-none mono-code text-[11px] text-slate-300">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">مفتاح التوقيع السري (Signing Secret):</label>
+              <div class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs mono-code text-slate-400 flex items-center justify-between">
+                <span>whsec_99182370129a8f4c...</span>
+                <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+              </div>
+            </div>
+
+            <button onclick="dispatchLiveWebhook()" class="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>إرسال الحدث إلى الخادم (Trigger Webhook)</span>
+            </button>
+          </div>
+
+          <!-- Payload & Response Viewer (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-bold text-slate-300">حمولة البيانات (JSON Request Payload):</span>
+                <span class="text-slate-500 mono-code text-[10px]">application/json</span>
+              </div>
+              <textarea id="webhookJsonPayload" rows="8" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 mono-code text-[11px] text-amber-300/90 leading-relaxed focus:outline-none text-left" dir="ltr">{
+  "id": "evt_910482910481",
+  "object": "event",
+  "api_version": "2026-03-01",
+  "created": 1741445012,
+  "type": "invoice.payment_succeeded",
+  "data": {
+    "invoice_id": "INV-2026-9021",
+    "customer_cr": "1010772911",
+    "amount_due": 3450.00,
+    "currency": "SAR",
+    "zatca_status": "CLEARED"
+  }
+}</textarea>
+            </div>
+
+            <!-- Server Response Output Box -->
+            <div id="webhookResponseBox" class="p-3.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-300 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400" id="responseStatusDot"></span>
+                  <span>حالة استجابة خادمك:</span>
+                  <span class="mono-code text-emerald-400 font-bold" id="responseStatusText">200 OK</span>
+                </span>
+                <span class="mono-code text-slate-400 text-[11px]" id="responseTimeText">وقت التنفيذ: 38ms</span>
+              </div>
+              <div class="mono-code text-[11px] text-slate-400 bg-black/40 p-2 rounded-lg border border-slate-800 text-left" dir="ltr" id="responseDetailText">
+{"success": true, "received_at": "2026-10-08T16:24:11.890Z", "signature_verified": true}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 4: TAX INVOICES ARCHIVE ==================== -->
+    <div id="view-invoices" class="tab-view hidden space-y-8">
+      
+      <div class="bg-[#111827] border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="p-5 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i data-lucide="receipt" class="w-4 h-4 text-indigo-400"></i>
+              <span>أرشيف الفواتير الضريبية المعتمدة (B2B Tax Invoices)</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">فواتير متطابقة مع متطلبات الربط والتكامل مع منصة فاتورة</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="openZatcaModal('INV-2026-9021')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-md">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              <span>معاينة الفاتورة الضريبية النموذجية</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead>
+              <tr class="bg-slate-900/60 border-b border-slate-800 text-slate-400 font-bold">
+                <th class="p-4">رقم الفاتورة UUID</th>
+                <th class="p-4">اسم العميل</th>
+                <th class="p-4">تاريخ الإصدار</th>
+                <th class="p-4">المبلغ الخاضع للضريبة</th>
+                <th class="p-4">الضريبة 15%</th>
+                <th class="p-4">الإجمالي شامل الضريبة</th>
+                <th class="p-4">حالة الاعتماد ZATCA</th>
+                <th class="p-4 text-center">الإجراء</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-200">
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 mono-code font-bold text-indigo-400">INV-2026-9021</td>
+                <td class="p-4 font-bold text-white">شركة تمكين الرقمية المحدودة</td>
+                <td class="p-4 num text-slate-400">2026-10-08 14:20</td>
+                <td class="p-4 num">3,000.00 ر.س</td>
+                <td class="p-4 num text-slate-400">450.00 ر.س</td>
+                <td class="p-4 num font-black text-white">3,450.00 ر.س</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> مختومة ومعتمدة
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9021')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
+                    عرض وطباعة
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 mono-code font-bold text-indigo-400">INV-2026-9020</td>
+                <td class="p-4 font-bold text-white">مؤسسة أفق للحلول السحابية</td>
+                <td class="p-4 num text-slate-400">2026-10-08 11:05</td>
+                <td class="p-4 num">1,043.48 ر.س</td>
+                <td class="p-4 num text-slate-400">156.52 ر.س</td>
+                <td class="p-4 num font-black text-white">1,200.00 ر.س</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> مختومة ومعتمدة
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9020')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
+                    عرض وطباعة
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="p-4 mono-code font-bold text-indigo-400">INV-2026-9019</td>
+                <td class="p-4 font-bold text-white">شركة إمداد اللوجستية الذكية</td>
+                <td class="p-4 num text-slate-400">2026-10-07 18:45</td>
+                <td class="p-4 num">7,739.13 ر.س</td>
+                <td class="p-4 num text-slate-400">1,160.87 ر.س</td>
+                <td class="p-4 num font-black text-white">8,900.00 ر.س</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center gap-1 w-fit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> مختومة ومعتمدة
+                  </span>
+                </td>
+                <td class="p-4 text-center">
+                  <button onclick="openZatcaModal('INV-2026-9019')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
+                    عرض وطباعة
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== MODAL: FULL REALISTIC SAUDI TAX INVOICE ==================== -->
+  <div id="zatcaInvoiceModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white text-slate-900 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-8 font-sans">
+      
+      <!-- Close button -->
+      <button onclick="closeZatcaModal()" class="absolute top-5 left-5 text-slate-400 hover:text-slate-700 transition">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <!-- Invoice Header -->
+      <div class="border-b-2 border-slate-900 pb-5 mb-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-black text-indigo-700">فاتورة ضريبية رسمية</span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Tax Invoice</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">صادرة وفق متطلبات هيئة الزكاة والضريبة والجمارك (المرحلة 2)</p>
+        </div>
+
+        <div class="text-left text-xs" dir="ltr">
+          <div class="font-black text-base text-slate-900 font-mono" id="modalInvNumber">INV-2026-9021</div>
+          <div class="text-slate-500">Date: 2026-10-08 14:20:10</div>
+        </div>
+      </div>
+
+      <!-- Seller & Buyer Info Grid -->
+      <div class="grid grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl text-xs mb-6 border border-slate-200">
+        <!-- Seller -->
+        <div>
+          <span class="text-indigo-700 font-bold block mb-1">بيانات المورد (Seller):</span>
+          <div class="font-extrabold text-sm text-slate-900">سحاب للتقنية المالية (Sahab FinTech)</div>
+          <div class="text-slate-600 mt-0.5">سجل تجاري: 1010892041</div>
+          <div class="text-slate-600">الرقم الضريبي: <span class="font-mono font-bold">310482910400003</span></div>
+          <div class="text-slate-500">طريق الملك فهد، حي الملقا، الرياض</div>
+        </div>
+
+        <!-- Buyer -->
+        <div>
+          <span class="text-indigo-700 font-bold block mb-1">بيانات العميل المشتري (Buyer):</span>
+          <div class="font-extrabold text-sm text-slate-900" id="modalBuyerTitle">شركة تمكين الرقمية المحدودة</div>
+          <div class="text-slate-600 mt-0.5">سجل تجاري: 1010772911</div>
+          <div class="text-slate-600">الرقم الضريبي: <span class="font-mono font-bold" id="modalBuyerVatDisplay">310928374900003</span></div>
+          <div class="text-slate-500">طريق التخصصي، الرياض</div>
+        </div>
+      </div>
+
+      <!-- Line Items Table -->
+      <table class="w-full text-right text-xs mb-6 border-collapse">
+        <thead>
+          <tr class="border-b border-slate-300 text-slate-600 font-bold">
+            <th class="py-2">البند / الخدمة</th>
+            <th class="py-2 text-center">الكمية</th>
+            <th class="py-2 num">سعر الوحدة</th>
+            <th class="py-2 text-center">نسبة الضريبة</th>
+            <th class="py-2 num">المجموع شامل الضريبة</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 text-slate-800">
+          <tr>
+            <td class="py-3 font-bold">
+              <div>اشتراك باقة الشركات SaaS Enterprise</div>
+              <div class="text-[11px] text-slate-500 font-normal">تتضمن 25 مقعد موظف + 150 ألف استدعاء AI</div>
+            </td>
+            <td class="py-3 text-center num font-bold">1</td>
+            <td class="py-3 num font-bold">3,000.00 ر.س</td>
+            <td class="py-3 text-center num font-bold">15%</td>
+            <td class="py-3 num font-extrabold text-indigo-700">3,450.00 ر.س</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Summary & ZATCA QR Code Strip -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <!-- QR Code -->
+        <div class="flex items-center gap-3">
+          <div class="w-20 h-20 bg-white p-1 rounded-lg border border-slate-300 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 100 100" class="w-full h-full text-black">
+              <path d="M10 10h30v30h-30zM20 20h10v10h-10zM60 10h30v30h-30zM70 20h10v10h-10zM10 60h30v30h-30zM20 70h10v10h-10zM50 20h5v15h-5zM45 50h15v5h-15zM60 60h10v10h-10zM80 60h10v20h-10zM60 80h15v10h-15z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="text-[11px] text-slate-600">
+            <div class="font-extrabold text-emerald-800 flex items-center gap-1">
+              <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+              <span>معتمدة من هيئة الزكاة ZATCA</span>
+            </div>
+            <div class="text-[10px] text-slate-500 mt-0.5">رمز الاستجابة السريعة المشفر مشفّر بنظام TLV Base64</div>
+          </div>
+        </div>
+
+        <!-- Totals breakdown -->
+        <div class="text-left w-full sm:w-auto text-xs space-y-1">
+          <div class="flex justify-between sm:justify-end gap-6 text-slate-600">
+            <span>المجموع غير شامل الضريبة:</span>
+            <span class="num font-bold">3,000.00 ر.س</span>
+          </div>
+          <div class="flex justify-between sm:justify-end gap-6 text-slate-600">
+            <span>ضريبة القيمة المضافة (15%):</span>
+            <span class="num font-bold">450.00 ر.س</span>
+          </div>
+          <div class="flex justify-between sm:justify-end gap-6 text-base font-black text-slate-900 pt-2 border-t border-slate-300">
+            <span>الإجمالي المستحق:</span>
+            <span class="num text-indigo-700">3,450.00 ر.س</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <button onclick="window.print()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition flex items-center gap-2">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>طباعة الفاتورة الرسمية</span>
+        </button>
+        <button onclick="closeZatcaModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-300 transition">
+          إغلاق
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="fixed bottom-6 left-6 z-50 bg-slate-900 border border-indigo-500/40 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" id="toastDot"></div>
+    <span id="toastMsg">تمت العملية بنجاح</span>
+  </div>
+
+
+
+  <!-- SCRIPTS & INTERACTIVITY LOGIC -->
+  <script>
+    // Tab switching logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400', 'border-indigo-500/20');
+        btn.classList.add('text-slate-400', 'border-transparent');
+      });
+
+      const activeView = document.getElementById(`view-${tabId}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.add('bg-indigo-600/10', 'text-indigo-400', 'border-indigo-500/20');
+        activeBtn.classList.remove('text-slate-400', 'border-transparent');
+      }
+      lucide.createIcons();
+    }
+
+    // Pricing Simulator
+    let isAnnualPricing = false;
+    function setBillingCycle(cycle) {
+      isAnnualPricing = (cycle === 'annual');
+      const monthlyBtn = document.getElementById('calcMonthlyBtn');
+      const annualBtn = document.getElementById('calcAnnualBtn');
+
+      if (isAnnualPricing) {
+        annualBtn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition flex items-center gap-1";
+        monthlyBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition";
+        document.getElementById('billingCycleLabel').textContent = "تدفع سنوياً بنظام الفوترة التلقائية (وفّر 20%)";
+      } else {
+        monthlyBtn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition";
+        annualBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition flex items-center gap-1";
+        document.getElementById('billingCycleLabel').textContent = "تدفع شهرياً بنظام الفوترة التلقائية";
+      }
+      recalcPricing();
+    }
+
+    function recalcPricing() {
+      const seats = parseInt(document.getElementById('seatsSlider').value);
+      const apiCredits = parseInt(document.getElementById('apiSlider').value);
+      const hasZatca = document.getElementById('addonZatca').checked;
+      const hasSla = document.getElementById('addonSla').checked;
+
+      document.getElementById('seatsValDisplay').textContent = `${seats} مقعد`;
+      document.getElementById('apiValDisplay').textContent = `${(apiCredits / 1000).toLocaleString('en-US')} ألف طلب`;
+
+      let baseMonthly = (seats * 40) + ((apiCredits / 10000) * 45);
+      if (hasZatca) baseMonthly += 250;
+      if (hasSla) baseMonthly += 450;
+
+      let subtotal = baseMonthly;
+      if (isAnnualPricing) {
+        subtotal = baseMonthly * 0.8 * 12;
+      }
+
+      const vat = subtotal * 0.15;
+      const grandTotal = subtotal + vat;
+
+      document.getElementById('subtotalDisplay').textContent = `${Math.round(subtotal).toLocaleString('en-US')} ر.س`;
+      document.getElementById('vatDisplay').textContent = `${Math.round(vat).toLocaleString('en-US')} ر.س`;
+      document.getElementById('grandTotalDisplay').textContent = `${Math.round(grandTotal).toLocaleString('en-US')} ر.س`;
+    }
+
+    // Toast helper
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastDot = document.getElementById('toastDot');
+
+      toastMsg.textContent = message;
+      toastDot.className = `w-2 h-2 rounded-full ${isSuccess ? 'bg-emerald-400' : 'bg-amber-400'} animate-pulse`;
+      toast.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // Environment switcher
+    function switchEnv(env) {
+      const liveBtn = document.getElementById('envLiveBtn');
+      const testBtn = document.getElementById('envTestBtn');
+      if (env === 'live') {
+        liveBtn.className = "px-2.5 py-1 rounded-lg bg-indigo-600 text-white shadow-sm transition";
+        testBtn.className = "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+        showToast("تم التحويل إلى بيئة الإنتاج المباشرة (Live Mode)");
+      } else {
+        testBtn.className = "px-2.5 py-1 rounded-lg bg-indigo-600 text-white shadow-sm transition";
+        liveBtn.className = "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+        showToast("تم التحويل إلى بيئة الاختبار والتجربة (Sandbox Mode)");
+      }
+    }
+
+    // Modal Helpers
+    function openZatcaModal(invNumber) {
+      const modal = document.getElementById('zatcaInvoiceModal');
+      document.getElementById('modalInvNumber').textContent = invNumber;
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeZatcaModal() {
+      document.getElementById('zatcaInvoiceModal').classList.add('hidden');
+    }
+
+    function generateInstantCheckoutLink() {
+      showToast("تم إنشاء رابط سداد إلكتروني معتمد مع QR وهيئة الزكاة");
+    }
+
+    function createCustomContractDraft() {
+      showToast("تم تصدير مسودة العرض المالي بصيغة PDF بنجاح");
+    }
+
+    function openNewSubscriptionModal() {
+      showToast("فُتحت نافذة تخصيص باقة واشتراك لمنشأة جديدة");
+    }
+
+    function exportCsvData() {
+      showToast("تم تنزيل ملف المشتركين والفوترة بصيغة CSV");
+    }
+
+    // Webhook lab
+    const webhookTemplates = {
+      "invoice.payment_succeeded": {
+        "id": "evt_" + Math.floor(Math.random() * 90000000),
+        "object": "event",
+        "api_version": "2026-03-01",
+        "created": Math.floor(Date.now() / 1000),
+        "type": "invoice.payment_succeeded",
+        "data": {
+          "invoice_id": "INV-2026-9021",
+          "customer_cr": "1010772911",
+          "amount_due": 3450.00,
+          "currency": "SAR",
+          "payment_method": "mada",
+          "zatca_status": "CLEARED"
+        }
+      },
+      "subscription.created": {
+        "id": "evt_" + Math.floor(Math.random() * 90000000),
+        "object": "event",
+        "api_version": "2026-03-01",
+        "type": "subscription.created",
+        "data": {
+          "subscription_id": "sub_881920",
+          "tier": "enterprise_saas",
+          "seats": 25,
+          "interval": "monthly"
+        }
+      },
+      "invoice.payment_failed": {
+        "id": "evt_" + Math.floor(Math.random() * 90000000),
+        "object": "event",
+        "type": "invoice.payment_failed",
+        "data": {
+          "invoice_id": "INV-2026-8991",
+          "decline_code": "insufficient_funds",
+          "retry_scheduled": "2026-10-09T08:00:00Z"
+        }
+      },
+      "zatca.clearance_approved": {
+        "id": "evt_" + Math.floor(Math.random() * 90000000),
+        "object": "event",
+        "type": "zatca.clearance_approved",
+        "data": {
+          "invoice_uuid": "3264c70a-00f7-4be7-8b09-fa9271c08",
+          "status": "REPORTED_CLEARED",
+          "hash_sha256": "4e8b39a7b9319e7a2bfa041c2c8f61537b98fbc185213b34df4981bc92"
+        }
+      },
+      "customer.subscription.canceled": {
+        "id": "evt_" + Math.floor(Math.random() * 90000000),
+        "object": "event",
+        "type": "customer.subscription.canceled",
+        "data": {
+          "subscription_id": "sub_441209",
+          "cancel_at_period_end": true
+        }
+      }
+    };
+
+    function loadWebhookPayloadTemplate() {
+      const type = document.getElementById('webhookEventType').value;
+      const tpl = webhookTemplates[type] || webhookTemplates["invoice.payment_succeeded"];
+      document.getElementById('webhookJsonPayload').value = JSON.stringify(tpl, null, 2);
+    }
+
+    function dispatchLiveWebhook() {
+      showToast("جاري إرسال الحدث إلى Webhook Endpoint…");
+      setTimeout(() => {
+        const latency = Math.floor(25 + Math.random() * 35);
+        document.getElementById('responseTimeText').textContent = `وقت التنفيذ: ${latency}ms`;
+        document.getElementById('responseStatusText').textContent = "200 OK";
+        document.getElementById('responseDetailText').textContent = `{"success": true, "received_at": "${new Date().toISOString()}", "signature_verified": true}`;
+        showToast("تم استلام الاستجابة 200 OK بنجاح!");
+      }, 400);
+    }
+
+    function injectSimulatedEvent() {
+      const feed = document.getElementById('liveActivityFeed');
+      const item = document.createElement('div');
+      item.className = "p-3 bg-indigo-950/40 border border-indigo-500/40 rounded-xl transition flex items-start justify-between gap-3 animate-pulse";
+      item.innerHTML = `
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white">دفعة B2B فورية جديدة</div>
+            <div class="text-[11px] text-slate-300">شركة مدار الرقمية · Apple Pay</div>
+          </div>
+        </div>
+        <div class="text-left">
+          <span class="num text-xs font-bold text-emerald-400">+2,150 ر.س</span>
+          <span class="block text-[10px] text-slate-400">الآن</span>
+        </div>
+      `;
+      feed.insertBefore(item, feed.firstChild);
+      lucide.createIcons();
+      showToast("وصل حدث مالي جديد لحظياً!");
+    }
+
+    function signAndSendToZatca() {
+      showToast("تم توليد الختم المشفر والتوقيع الرقمي بنجاح من ZATCA");
+    }
+
+    function runZatcaSelfCheck() {
+      showToast("فحص شهادة CSID: متوافقة ومرتبطة ببيئة FATOORA الحية");
+    }
+
+    function copyHashText() {
+      navigator.clipboard?.writeText(document.getElementById('zatcaHashDisplay').innerText);
+      showToast("تم نسخ الهاش SHA-256 للحافظة");
+    }
+
+    function copyXmlCode() {
+      navigator.clipboard?.writeText(document.getElementById('xmlCodeContainer').innerText);
+      showToast("تم نسخ ملف XML UBL 2.1 للحافظة");
+    }
+
+    function filterCustomerTable() {
+      const val = document.getElementById('custSearchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#customersTableBody tr');
+      rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(val) ? '' : 'none';
+      });
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      recalcPricing();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

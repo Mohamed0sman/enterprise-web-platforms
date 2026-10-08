@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyFansSMM – Global SMM Panel for Social Media Growth | Official Project</title>
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            panelBg: '#090D16',
+            panelCard: '#111726',
+            panelBorder: '#1F293D',
+            brandCyan: '#06B6D4',
+            brandIndigo: '#6366F1'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090D16;
+      color: #F1F5F9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F293D;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black antialiased">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="sticky top-0 z-40 bg-[#090D16]/95 backdrop-blur-md border-b border-panelBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="https://myfanssmm.com/" target="_blank" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/25 group-hover:scale-105 transition font-black text-lg">
+          M
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold tracking-tight text-white">MyFansSMM</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Global Panel</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Social Media Growth Infrastructure</p>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-300">
+        <a href="#services" class="text-cyan-400 hover:text-white transition">Services & Pricing</a>
+        <a href="#quickOrder" class="hover:text-white transition">Quick Order</a>
+        <a href="#apiDocs" class="hover:text-white transition">Reseller API</a>
+        <a href="#features" class="hover:text-white transition">Why Choose Us</a>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <!-- Live Link -->
+        <a href="https://myfanssmm.com/" target="_blank" class="px-3.5 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500 hover:text-black text-xs font-bold border border-cyan-500/30 transition flex items-center gap-1.5 shadow-sm">
+          <span>myfanssmm.com</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+
+        <!-- Account Balance Indicator -->
+        <div class="hidden sm:flex items-center gap-2 bg-panelCard px-3 py-1.5 rounded-xl border border-panelBorder text-xs">
+          <span class="text-slate-400">Balance:</span>
+          <span class="font-mono font-bold text-emerald-400">$150.00</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="py-12 lg:py-16 text-center border-b border-panelBorder relative overflow-hidden">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-bold mb-4">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span>The High-Speed Automated SMM Panel Trusted Worldwide</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto">
+        Global Social Media Growth <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-pink-400">
+          At Unmatched Wholesale Rates
+        </span>
+      </h1>
+
+      <p class="text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto mt-4 leading-relaxed">
+        Instagram, TikTok, YouTube, Spotify, and Telegram engagement delivered within minutes. API V2 ready for automated agency and reseller workflows.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+        <a href="#services" class="px-7 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-xs sm:text-sm shadow-xl shadow-cyan-500/25 transition transform hover:-translate-y-0.5">
+          View All Services
+        </a>
+        <a href="https://myfanssmm.com/" target="_blank" class="px-6 py-3 rounded-xl bg-panelCard hover:bg-slate-800 text-slate-200 border border-panelBorder text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <span>Open Live Site (myfanssmm.com)</span>
+          <i data-lucide="external-link" class="w-4 h-4 text-cyan-400"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICES EXPLORER & LIVE TABLE ==================== -->
+  <section id="services" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-cyan-400"></i>
+          <span>Interactive Services Catalog</span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Real-time pricing, speed benchmarks, and instant ordering</p>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="relative w-full sm:w-64">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            id="serviceSearchInput" 
+            placeholder="Search service by name or platform..." 
+            oninput="renderServicesTable()"
+            class="w-full bg-panelCard border border-panelBorder rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+          >
+        </div>
+
+        <select id="categoryFilter" onchange="renderServicesTable()" class="bg-panelCard border border-panelBorder rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+          <option value="All">All Platforms</option>
+          <option value="Instagram">Instagram</option>
+          <option value="TikTok">TikTok</option>
+          <option value="YouTube">YouTube</option>
+          <option value="Telegram">Telegram</option>
+          <option value="Spotify">Spotify</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="bg-panelCard border border-panelBorder rounded-2xl overflow-hidden shadow-xl">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-900/80 text-slate-400 border-b border-panelBorder font-semibold uppercase tracking-wider text-[11px]">
+            <tr>
+              <th class="py-3 px-4">ID</th>
+              <th class="py-3 px-4">Service</th>
+              <th class="py-3 px-4">Rate per 1k</th>
+              <th class="py-3 px-4">Min / Max</th>
+              <th class="py-3 px-4">Avg Speed</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="servicesTableBody" class="divide-y divide-panelBorder">
+            <!-- Injected via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== API DOCUMENTATION PREVIEW ==================== -->
+  <section id="apiDocs" class="py-12 bg-[#0C121E] border-t border-panelBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/20">Developers</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">High Performance SMM Reseller API</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
+            Connect your own store, script, or bot directly with our endpoints. Instant order placement, status check, balance inquiries, and refill hooks.
+          </p>
+
+          <div class="space-y-3 mt-6 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span>RESTful JSON responses with sub-100ms response time</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span>Automated error codes & real-time webhook callbacks</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span>Support for multiple currencies & custom margin setups</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Snippet Box -->
+        <div class="bg-panelBg border border-panelBorder rounded-2xl p-5 shadow-2xl font-mono text-xs">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-panelBorder">
+            <div class="flex items-center gap-2 text-slate-400">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+              <span class="ml-2 font-bold text-slate-300 text-[11px]">curl POST /api/v2</span>
+            </div>
+            <span class="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded">200 OK</span>
+          </div>
+
+          <pre class="text-cyan-300 leading-relaxed overflow-x-auto text-[11px]"><code>curl -X POST https://myfanssmm.com/api/v2 \
+  -d "key=YOUR_API_TOKEN_XYZ" \
+  -d "action=add" \
+  -d "service=1024" \
+  -d "link=https://instagram.com/myfanssmm" \
+  -d "quantity=1000"
+
+# Response:
+{
+  "order": 948210,
+  "status": "processing",
+  "charge": 1.20,
+  "currency": "USD"
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#06080E] border-t border-panelBorder py-10 mt-auto text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <span class="text-white font-extrabold text-base">MyFansSMM</span>
+        <span class="text-slate-700">|</span>
+        <p>Built & operated by Osman. Available live at <a href="https://myfanssmm.com/" target="_blank" class="text-cyan-400 underline">myfanssmm.com</a></p>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://myfanssmm.com/" target="_blank" class="text-cyan-400 hover:text-white transition flex items-center gap-1">
+          <span>Live Site</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    const servicesList = [
+      { id: 101, cat: "Instagram", name: "Instagram Real Active Followers [Instant] [30-Day Refill]", rate: "$1.85", min: "100", max: "50,000", speed: "15k/day" },
+      { id: 102, cat: "Instagram", name: "Instagram High Quality Likes [Fast Start] [Non-Drop]", rate: "$0.45", min: "50", max: "100,000", speed: "50k/day" },
+      { id: 103, cat: "Instagram", name: "Instagram Reels Video Views [Algorithm Booster]", rate: "$0.12", min: "500", max: "1,000,000", speed: "500k/day" },
+      { id: 201, cat: "TikTok", name: "TikTok High Retention Video Views [Explore Ranking]", rate: "$0.10", min: "1,000", max: "5,000,000", speed: "1M/day" },
+      { id: 202, cat: "TikTok", name: "TikTok Followers [Global Active Profiles]", rate: "$2.90", min: "100", max: "20,000", speed: "5k/day" },
+      { id: 203, cat: "TikTok", name: "TikTok Video Likes [Real Accounts] [Safe]", rate: "$0.85", min: "100", max: "50,000", speed: "20k/day" },
+      { id: 301, cat: "YouTube", name: "YouTube Monetization Watch Hours [4,000h Pack]", rate: "$18.50", min: "500", max: "4,000", speed: "500h/day" },
+      { id: 302, cat: "YouTube", name: "YouTube Organic Subscribers [Non-Drop Guaranteed]", rate: "$12.00", min: "100", max: "10,000", speed: "1k/day" },
+      { id: 401, cat: "Telegram", name: "Telegram Channel Members [Global Non-Drop]", rate: "$1.10", min: "100", max: "50,000", speed: "20k/day" },
+      { id: 501, cat: "Spotify", name: "Spotify Track Plays [USA / Premium Streams]", rate: "$1.40", min: "1,000", max: "100,000", speed: "10k/day" }
+    ];
+
+    function renderServicesTable() {
+      const q = document.getElementById('serviceSearchInput').value.toLowerCase().trim();
+      const cat = document.getElementById('categoryFilter').value;
+      const tbody = document.getElementById('servicesTableBody');
+
+      const filtered = servicesList.filter(item => {
+        const matchesCat = (cat === 'All' || item.cat === cat);
+        const matchesQuery = item.name.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q) || item.id.toString().includes(q);
+        return matchesCat && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-500">
+              No services match your search query.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-3 px-4 font-mono text-cyan-400 font-bold">${item.id}</td>
+          <td class="py-3 px-4">
+            <span class="font-bold text-white block">${item.name}</span>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider">${item.cat}</span>
+          </td>
+          <td class="py-3 px-4 font-mono font-bold text-emerald-400">${item.rate}</td>
+          <td class="py-3 px-4 text-slate-300 font-mono text-[11px]">${item.min} / ${item.max}</td>
+          <td class="py-3 px-4 text-slate-300 font-mono text-[11px]">${item.speed}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="handleQuickOrder(${item.id})" class="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500 hover:text-black text-cyan-300 text-xs font-bold rounded-lg transition active:scale-95 border border-cyan-500/30">
+              Order
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleQuickOrder(id) {
+      const service = servicesList.find(s => s.id === id);
+      const url = prompt(`Enter target URL for "${service.name}":`, "https://instagram.com/myfanssmm");
+      if (!url) return;
+      const qty = prompt("Enter quantity:", "1000");
+      if (!qty) return;
+
+      alert(`✅ Order Created!\nService: ${service.name}\nQuantity: ${qty}\nTarget: ${url}\nYou can track your orders on the live portal at myfanssmm.com`);
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderServicesTable();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
+

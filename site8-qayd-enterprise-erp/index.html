@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قيد — نظام إدارة الأعمال والمحاسبة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#F1F2EF;
+  --surface:#FFFFFF;
+  --ink:#17201E;
+  --ink-2:#3E4A46;
+  --muted:#77837E;
+  --rule:#DFE3DD;
+  --rule-soft:#ECEEE9;
+  --brand:#16403B;
+  --brand-2:#1E5B54;
+  --brand-soft:#E6EEEB;
+  --gold:#A87C14;
+  --gold-soft:#FBF2DC;
+  --red:#9A3324;
+  --red-soft:#FBEBE8;
+  --green:#2C6B4F;
+  --green-soft:#E7F1EB;
+  --r:5px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,"Segoe UI",sans-serif;
+  background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#C9CFC9;border-radius:9px;border:2px solid var(--canvas)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:246px 1fr;min-height:100vh}
+.nav{
+  background:var(--brand);color:#CFDCD8;display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow:hidden;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 18px 14px}
+.mark{
+  width:34px;height:34px;border-radius:7px;background:var(--gold);color:#1B1403;
+  display:grid;place-items:center;font-weight:700;font-size:15px;flex:none;
+}
+.brand b{color:#fff;font-weight:600;font-size:16px;letter-spacing:.2px;display:block}
+.brand span{font-size:11.5px;color:#89A29C;display:block;margin-top:-2px}
+.org{
+  margin:2px 12px 10px;padding:9px 11px;border-radius:var(--r);
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);
+}
+.org b{display:block;color:#EAF1EF;font-size:12.5px;font-weight:500}
+.org i{display:block;font-style:normal;font-size:11px;color:#89A29C;margin-top:1px}
+.navscroll{flex:1;overflow-y:auto;padding:2px 10px 14px}
+.navscroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-color:transparent}
+.navgrp{font-size:10.5px;color:#6F8A84;padding:14px 8px 6px;font-weight:500}
+.navitem{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:right;
+  padding:8px 10px;border-radius:var(--r);color:#B9CBC6;font-size:13.5px;
+  border-right:2px solid transparent;margin-bottom:1px;
+}
+.navitem:hover{background:rgba(255,255,255,.06);color:#fff}
+.navitem.on{background:rgba(255,255,255,.1);color:#fff;border-right-color:var(--gold);font-weight:500}
+.navitem svg{width:16px;height:16px;flex:none;opacity:.85}
+.navitem .tag{margin-inline-start:auto;font-size:10.5px;background:var(--gold);color:#1B1403;border-radius:20px;padding:0 6px;font-weight:600}
+.navfoot{padding:10px 14px 14px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#7E9691;display:flex;justify-content:space-between;align-items:center}
+.dot-ok{width:7px;height:7px;border-radius:50%;background:#5FD0A5;display:inline-block;margin-inline-end:5px}
+
+main{min-width:0;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:30;background:rgba(241,242,239,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);padding:11px 22px;display:flex;align-items:center;gap:14px;
+}
+.crumb{display:flex;align-items:baseline;gap:8px;min-width:0}
+.crumb h1{font-size:17px;font-weight:600;letter-spacing:-.2px;white-space:nowrap}
+.crumb em{font-style:normal;color:var(--muted);font-size:12.5px;white-space:nowrap}
+.search{
+  margin-inline-start:auto;position:relative;width:270px;max-width:32vw;
+}
+.search input{
+  width:100%;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);
+  padding:7px 32px 7px 10px;font-size:13px;
+}
+.search input::placeholder{color:#9AA5A0}
+.search svg{position:absolute;right:10px;top:8px;width:14px;height:14px;color:#9AA5A0}
+.pick{
+  display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r);padding:6px 10px;font-size:12.5px;white-space:nowrap;
+}
+.pick b{font-weight:500}
+.pick svg{width:15px;height:15px;flex:none;color:var(--muted)}
+.pick select{border:none;background:none;font-size:12.5px;font-weight:500;cursor:pointer;max-width:150px}
+.iconbtn{
+  width:32px;height:32px;border:1px solid var(--rule);background:var(--surface);border-radius:var(--r);
+  display:grid;place-items:center;position:relative;color:var(--ink-2)
+}
+.iconbtn:hover{border-color:#C6CCC5}
+.iconbtn svg{width:16px;height:16px}
+.bell-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+.me{display:flex;align-items:center;gap:8px;padding-inline-start:12px;border-inline-start:1px solid var(--rule)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:600;font-size:12px}
+.me small{display:block;color:var(--muted);font-size:11px;margin-top:-2px}
+.me b{font-size:12.5px;font-weight:500}
+
+.view{padding:20px 22px 46px;flex:1}
+.view.flush{padding:0}
+
+/* ---------- panels & primitives ---------- */
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r)}
+.phead{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule-soft)}
+.phead h2{font-size:13.5px;font-weight:600}
+.phead .sub{font-size:11.5px;color:var(--muted)}
+.phead .right{margin-inline-start:auto;display:flex;gap:6px;align-items:center}
+.pad{padding:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g-main{grid-template-columns:1fr 316px;align-items:start}
+.g-hero{grid-template-columns:1.62fr 1fr}
+
+.btn{
+  background:var(--brand);color:#fff;border-radius:var(--r);padding:7px 13px;font-size:12.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;border:1px solid var(--brand)
+}
+.btn:hover{background:var(--brand-2)}
+.btn svg{width:14px;height:14px}
+.btn.ghost{background:var(--surface);color:var(--ink-2);border-color:var(--rule)}
+.btn.ghost:hover{background:#F7F8F6;border-color:#C6CCC5}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.gold:hover{filter:brightness(1.06)}
+.btn.sm{padding:5px 9px;font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 7px;border-radius:20px;font-weight:500}
+.chip.pos{background:var(--green-soft);color:var(--green)}
+.chip.neg{background:var(--red-soft);color:var(--red)}
+.chip.warn{background:var(--gold-soft);color:var(--gold)}
+.chip.mute{background:#F0F2EF;color:var(--muted)}
+.lbl{font-size:11.5px;color:var(--muted)}
+.sep{height:1px;background:var(--rule-soft)}
+
+table{width:100%;border-collapse:collapse}
+.tbl th{
+  text-align:right;font-size:11.5px;font-weight:500;color:var(--muted);
+  padding:8px 12px;border-bottom:1px solid var(--rule);white-space:nowrap;background:#FAFBF9
+}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--rule-soft);font-size:13px;vertical-align:middle}
+.tbl tbody tr:hover{background:#FAFBF9}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .t-l{text-align:left}
+.tbl .t-c{text-align:center}
+.tbl tfoot td{background:#FAFBF9;font-weight:600;border-top:1px solid var(--rule);font-size:13px}
+.t-scroll{overflow:auto;max-height:420px}
+.mini{font-size:11.5px;color:var(--muted);display:block}
+
+.field{display:block;margin-bottom:11px}
+.field span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid var(--rule);border-radius:4px;padding:7px 9px;font-size:13px;background:var(--surface)
+}
+.field input:focus,.field select:focus{border-color:var(--brand-2);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+.inline-in{border:1px solid transparent;border-radius:4px;padding:4px 6px;font-size:13px;width:100%;background:transparent}
+.inline-in:hover{border-color:var(--rule)}
+.inline-in:focus{border-color:var(--brand-2);background:#fff;outline:none}
+
+.bar{height:6px;background:var(--rule-soft);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand-2);border-radius:6px}
+.bar i.gold{background:var(--gold)}
+.bar i.red{background:var(--red)}
+
+/* ---------- dashboard hero ---------- */
+.hero{position:relative;overflow:hidden;min-height:224px;display:flex;flex-direction:column}
+.hero .top{padding:16px 16px 0;position:relative;z-index:2}
+.hero .fig{font-size:42px;font-weight:600;letter-spacing:-1.4px;line-height:1.1;margin-top:2px}
+.hero .fig small{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0;margin-inline-start:4px}
+.hero .meta{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.hero svg.area{width:100%;height:120px;display:block;margin-top:auto}
+.hero .months{display:flex;justify-content:space-between;padding:0 14px 10px;font-size:10.5px;color:#9AA5A0}
+
+.cells{display:grid;grid-template-columns:repeat(4,1fr)}
+.cell{padding:13px 15px;border-inline-start:1px solid var(--rule-soft)}
+.cell:first-child{border:none}
+.cell b{display:block;font-size:20px;font-weight:600;letter-spacing:-.5px;margin:3px 0 2px}
+.cell .lbl{font-size:11.5px}
+
+.stack{display:flex;flex-direction:column}
+.row-i{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--rule-soft);font-size:13px}
+.row-i:last-child{border-bottom:none}
+.row-i .amt{margin-inline-start:auto;font-weight:500}
+.swatch{width:26px;height:26px;border-radius:5px;display:grid;place-items:center;flex:none;background:var(--brand-soft);color:var(--brand)}
+.swatch svg{width:14px;height:14px}
+.swatch.g{background:var(--gold-soft);color:var(--gold)}
+.swatch.r{background:var(--red-soft);color:var(--red)}
+.swatch.v{background:var(--green-soft);color:var(--green)}
+
+.rank{display:flex;align-items:center;gap:10px;padding:8px 14px}
+.rank .nm{width:118px;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .bar{flex:1}
+.rank .vl{font-size:12px;color:var(--muted);width:62px;text-align:left}
+
+/* ---------- POS ---------- */
+.posv{display:grid;grid-template-columns:1fr 372px;height:calc(100vh - 55px)}
+.pos-left{display:flex;flex-direction:column;min-width:0;background:var(--canvas)}
+.pos-bar{display:flex;gap:8px;padding:12px 16px;align-items:center;border-bottom:1px solid var(--rule);background:var(--surface);flex-wrap:wrap}
+.cats{display:flex;gap:6px;overflow:auto;padding-bottom:2px}
+.cat{padding:5px 11px;border:1px solid var(--rule);border-radius:20px;font-size:12.5px;white-space:nowrap;background:var(--surface)}
+.cat.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px;padding:14px 16px;overflow:auto}
+.pcard{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:10px;text-align:right;position:relative;transition:transform .08s}
+.pcard:hover{border-color:var(--brand-2)}
+.pcard:active{transform:scale(.975)}
+.pcard .ic{height:46px;border-radius:4px;background:var(--brand-soft);display:grid;place-items:center;color:var(--brand);font-size:17px;font-weight:600;margin-bottom:8px}
+.pcard b{display:block;font-size:12.5px;font-weight:500;line-height:1.35;min-height:34px}
+.pcard .pr{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12.5px}
+.pcard .st{color:var(--muted);font-size:11px}
+.pcard .st.low{color:var(--red)}
+.cart{background:var(--surface);border-inline-start:1px solid var(--rule);display:flex;flex-direction:column;height:100%}
+.cart-head{padding:12px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px}
+.cart-lines{flex:1;overflow:auto}
+.cline{display:grid;grid-template-columns:1fr auto;gap:4px 8px;padding:10px 14px;border-bottom:1px solid var(--rule-soft)}
+.cline b{font-size:12.5px;font-weight:500}
+.qty{display:flex;align-items:center;gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;width:fit-content}
+.qty button{width:24px;height:24px;font-size:14px;color:var(--ink-2);line-height:1}
+.qty button:hover{background:#F2F4F1}
+.qty span{width:30px;text-align:center;font-size:12.5px;border-inline:1px solid var(--rule)}
+.cart-sum{border-top:1px solid var(--rule);padding:12px 14px;background:#FAFBF9}
+.sum-r{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;color:var(--ink-2)}
+.sum-r.total{font-size:18px;font-weight:600;color:var(--ink);padding-top:8px;margin-top:6px;border-top:1px dashed var(--rule)}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:11px}
+.empty{display:grid;place-items:center;height:100%;text-align:center;color:var(--muted);font-size:12.5px;padding:26px;gap:8px}
+.empty svg{width:34px;height:34px;color:#C4CCC7}
+
+/* ---------- misc ---------- */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--rule);margin-bottom:16px;overflow:auto}
+.tab{padding:8px 13px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--brand);font-weight:500}
+.tree-n{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--rule-soft);font-size:13px}
+.tree-n .code{color:var(--muted);font-size:12px;width:52px}
+.tree-n .amt{margin-inline-start:auto;font-weight:500;font-size:12.5px}
+.lv1{font-weight:600;background:#FAFBF9}
+.lv2{padding-inline-start:30px}
+.lv3{padding-inline-start:52px;color:var(--ink-2)}
+
+.toast{
+  position:fixed;bottom:20px;left:20px;z-index:90;background:var(--ink);color:#fff;
+  padding:11px 15px;border-radius:var(--r);font-size:13px;display:flex;gap:9px;align-items:center;
+  box-shadow:0 8px 26px rgba(20,30,28,.22);transform:translateY(14px);opacity:0;pointer-events:none;transition:.22s
+}
+.toast.show{transform:none;opacity:1}
+.toast svg{width:15px;height:15px;color:#6FD3A8}
+.modal-bg{position:fixed;inset:0;background:rgba(18,26,24,.4);z-index:80;display:none;place-items:center;padding:20px}
+.modal-bg.show{display:grid}
+.modal{background:var(--surface);border-radius:7px;width:min(440px,100%);overflow:hidden;box-shadow:0 22px 60px rgba(15,25,22,.3)}
+.modal-h{padding:14px 16px;border-bottom:1px solid var(--rule-soft);display:flex;align-items:center}
+.modal-h b{font-size:14px}
+.modal-h button{margin-inline-start:auto;color:var(--muted);font-size:18px;line-height:1}
+.pop{
+  position:absolute;top:46px;left:22px;width:326px;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r);box-shadow:0 14px 40px rgba(15,25,22,.16);z-index:40;display:none;overflow:hidden
+}
+.pop.show{display:block}
+.note{display:flex;gap:10px;padding:11px 13px;border-bottom:1px solid var(--rule-soft);font-size:12.5px;align-items:flex-start}
+.note:last-child{border:none}
+.note time{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+
+.kbd{border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px;font-size:11px;color:var(--muted);background:#FAFBF9}
+
+/* entrance: single orchestrated load */
+@media (prefers-reduced-motion:no-preference){
+  .app{animation:fade .3s ease}
+  .view>*{animation:rise .34s cubic-bezier(.22,.7,.3,1) backwards}
+  .view>*:nth-child(2){animation-delay:.05s}
+  .view>*:nth-child(3){animation-delay:.1s}
+  .view>*:nth-child(4){animation-delay:.14s}
+}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}}
+
+@media(max-width:1180px){
+  .g-main,.g-hero{grid-template-columns:1fr}
+  .posv{grid-template-columns:1fr 320px}
+}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .nav{position:fixed;inset-inline-start:0;top:0;width:246px;z-index:60;transform:translateX(100%);transition:.2s}
+  .nav.open{transform:none;box-shadow:-10px 0 40px rgba(0,0,0,.2)}
+  .burger{display:grid!important}
+  .search{display:none}
+  .g2,.g3,.cells{grid-template-columns:1fr 1fr}
+  .posv{grid-template-columns:1fr;height:auto}
+  .cart{border-inline-start:none;border-top:1px solid var(--rule)}
+  .me small{display:none}
+}
+.burger{display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modalbg"><div class="modal" id="modal"></div></div>
+<script>
+/* ============ بيانات تجريبية ============ */
+const DB = {
+  org:"مؤسسة الأفق التجارية", vat:"310247891600003", taxRate:.15,
+  branches:[
+    {id:"b1",name:"الفرع الرئيسي — الرياض",f:1},
+    {id:"b2",name:"فرع جدة",f:.62},
+    {id:"b3",name:"فرع الدمام",f:.41},
+  ],
+  stores:["مستودع الرياض","مستودع جدة","مستودع الدمام","مستودع التالف"],
+  cash:[
+    {n:"الصندوق الرئيسي",v:84520,t:"cash"},
+    {n:"صندوق نقاط البيع",v:12380,t:"cash"},
+    {n:"الراجحي — 6021",v:412900,t:"bank"},
+    {n:"الأهلي — 8830",v:157640,t:"bank"},
+    {n:"شبكة مدى (تحت التحصيل)",v:23150,t:"card"},
+  ],
+  months:["أكتوبر","نوفمبر","ديسمبر","يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر"],
+  profit:[118,131,142,126,149,163,155,171,168,186,194,212],
+  products:[
+    {n:"لابتوب ديل Latitude 5440",c:"إلكترونيات",p:3850,s:24,u:"قطعة",b:"6281000110045"},
+    {n:"شاشة سامسونج 27 بوصة",c:"إلكترونيات",p:1120,s:41,u:"قطعة",b:"6281000110052"},
+    {n:"طابعة HP LaserJet M404",c:"إلكترونيات",p:1690,s:7,u:"قطعة",b:"6281000110069"},
+    {n:"كرسي مكتبي شبك",c:"أثاث",p:740,s:63,u:"قطعة",b:"6281000110076"},
+    {n:"مكتب خشبي 160سم",c:"أثاث",p:1250,s:18,u:"قطعة",b:"6281000110083"},
+    {n:"خزانة ملفات معدنية",c:"أثاث",p:980,s:4,u:"قطعة",b:"6281000110090"},
+    {n:"ورق تصوير A4 — كرتون",c:"قرطاسية",p:145,s:210,u:"كرتون",b:"6281000110106"},
+    {n:"حبر طابعة أصلي 59A",c:"قرطاسية",p:420,s:32,u:"علبة",b:"6281000110113"},
+    {n:"دفتر تحضير 100 ورقة",c:"قرطاسية",p:12,s:1240,u:"حبة",b:"6281000110120"},
+    {n:"عقد صيانة سنوي — ذهبي",c:"خدمات",p:6500,s:null,u:"عقد",b:"SRV-G-01"},
+    {n:"تركيب وتشغيل شبكة",c:"خدمات",p:2200,s:null,u:"ساعة عمل",b:"SRV-N-02"},
+    {n:"استضافة سحابية — سنوي",c:"خدمات",p:3400,s:null,u:"اشتراك",b:"SRV-H-03"},
+  ],
+  moves:[
+    ["INV-2026-1184","فاتورة مبيعات","شركة بناء المستقبل",18400,"مسددة","b1"],
+    ["POS-9921","بيع نقطة بيع","عميل نقدي",860,"مسددة","b2"],
+    ["PUR-2026-0442","فاتورة مشتريات","مؤسسة التقنية الحديثة",-31250,"آجلة","b1"],
+    ["INV-2026-1183","فاتورة مبيعات","مجموعة الواحة",7620,"جزئي","b3"],
+    ["RCV-2026-0771","سند قبض","شركة بناء المستقبل",12000,"مسددة","b1"],
+    ["PAY-2026-0318","سند صرف","إيجار المعرض — سبتمبر",-14000,"مسددة","b2"],
+    ["INV-2026-1182","فاتورة مبيعات","مؤسسة نور التجارية",4310,"متأخرة","b1"],
+  ],
+  top:[["لابتوب ديل Latitude 5440",214000],["عقد صيانة سنوي — ذهبي",156000],["شاشة سامسونج 27",98400],["كرسي مكتبي شبك",71300],["ورق تصوير A4",42100]],
+  alerts:[
+    ["r","خزانة ملفات معدنية وصلت 4 وحدات — تحت حد الطلب","مستودع الرياض"],
+    ["g","3 عقود صيانة تنتهي خلال 12 يوم","إدارة الخدمات"],
+    ["r","ذمم متأخرة 46,200 ر.س تجاوزت 90 يوم","4 عملاء"],
+    ["v","إقرار ضريبة القيمة المضافة للربع الثالث جاهز للمراجعة","الربع الثالث 2026"],
+  ],
+  customers:[
+    ["C-1004","شركة بناء المستقبل","0501234567",64200,30,"الرياض"],
+    ["C-1011","مجموعة الواحة التجارية","0552233441",18750,45,"جدة"],
+    ["C-1019","مؤسسة نور التجارية","0533445566",46200,0,"الدمام"],
+    ["C-1026","مركز الإتقان الطبي","0566778899",0,30,"الرياض"],
+    ["C-1033","شركة أفق العقارية","0544556677",9820,60,"الرياض"],
+  ],
+  suppliers:[
+    ["S-201","مؤسسة التقنية الحديثة","0112345678",31250,"أجهزة ومعدات"],
+    ["S-207","الشركة العربية للأثاث","0126677889",12400,"أثاث مكتبي"],
+    ["S-212","دار القرطاسية","0138899001",0,"قرطاسية"],
+  ],
+  accounts:[
+    [1,"1","الأصول",2418400],
+    [2,"11","الأصول المتداولة",1642300],
+    [3,"1101","النقدية والبنوك",690590],
+    [3,"1102","العملاء والذمم المدينة",138970],
+    [3,"1103","المخزون",812740],
+    [2,"12","الأصول الثابتة",776100],
+    [3,"1201","سيارات ومعدات نقل",320000],
+    [3,"1202","أثاث وتجهيزات",186400],
+    [3,"1203","مجمع الإهلاك",-97300],
+    [1,"2","الخصوم",842600],
+    [2,"21","الالتزامات المتداولة",612600],
+    [3,"2101","الموردون",243650],
+    [3,"2102","ضريبة القيمة المضافة المستحقة",84120],
+    [3,"2103","رواتب مستحقة",96400],
+    [1,"3","حقوق الملكية",1575800],
+    [1,"4","الإيرادات",2184000],
+    [1,"5","المصروفات",1462000],
+  ],
+  journal:[
+    ["JV-2026-0912","12/09/2026","إثبات مبيعات آجلة — بناء المستقبل",18400,"معتمد"],
+    ["JV-2026-0911","12/09/2026","مصروف إيجار المعرض — سبتمبر",14000,"معتمد"],
+    ["JV-2026-0910","11/09/2026","إهلاك شهري للأصول الثابتة",7180,"معتمد"],
+    ["JV-2026-0909","11/09/2026","تسوية جرد مستودع جدة",2340,"مسودة"],
+    ["JV-2026-0908","10/09/2026","إثبات مشتريات آجلة — التقنية الحديثة",31250,"معتمد"],
+  ],
+  trial:[
+    ["1101","النقدية والبنوك",690590,0],
+    ["1102","العملاء والذمم المدينة",138970,0],
+    ["1103","المخزون",812740,0],
+    ["1201","أصول ثابتة",506400,0],
+    ["2101","الموردون",0,243650],
+    ["2102","ضريبة القيمة المضافة",0,84120],
+    ["2103","رواتب مستحقة",0,96400],
+    ["3101","رأس المال",0,1200000],
+    ["3102","الأرباح المرحّلة",0,375800],
+    ["4101","إيرادات المبيعات",0,2184000],
+    ["4102","إيرادات الخدمات",0,318000],
+    ["5101","تكلفة البضاعة المباعة",1642000,0],
+    ["5102","رواتب وأجور",486300,0],
+    ["5103","إيجارات",168000,0],
+    ["5104","مصاريف تشغيلية",56970,0],
+  ],
+  employees:[
+    ["E-018","خالد عبدالرحمن السالم","مدير المبيعات","المبيعات",14000,2200,0,"حاضر"],
+    ["E-024","منى فهد الزهراني","محاسب أول","المالية",9500,1400,300,"حاضر"],
+    ["E-031","ياسر محمد الحربي","أمين مستودع","المستودعات",5200,900,0,"إجازة"],
+    ["E-037","سارة ناصر القحطاني","أخصائي موارد بشرية","الموارد البشرية",7800,1100,150,"حاضر"],
+    ["E-045","عمر إبراهيم الدوسري","فني صيانة","العمليات",4800,800,0,"متأخر"],
+    ["E-052","نورة سعد المطيري","كاشير","نقاط البيع",4200,700,0,"حاضر"],
+  ],
+  projects:[
+    ["PRJ-07","تجهيز مقر شركة بناء المستقبل",420000,286400,68,"جاري","31/12/2026"],
+    ["PRJ-09","توريد وتركيب شبكة — مجموعة الواحة",185000,121300,74,"جاري","20/10/2026"],
+    ["PRJ-11","عقد صيانة سنوي — مركز الإتقان",96000,38200,40,"جاري","01/03/2027"],
+    ["PRJ-04","تأثيث فرع الدمام",240000,239100,100,"مكتمل","12/06/2026"],
+  ],
+  assets:[
+    ["FA-003","سيارة نقل هونداي H1","مركبات",128000,"قسط ثابت",20,"فرع جدة",42600],
+    ["FA-007","رافعة شوكية كهربائية","معدات",96000,"قسط ثابت",15,"مستودع الرياض",21300],
+    ["FA-012","أثاث مكتبي — الإدارة","أثاث",74500,"قسط ثابت",10,"الفرع الرئيسي",18600],
+    ["FA-015","أجهزة حاسب ومخدمات","أجهزة",112400,"قسط متناقص",25,"الفرع الرئيسي",39800],
+  ],
+  notes:[
+    ["r","فاتورة INV-2026-1182 تجاوزت موعد السداد","قبل 20 دقيقة"],
+    ["g","طلب شراء PO-0452 بانتظار اعتمادك","قبل ساعتين"],
+    ["v","تم إغلاق وردية الكاشير — فرع جدة","أمس 11:04 م"],
+  ],
+};
+const T = {
+  dash:["لوحة التحكم","نظرة عامة على أداء المنشأة"],
+  pos:["نقاط البيع","وردية مفتوحة — الكاشير: نورة سعد"],
+  sales:["المبيعات","الفواتير وعروض الأسعار والمرتجعات"],
+  purchases:["المشتريات","أوامر الشراء وفواتير الموردين"],
+  inventory:["المخزون","الأرصدة والتحويلات والجرد"],
+  accounting:["الحسابات","شجرة الحسابات وقيود اليومية"],
+  reports:["التقارير","القوائم المالية والتقارير التشغيلية"],
+  hr:["الموارد البشرية","الموظفون والحضور والرواتب"],
+  projects:["المشاريع ومراكز التكلفة","الميزانيات والإنجاز والربحية"],
+  assets:["الأصول الثابتة","التسجيل والإهلاك والاستبعاد"],
+  settings:["الإعدادات","البيانات الأساسية والمستخدمون والصلاحيات"],
+};
+
+/* ============ أدوات ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const money=(n,d=0)=>(n<0?"−":"")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const sar=(n,d=0)=>`<span class="num">${money(n,d)}</span> <span class="lbl">ر.س</span>`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let state={view:"dash",branch:"b1",cart:[],cat:"الكل",tab:0};
+const F=()=>DB.branches.find(b=>b.id===state.branch).f;
+function toast(m){const t=$("#toast");t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>${m}</span>`;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2600);}
+function modal(html){$("#modal").innerHTML=html;$("#modalbg").classList.add("show");}
+function closeModal(){$("#modalbg").classList.remove("show");}
+$("#modalbg").addEventListener("click",e=>{if(e.target.id==="modalbg")closeModal()});
+
+function spark(vals,w=680,h=120){
+  const mn=Math.min(...vals)*.86,mx=Math.max(...vals)*1.04,rg=mx-mn||1;
+  const pt=i=>[ (i/(vals.length-1))*w, h-((vals[i]-mn)/rg)*(h-10)-6 ];
+  let d="",a="";
+  vals.forEach((v,i)=>{const[x,y]=pt(i);if(i){const[px,py]=pt(i-1);const cx=(px+x)/2;d+=` C${cx},${py} ${cx},${y} ${x},${y}`}else d=`M${x},${y}`});
+  a=d+` L${w},${h} L0,${h} Z`;
+  const[lx,ly]=pt(vals.length-1);
+  return `<svg class="area" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E5B54" stop-opacity=".17"/><stop offset="1" stop-color="#1E5B54" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${a}" fill="url(#ag)"/><path d="${d}" fill="none" stroke="#1E5B54" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <circle cx="${lx}" cy="${ly}" r="3.4" fill="#A87C14"/></svg>`;
+}
+function bars(data,h=150){
+  const mx=Math.max(...data.map(d=>d[1]));const rev=[...data].reverse();
+  return `<svg viewBox="0 0 300 ${h}" style="width:100%;height:${h}px;display:block">
+  ${rev.map((d,i)=>{const bh=(d[1]/mx)*(h-24),x=i*(300/rev.length)+6,bw=300/rev.length-12;
+   return `<rect x="${x}" y="${h-18-bh}" width="${bw}" height="${bh}" rx="2" fill="${i===0?'#A87C14':'#1E5B54'}" opacity="${i===0?1:.82}"/>
+   <text x="${x+bw/2}" y="${h-5}" font-size="9" fill="#77837E" text-anchor="middle">${d[0]}</text>`}).join("")}
+  </svg>`;
+}
+function donut(parts){
+  let a=0,R=52,C=2*Math.PI*R,tot=parts.reduce((s,p)=>s+p[1],0);
+  const segs=parts.map(p=>{const len=p[1]/tot*C,s=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${p[2]}" stroke-width="17" stroke-dasharray="${len-2} ${C-len+2}" stroke-dashoffset="${-a}" transform="rotate(-90 70 70)"/>`;a+=len;return s}).join("");
+  return `<svg viewBox="0 0 140 140" style="width:140px;height:140px;flex:none">${segs}</svg>`;
+}
+const ico={
+  dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 7h8V3h-8zM3 21h8v-4H3z"/>',
+  pos:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h5"/>',
+  sales:'<path d="M4 4h16v13H4z"/><path d="M4 9h16M9 21h6"/>',
+  purchases:'<path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 3h2l1 3"/>',
+  inventory:'<path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/>',
+  accounting:'<path d="M4 3h16v18H4z"/><path d="M8 8h8M8 12h8M8 16h4"/>',
+  reports:'<path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/>',
+  hr:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.4 2.7-5.5 6-5.5s6 2.1 6 5.5"/><path d="M17 11h4M19 9v4"/>',
+  projects:'<path d="M3 7h7l2 2h9v11H3z"/>',
+  assets:'<path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M10 21v-6h4v6"/>',
+  settings:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+};
+const svg=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+/* ============ الهيكل ============ */
+function shell(){
+  const nav=(k,label,tag)=>`<button class="navitem ${state.view===k?'on':''}" data-go="${k}">${svg(ico[k])}<span>${label}</span>${tag?`<span class="tag">${tag}</span>`:""}</button>`;
+  $("#app").innerHTML=`
+  <aside class="nav" id="nav">
+    <div class="brand"><div class="mark">قيد</div><div><b>قيد</b><span>نظام إدارة الأعمال</span></div></div>
+    <div class="org"><b>${DB.org}</b><i>الرقم الضريبي ${DB.vat}</i></div>
+    <div class="navscroll">
+      ${nav("dash","لوحة التحكم")}
+      ${nav("pos","نقاط البيع","وردية")}
+      <div class="navgrp">الدورة التجارية</div>
+      ${nav("sales","المبيعات والعملاء")}
+      ${nav("purchases","المشتريات والموردون")}
+      ${nav("inventory","المخزون والمستودعات")}
+      <div class="navgrp">المالية</div>
+      ${nav("accounting","الحسابات والقيود")}
+      ${nav("reports","التقارير والقوائم")}
+      <div class="navgrp">الموارد والأصول</div>
+      ${nav("hr","الموارد البشرية")}
+      ${nav("projects","المشاريع ومراكز التكلفة")}
+      ${nav("assets","الأصول الثابتة")}
+      <div class="navgrp">النظام</div>
+      ${nav("settings","الإعدادات والصلاحيات")}
+    </div>
+    <div class="navfoot"><span><span class="dot-ok"></span>متصل — آخر نسخة احتياطية 03:00</span><span>v4.2</span></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <button class="iconbtn burger" id="burger">${svg('<path d="M4 7h16M4 12h16M4 17h16"/>')}</button>
+      <div class="crumb"><h1>${T[state.view][0]}</h1><em>${T[state.view][1]}</em></div>
+      <div class="search">${svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')}
+        <input placeholder="ابحث عن فاتورة، عميل، صنف، قيد…">
+      </div>
+      <div class="pick">${svg('<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/>')}
+        <select id="branchSel">${DB.branches.map(b=>`<option value="${b.id}" ${b.id===state.branch?"selected":""}>${b.name}</option>`).join("")}</select>
+      </div>
+      <div class="pick"><b>السنة المالية 2026</b></div>
+      <button class="iconbtn" id="bell">${svg('<path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/>')}<span class="bell-dot"></span></button>
+      <div class="pop" id="notes">
+        <div class="phead"><h2>التنبيهات</h2><span class="right lbl">3 جديدة</span></div>
+        ${DB.notes.map(n=>`<div class="note"><span class="swatch ${n[0]}">${svg('<path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="9"/>')}</span><div><span>${n[1]}</span><time>${n[2]}</time></div></div>`).join("")}
+      </div>
+      <div class="me"><div class="avatar">خ س</div><div><b>خالد السالم</b><small>مدير النظام</small></div></div>
+    </header>
+    <div class="view ${state.view==='pos'?'flush':''}" id="view"></div>
+  </main>`;
+  $("#view").innerHTML=VIEWS[state.view]();
+  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{state.view=b.dataset.go;state.tab=0;shell();window.scrollTo(0,0);$("#nav").classList.remove("open")});
+  $("#branchSel").onchange=e=>{state.branch=e.target.value;shell();toast("تم تبديل الفرع — حُدّثت كل الأرقام والتقارير")};
+  $("#bell").onclick=e=>{e.stopPropagation();$("#notes").classList.toggle("show")};
+  $("#burger").onclick=()=>$("#nav").classList.toggle("open");
+  document.addEventListener("click",()=>$("#notes")?.classList.remove("show"),{once:true});
+  bindView();
+}
+
+/* ============ لوحة التحكم ============ */
+const VIEWS={};
+VIEWS.dash=()=>{
+  const f=F(), p=DB.profit.map(v=>Math.round(v*f)), last=p.at(-1), prev=p.at(-2);
+  const dl=((last-prev)/prev*100).toFixed(1);
+  return `
+  <div class="grid g-hero" style="margin-bottom:14px">
+    <div class="panel hero">
+      <div class="top">
+        <span class="lbl">صافي الربح — سبتمبر 2026</span>
+        <div class="fig num">${money(last*1000)}<small>ر.س</small></div>
+        <div class="meta">
+          <span class="chip pos">▲ ${dl}% عن أغسطس</span>
+          <span class="lbl">هامش الربح 23.4%</span>
+          <span class="lbl">الإيرادات ${money(Math.round(last*4.3*1000))} ر.س</span>
+        </div>
+      </div>
+      ${spark(p)}
+      <div class="months"><span>${DB.months[0]}</span><span>${DB.months[3]}</span><span>${DB.months[6]}</span><span>${DB.months[9]}</span><span>${DB.months[11]}</span></div>
+    </div>
+    <div class="panel">
+      <div class="phead"><h2>الصناديق والبنوك</h2><span class="right lbl">الرصيد الآن</span></div>
+      <div class="stack">
+        ${DB.cash.map(c=>`<div class="row-i">
+          <span class="swatch ${c.t==='bank'?'':c.t==='card'?'g':'v'}">${svg(c.t==='bank'?'<path d="M3 10l9-6 9 6M5 10v9h14v-9M3 21h18"/>':c.t==='card'?'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>':'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>')}</span>
+          <span>${c.n}</span><span class="amt num">${money(Math.round(c.v*f))}</span></div>`).join("")}
+      </div>
+      <div class="pad" style="border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center">
+        <span class="lbl">الإجمالي المتاح</span><b class="num" style="font-size:16px">${money(Math.round(DB.cash.reduce((s,c)=>s+c.v,0)*f))} ر.س</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px">
+    <div class="cells">
+      <div class="cell"><span class="lbl">مبيعات اليوم</span><b class="num">${money(Math.round(38420*f))}</b><span class="chip pos">▲ 12.4%</span></div>
+      <div class="cell"><span class="lbl">فواتير غير محصّلة</span><b class="num">${money(Math.round(138970*f))}</b><span class="chip neg">46,200 متأخرة</span></div>
+      <div class="cell"><span class="lbl">مشتريات الشهر</span><b class="num">${money(Math.round(214600*f))}</b><span class="chip mute">18 فاتورة</span></div>
+      <div class="cell"><span class="lbl">ضريبة مستحقة — الربع 3</span><b class="num">${money(Math.round(84120*f))}</b><span class="chip warn">الإقرار خلال 18 يوم</span></div>
+    </div>
+  </div>
+
+  <div class="grid g-main">
+    <div class="panel">
+      <div class="phead"><h2>آخر الحركات</h2>
+        <div class="right"><button class="btn ghost sm" data-toast="جاري تجهيز ملف Excel…">تصدير</button><button class="btn sm" data-go="sales">عرض الكل</button></div>
+      </div>
+      <table class="tbl"><thead><tr><th>المستند</th><th>النوع</th><th>الطرف</th><th class="t-l">القيمة</th><th class="t-c">الحالة</th></tr></thead><tbody>
+        ${DB.moves.map(m=>`<tr><td><b style="font-weight:500">${m[0]}</b></td><td>${m[1]}</td><td>${m[2]}</td>
+        <td class="t-l num" style="color:${m[3]<0?'var(--red)':'var(--ink)'}">${money(Math.round(m[3]*f))}</td>
+        <td class="t-c"><span class="chip ${m[4]==='مسددة'?'pos':m[4]==='متأخرة'?'neg':m[4]==='آجلة'?'warn':'mute'}">${m[4]}</span></td></tr>`).join("")}
+      </tbody></table>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel">
+        <div class="phead"><h2>أعلى الأصناف مبيعًا</h2><span class="right lbl">آخر 30 يوم</span></div>
+        <div style="padding:8px 0 12px">
+          ${DB.top.map((t,i)=>`<div class="rank"><span class="nm">${t[0]}</span><span class="bar"><i class="${i===0?'gold':''}" style="width:${t[1]/DB.top[0][1]*100}%"></i></span><span class="vl num">${money(Math.round(t[1]*f/1000))}k</span></div>`).join("")}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>يحتاج انتباهك</h2></div>
+        <div class="stack">
+          ${DB.alerts.map(a=>`<div class="row-i" style="align-items:flex-start">
+            <span class="swatch ${a[0]}">${svg('<path d="M12 9v4M12 17v.01"/><path d="M10.3 3.9L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>')}</span>
+            <div><span>${a[1]}</span><span class="mini">${a[2]}</span></div></div>`).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ============ نقاط البيع ============ */
+VIEWS.pos=()=>{
+  const cats=["الكل",...new Set(DB.products.map(p=>p.c))];
+  const list=DB.products.filter(p=>state.cat==="الكل"||p.c===state.cat);
+  const sub=state.cart.reduce((s,l)=>s+l.p*l.q,0), disc=state.cart.length?Math.round(sub*.02):0;
+  const vat=Math.round((sub-disc)*DB.taxRate), tot=sub-disc+vat;
+  return `<div class="posv">
+    <div class="pos-left">
+      <div class="pos-bar">
+        <div class="pick" style="flex:1;max-width:300px">${svg('<path d="M4 7v10M7 7v10M10 7v10M14 7v10M17 7v10M20 7v10"/>')}
+          <input id="bc" placeholder="امسح الباركود أو اكتب اسم الصنف" style="border:none;outline:none;width:100%;font-size:13px;background:none">
+        </div>
+        <div class="cats">${cats.map(c=>`<button class="cat ${state.cat===c?'on':''}" data-cat="${c}">${c}</button>`).join("")}</div>
+        <div style="margin-inline-start:auto;display:flex;gap:6px;align-items:center">
+          <span class="lbl">وردية #4412 · فُتحت 08:02 ص</span>
+          <button class="btn ghost sm" data-shift="1">إغلاق الوردية</button>
+        </div>
+      </div>
+      <div class="pgrid">
+        ${list.map((p,i)=>`<button class="pcard" data-add="${DB.products.indexOf(p)}">
+          <span class="ic">${p.n.slice(0,2)}</span>
+          <b>${p.n}</b>
+          <span class="pr"><span class="num" style="font-weight:600">${money(p.p)}</span>
+          <span class="st ${p.s!==null&&p.s<10?'low':''}">${p.s===null?"خدمة":`متوفر ${p.s}`}</span></span>
+        </button>`).join("")}
+      </div>
+    </div>
+    <aside class="cart">
+      <div class="cart-head">
+        <div><b style="font-size:13.5px">فاتورة جديدة</b><span class="mini">POS-9922 · عميل نقدي</span></div>
+        <button class="btn ghost sm" style="margin-inline-start:auto" data-clear="1">تفريغ</button>
+      </div>
+      <div class="cart-lines">
+        ${state.cart.length?state.cart.map((l,i)=>`<div class="cline">
+          <b>${l.n}</b><span class="num" style="font-weight:500">${money(l.p*l.q)}</span>
+          <div class="qty"><button data-q="${i},1">+</button><span class="num">${l.q}</span><button data-q="${i},-1">−</button></div>
+          <span class="mini" style="text-align:left">${money(l.p)} × ${l.q}</span>
+        </div>`).join(""):`<div class="empty">${svg('<path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>')}<span>ابدأ بمسح الباركود أو اختيار صنف<br>من الشاشة المجاورة</span></div>`}
+      </div>
+      <div class="cart-sum">
+        <div class="sum-r"><span>الإجمالي قبل الضريبة</span><span class="num">${money(sub,2)}</span></div>
+        <div class="sum-r"><span>خصم العميل (2%)</span><span class="num" style="color:var(--red)">−${money(disc,2)}</span></div>
+        <div class="sum-r"><span>ضريبة القيمة المضافة 15%</span><span class="num">${money(vat,2)}</span></div>
+        <div class="sum-r total"><span>المطلوب</span><span class="num">${money(tot,2)} ر.س</span></div>
+        <div class="pay-grid">
+          <button class="btn" data-pay="نقدًا">نقدًا</button>
+          <button class="btn gold" data-pay="شبكة مدى">شبكة</button>
+          <button class="btn ghost" data-pay="آجل">آجل</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:7px">
+          <button class="btn ghost sm" style="flex:1" data-toast="تم تعليق الفاتورة">تعليق</button>
+          <button class="btn ghost sm" style="flex:1" data-toast="فُتحت شاشة المرتجعات">مرتجع</button>
+          <button class="btn ghost sm" style="flex:1" data-toast="تم تطبيق الخصم">خصم</button>
+        </div>
+      </div>
+    </aside>
+  </div>`;
+};
+/* ============ المبيعات ============ */
+state.inv=[{i:0,q:2,p:3850},{i:3,q:6,p:740},{i:9,q:1,p:6500}];
+const tabs=(list)=>`<div class="tabs">${list.map((t,i)=>`<button class="tab ${state.tab===i?'on':''}" data-tab="${i}">${t}</button>`).join("")}</div>`;
+
+VIEWS.sales=()=>{
+  const f=F();
+  if(state.tab===1) return tabs(["فاتورة جديدة","سجل الفواتير","العملاء"])+`
+    <div class="panel">
+      <div class="phead"><h2>سجل فواتير المبيعات</h2><div class="right">
+        <button class="btn ghost sm" data-toast="تم تصدير 184 فاتورة">تصدير Excel</button>
+        <button class="btn sm" data-tab="0">فاتورة جديدة</button></div></div>
+      <table class="tbl"><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل</th><th>الفرع</th><th class="t-l">الصافي</th><th class="t-l">المحصّل</th><th class="t-c">الحالة</th><th></th></tr></thead><tbody>
+      ${[["INV-2026-1184","12/09/2026","شركة بناء المستقبل",18400,18400,"مسددة"],
+         ["INV-2026-1183","11/09/2026","مجموعة الواحة التجارية",7620,3000,"جزئي"],
+         ["INV-2026-1182","02/08/2026","مؤسسة نور التجارية",4310,0,"متأخرة"],
+         ["INV-2026-1181","28/08/2026","مركز الإتقان الطبي",26900,26900,"مسددة"],
+         ["INV-2026-1180","25/08/2026","شركة أفق العقارية",9820,4000,"جزئي"],
+         ["INV-2026-1179","21/08/2026","شركة بناء المستقبل",41200,41200,"مسددة"]]
+      .map(r=>`<tr><td style="font-weight:500">${r[0]}</td><td class="num">${r[1]}</td><td>${r[2]}</td><td>${DB.branches.find(b=>b.id===state.branch).name.split("—")[0]}</td>
+      <td class="t-l num">${money(Math.round(r[3]*f),2)}</td><td class="t-l num">${money(Math.round(r[4]*f),2)}</td>
+      <td class="t-c"><span class="chip ${r[5]==='مسددة'?'pos':r[5]==='متأخرة'?'neg':'warn'}">${r[5]}</span></td>
+      <td class="t-l"><button class="btn ghost sm" data-toast="فُتحت معاينة الفاتورة مع رمز QR الضريبي">عرض</button></td></tr>`).join("")}
+      </tbody></table>
+    </div>`;
+  if(state.tab===2) return tabs(["فاتورة جديدة","سجل الفواتير","العملاء"])+`
+    <div class="grid g-main">
+      <div class="panel"><div class="phead"><h2>العملاء</h2><div class="right"><button class="btn sm" data-toast="فُتحت شاشة إضافة عميل">إضافة عميل</button></div></div>
+        <table class="tbl"><thead><tr><th>الكود</th><th>الاسم</th><th>الجوال</th><th>المدينة</th><th class="t-c">الآجل</th><th class="t-l">الرصيد</th></tr></thead><tbody>
+        ${DB.customers.map(c=>`<tr><td class="num">${c[0]}</td><td>${c[1]}</td><td class="num">${c[2]}</td><td>${c[5]}</td><td class="t-c">${c[4]?c[4]+" يوم":"نقدي"}</td>
+        <td class="t-l num" style="color:${c[3]?'var(--ink)':'var(--muted)'}">${money(c[3],2)}</td></tr>`).join("")}
+        </tbody><tfoot><tr><td colspan="5">إجمالي ذمم العملاء</td><td class="t-l num">${money(DB.customers.reduce((s,c)=>s+c[3],0),2)}</td></tr></tfoot></table></div>
+      <div class="panel"><div class="phead"><h2>أعمار الديون</h2></div>
+        <div class="pad">
+          ${[["حالية (0–30)",92770,"var(--brand-2)"],["31–60 يوم",28400,"#3E8C7E"],["61–90 يوم",17600,"var(--gold)"],["أكثر من 90",46200,"var(--red)"]]
+          .map(a=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span>${a[0]}</span><b class="num">${money(a[1])}</b></div>
+          <div class="bar"><i style="width:${a[1]/92770*100}%;background:${a[2]}"></i></div></div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  const lines=state.inv.map(l=>({...DB.products[l.i],q:l.q,p:l.p}));
+  const sub=lines.reduce((s,l)=>s+l.p*l.q,0), vat=Math.round(sub*DB.taxRate*100)/100;
+  return tabs(["فاتورة جديدة","سجل الفواتير","العملاء"])+`
+  <div class="grid g-main">
+    <div class="panel">
+      <div class="phead"><h2>فاتورة مبيعات ضريبية</h2><span class="sub">INV-2026-1185</span>
+        <div class="right"><button class="btn ghost sm" data-addline="1">+ إضافة بند</button></div></div>
+      <div class="pad" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;border-bottom:1px solid var(--rule-soft)">
+        <label class="field" style="margin:0"><span>العميل</span><select>${DB.customers.map(c=>`<option>${c[1]}</option>`).join("")}</select></label>
+        <label class="field" style="margin:0"><span>المستودع</span><select>${DB.stores.map(s=>`<option>${s}</option>`).join("")}</select></label>
+        <label class="field" style="margin:0"><span>طريقة الدفع</span><select><option>آجل 30 يوم</option><option>نقدًا</option><option>شبكة</option><option>تحويل بنكي</option></select></label>
+        <label class="field" style="margin:0"><span>مركز التكلفة</span><select><option>PRJ-07 تجهيز مقر بناء المستقبل</option><option>إدارة عامة</option></select></label>
+      </div>
+      <table class="tbl"><thead><tr><th style="width:34px"></th><th>الصنف</th><th style="width:86px">الوحدة</th><th style="width:74px">الكمية</th><th style="width:104px">السعر</th><th class="t-l" style="width:110px">الإجمالي</th><th style="width:34px"></th></tr></thead><tbody>
+      ${lines.map((l,i)=>`<tr><td class="num lbl">${i+1}</td>
+        <td><b style="font-weight:500">${l.n}</b><span class="mini">${l.b}</span></td>
+        <td>${l.u}</td>
+        <td><input class="inline-in num" type="number" min="1" value="${l.q}" data-line="${i}" data-k="q"></td>
+        <td><input class="inline-in num" type="number" value="${l.p}" data-line="${i}" data-k="p"></td>
+        <td class="t-l num" style="font-weight:500">${money(l.p*l.q,2)}</td>
+        <td><button class="lbl" data-del="${i}" title="حذف البند">✕</button></td></tr>`).join("")}
+      </tbody></table>
+      <div style="display:flex;border-top:1px solid var(--rule)">
+        <div class="pad" style="flex:1"><span class="lbl">ملاحظات</span><div style="font-size:12.5px;margin-top:4px;color:var(--ink-2)">تسليم خلال 5 أيام عمل — الأسعار شاملة التركيب.</div></div>
+        <div style="width:270px;border-inline-start:1px solid var(--rule-soft);padding:12px 14px">
+          <div class="sum-r"><span>الإجمالي</span><span class="num">${money(sub,2)}</span></div>
+          <div class="sum-r"><span>ضريبة القيمة المضافة 15%</span><span class="num">${money(vat,2)}</span></div>
+          <div class="sum-r total"><span>الصافي</span><span class="num">${money(sub+vat,2)}</span></div>
+          <div style="display:flex;gap:6px;margin-top:12px">
+            <button class="btn" style="flex:1" data-save="1">حفظ واعتماد</button>
+            <button class="btn ghost sm" data-toast="حُفظت كمسودة">مسودة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>القيد المحاسبي المتولّد</h2><span class="right chip mute">تلقائي</span></div>
+        <table class="tbl"><thead><tr><th>الحساب</th><th class="t-l">مدين</th><th class="t-l">دائن</th></tr></thead><tbody>
+          <tr><td>العملاء — ذمم مدينة</td><td class="t-l num">${money(sub+vat,2)}</td><td class="t-l lbl">—</td></tr>
+          <tr><td>إيرادات المبيعات</td><td class="t-l lbl">—</td><td class="t-l num">${money(sub,2)}</td></tr>
+          <tr><td>ضريبة القيمة المضافة المستحقة</td><td class="t-l lbl">—</td><td class="t-l num">${money(vat,2)}</td></tr>
+          <tr><td>تكلفة البضاعة المباعة</td><td class="t-l num">${money(sub*.68,2)}</td><td class="t-l lbl">—</td></tr>
+          <tr><td>المخزون</td><td class="t-l lbl">—</td><td class="t-l num">${money(sub*.68,2)}</td></tr>
+        </tbody></table></div>
+      <div class="panel"><div class="phead"><h2>الطباعة والإرسال</h2></div>
+        <div class="pad" style="display:grid;gap:7px">
+          <button class="btn ghost" data-toast="تم توليد PDF بصيغة فاتورة ضريبية (ZATCA)">فاتورة ضريبية PDF · QR</button>
+          <button class="btn ghost" data-toast="أُرسلت الفاتورة على واتساب">إرسال واتساب</button>
+          <button class="btn ghost" data-toast="أُرسلت الفاتورة بالبريد">إرسال بالبريد</button>
+          <button class="btn ghost" data-toast="طُبعت على الطابعة الحرارية 80mm">طباعة حرارية 80mm</button>
+        </div></div>
+    </div>
+  </div>`;
+};
+
+/* ============ المشتريات ============ */
+VIEWS.purchases=()=>{
+  const f=F();
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="cells">
+        <div class="cell"><span class="lbl">مشتريات الشهر</span><b class="num">${money(Math.round(214600*f))}</b><span class="chip mute">18 فاتورة</span></div>
+        <div class="cell"><span class="lbl">أوامر شراء مفتوحة</span><b class="num">6</b><span class="chip warn">2 بانتظار الاعتماد</span></div>
+        <div class="cell"><span class="lbl">مستحق للموردين</span><b class="num">${money(Math.round(243650*f))}</b><span class="chip neg">31,250 تستحق غدًا</span></div>
+        <div class="cell"><span class="lbl">ضريبة مدخلات</span><b class="num">${money(Math.round(32190*f))}</b><span class="chip pos">قابلة للخصم</span></div>
+      </div></div>
+      <div class="panel"><div class="phead"><h2>أوامر الشراء</h2><div class="right"><button class="btn sm" data-toast="فُتحت شاشة أمر شراء جديد">أمر شراء جديد</button></div></div>
+        <table class="tbl"><thead><tr><th>الأمر</th><th>المورد</th><th>التاريخ</th><th class="t-l">القيمة</th><th class="t-c">الاستلام</th><th class="t-c">الحالة</th></tr></thead><tbody>
+        ${[["PO-0452","مؤسسة التقنية الحديثة","10/09/2026",31250,100,"بانتظار الاعتماد"],
+           ["PO-0451","الشركة العربية للأثاث","08/09/2026",18600,60,"مستلم جزئي"],
+           ["PO-0450","دار القرطاسية","05/09/2026",4280,100,"مكتمل"],
+           ["PO-0449","مؤسسة التقنية الحديثة","01/09/2026",52400,100,"مكتمل"],
+           ["PO-0448","الشركة العربية للأثاث","27/08/2026",9750,0,"ملغي"]]
+        .map(r=>`<tr><td style="font-weight:500">${r[0]}</td><td>${r[1]}</td><td class="num">${r[2]}</td><td class="t-l num">${money(r[3],2)}</td>
+        <td class="t-c" style="width:110px"><div class="bar"><i class="${r[4]===100?'':'gold'}" style="width:${r[4]}%"></i></div><span class="mini">${r[4]}%</span></td>
+        <td class="t-c"><span class="chip ${r[5]==='مكتمل'?'pos':r[5]==='ملغي'?'mute':'warn'}">${r[5]}</span></td></tr>`).join("")}
+        </tbody></table></div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>أرصدة الموردين</h2></div>
+        <div class="stack">${DB.suppliers.map(s=>`<div class="row-i"><div><span>${s[1]}</span><span class="mini">${s[4]}</span></div>
+        <span class="amt num" style="color:${s[3]?'var(--red)':'var(--muted)'}">${money(s[3])}</span></div>`).join("")}</div>
+        <div class="pad" style="border-top:1px solid var(--rule)"><button class="btn ghost" style="width:100%" data-toast="فُتح سند صرف جديد">سند صرف لمورد</button></div>
+      </div>
+      <div class="panel"><div class="phead"><h2>المشتريات شهريًا</h2><span class="right lbl">ألف ر.س</span></div>
+        <div class="pad">${bars([["مايو",186],["يونيو",164],["يوليو",231],["أغسطس",198],["سبتمبر",215]])}</div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ============ المخزون ============ */
+VIEWS.inventory=()=>{
+  const f=F();
+  const stock=DB.products.filter(p=>p.s!==null);
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="cells">
+        <div class="cell"><span class="lbl">قيمة المخزون</span><b class="num">${money(Math.round(812740*f))}</b><span class="lbl">بسعر التكلفة</span></div>
+        <div class="cell"><span class="lbl">الأصناف</span><b class="num">1,284</b><span class="lbl">في 4 مستودعات</span></div>
+        <div class="cell"><span class="lbl">تحت حد الطلب</span><b class="num" style="color:var(--red)">17</b><span class="chip neg">يحتاج شراء</span></div>
+        <div class="cell"><span class="lbl">راكد +90 يوم</span><b class="num">32</b><span class="chip warn">${money(46800)} ر.س</span></div>
+      </div></div>
+      <div class="panel">
+        <div class="phead"><h2>أرصدة الأصناف بالمستودعات</h2>
+          <div class="right"><button class="btn ghost sm" data-modal="transfer">تحويل بين مستودعين</button><button class="btn sm" data-toast="بدأت جلسة جرد جديدة">جرد</button></div>
+        </div>
+        <div class="t-scroll"><table class="tbl"><thead><tr><th>الصنف</th><th>الباركود</th><th class="t-c">الرياض</th><th class="t-c">جدة</th><th class="t-c">الدمام</th><th class="t-c">الإجمالي</th><th class="t-l">قيمة التكلفة</th></tr></thead><tbody>
+        ${stock.map(p=>{const a=Math.round(p.s*.5),b=Math.round(p.s*.3),c=p.s-a-b;
+        return `<tr><td><b style="font-weight:500">${p.n}</b><span class="mini">${p.c} · ${p.u}</span></td><td class="num lbl">${p.b}</td>
+        <td class="t-c num">${a}</td><td class="t-c num">${b}</td><td class="t-c num">${c}</td>
+        <td class="t-c num" style="font-weight:600;color:${p.s<10?'var(--red)':'inherit'}">${p.s}</td>
+        <td class="t-l num">${money(Math.round(p.s*p.p*.68))}</td></tr>`}).join("")}
+        </tbody></table></div>
+      </div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>توزيع قيمة المخزون</h2></div>
+        <div class="pad" style="display:flex;gap:14px;align-items:center">
+          ${donut([["إلكترونيات",48,"#16403B"],["أثاث",29,"#3E8C7E"],["قرطاسية",14,"#A87C14"],["أخرى",9,"#D8DCD6"]])}
+          <div style="flex:1">${[["إلكترونيات",48,"#16403B"],["أثاث",29,"#3E8C7E"],["قرطاسية",14,"#A87C14"],["أخرى",9,"#D8DCD6"]]
+          .map(p=>`<div style="display:flex;align-items:center;gap:7px;font-size:12.5px;padding:3px 0">
+          <span style="width:9px;height:9px;border-radius:2px;background:${p[2]};flex:none"></span>${p[0]}
+          <b class="num" style="margin-inline-start:auto">${p[1]}%</b></div>`).join("")}</div>
+        </div>
+      </div>
+      <div class="panel"><div class="phead"><h2>آخر حركات المخزون</h2></div>
+        <div class="stack">
+          ${[["v","استلام أمر شراء PO-0451","+12 كرسي مكتبي · مستودع جدة"],
+             ["","تحويل مخزني TR-0188","−8 شاشة سامسونج · الرياض ← الدمام"],
+             ["r","صرف على فاتورة INV-2026-1184","−4 لابتوب ديل · مستودع الرياض"],
+             ["g","تسوية جرد","+2 ورق تصوير A4 · مستودع جدة"]]
+          .map(m=>`<div class="row-i" style="align-items:flex-start"><span class="swatch ${m[0]}">${svg('<path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/>')}</span>
+          <div><span>${m[1]}</span><span class="mini">${m[2]}</span></div></div>`).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ============ الحسابات ============ */
+state.je=[{a:"1101 النقدية والبنوك",d:18400,c:0},{a:"4101 إيرادات المبيعات",d:0,c:16000},{a:"2102 ضريبة القيمة المضافة",d:0,c:2400}];
+VIEWS.accounting=()=>{
+  const f=F(), td=state.je.reduce((s,r)=>s+ +r.d,0), tc=state.je.reduce((s,r)=>s+ +r.c,0), bal=td===tc;
+  if(state.tab===1) return tabs(["شجرة الحسابات وقيد جديد","دفتر اليومية"])+`
+    <div class="panel"><div class="phead"><h2>دفتر اليومية</h2><div class="right">
+      <button class="btn ghost sm" data-toast="تم تصدير دفتر اليومية">تصدير</button>
+      <button class="btn sm" data-tab="0">قيد جديد</button></div></div>
+      <table class="tbl"><thead><tr><th>رقم القيد</th><th>التاريخ</th><th>البيان</th><th class="t-l">القيمة</th><th class="t-c">الحالة</th><th></th></tr></thead><tbody>
+      ${DB.journal.map(j=>`<tr><td style="font-weight:500">${j[0]}</td><td class="num">${j[1]}</td><td>${j[2]}</td><td class="t-l num">${money(Math.round(j[3]*f),2)}</td>
+      <td class="t-c"><span class="chip ${j[4]==='معتمد'?'pos':'warn'}">${j[4]}</span></td>
+      <td class="t-l"><button class="btn ghost sm" data-toast="فُتح القيد للمراجعة">تفاصيل</button></td></tr>`).join("")}
+      </tbody></table></div>`;
+  return tabs(["شجرة الحسابات وقيد جديد","دفتر اليومية"])+`
+  <div class="grid g-hero">
+    <div class="panel">
+      <div class="phead"><h2>قيد يومية جديد</h2><span class="sub">JV-2026-0913 · 12/09/2026</span>
+        <div class="right"><span class="chip ${bal?'pos':'neg'}">${bal?"القيد متوازن":"فرق "+money(Math.abs(td-tc),2)}</span></div></div>
+      <table class="tbl"><thead><tr><th>الحساب</th><th>مركز التكلفة</th><th class="t-l" style="width:120px">مدين</th><th class="t-l" style="width:120px">دائن</th><th style="width:34px"></th></tr></thead>
+      <tbody>${state.je.map((r,i)=>`<tr>
+        <td>${r.a}</td>
+        <td class="lbl">${i===1?"PRJ-07":"إدارة عامة"}</td>
+        <td class="t-l"><input class="inline-in num" type="number" value="${r.d}" data-je="${i}" data-k="d"></td>
+        <td class="t-l"><input class="inline-in num" type="number" value="${r.c}" data-je="${i}" data-k="c"></td>
+        <td><button class="lbl" data-jedel="${i}">✕</button></td></tr>`).join("")}
+      </tbody>
+      <tfoot><tr><td colspan="2">الإجمالي</td><td class="t-l num">${money(td,2)}</td><td class="t-l num">${money(tc,2)}</td><td></td></tr></tfoot></table>
+      <div class="pad" style="display:flex;gap:7px;border-top:1px solid var(--rule)">
+        <button class="btn ghost sm" data-jeadd="1">+ إضافة سطر</button>
+        <button class="btn" style="margin-inline-start:auto;${bal?'':'opacity:.45;pointer-events:none'}" ${bal?'':'disabled'} data-jesave="1">ترحيل القيد</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="phead"><h2>شجرة الحسابات</h2><span class="right lbl">4 مستويات</span></div>
+      <div class="t-scroll" style="max-height:430px">
+        ${DB.accounts.map(a=>`<div class="tree-n lv${a[0]}"><span class="code num">${a[1]}</span><span>${a[2]}</span>
+        <span class="amt num" style="color:${a[3]<0?'var(--red)':'inherit'}">${money(Math.round(a[3]*f))}</span></div>`).join("")}
+      </div>
+    </div>
+  </div>`;
+};
+/* ============ التقارير ============ */
+VIEWS.reports=()=>{
+  const f=F(), td=DB.trial.reduce((s,r)=>s+r[2],0), tc=DB.trial.reduce((s,r)=>s+r[3],0);
+  const rep=[["المبيعات",["مبيعات تفصيلية","مبيعات حسب الصنف","مبيعات حسب المندوب","مرتجعات المبيعات","ربحية الفاتورة"]],
+             ["المشتريات",["مشتريات تفصيلية","حسب المورد","مرتجعات المشتريات","مقارنة أسعار الموردين"]],
+             ["المخزون",["أرصدة المخزون","حركة صنف","الأصناف الراكدة","تحت حد الطلب","تقييم المخزون"]],
+             ["المالية",["ميزان المراجعة","دفتر الأستاذ","قائمة الدخل","المركز المالي","التدفقات النقدية","الأرباح والخسائر"]],
+             ["الضريبة",["إقرار القيمة المضافة","ضريبة المخرجات","ضريبة المدخلات"]],
+             ["الأطراف",["كشف حساب عميل","كشف حساب مورد","أعمار الديون","أرصدة العملاء"]],
+             ["التشغيل",["أداء الفروع","ربحية المشاريع","مراكز التكلفة","الرواتب والحضور","الأصول والإهلاك"]]];
+  if(state.tab===1) return tabs(["كل التقارير","ميزان المراجعة","قائمة الدخل","إقرار الضريبة"])+`
+    <div class="panel"><div class="phead"><h2>ميزان المراجعة</h2><span class="sub">01/01/2026 — 12/09/2026 · ${DB.branches.find(b=>b.id===state.branch).name}</span>
+      <div class="right"><button class="btn ghost sm" data-toast="تم التصدير إلى Excel">Excel</button><button class="btn ghost sm" data-toast="تم توليد PDF">PDF</button></div></div>
+      <table class="tbl"><thead><tr><th>الحساب</th><th>الاسم</th><th class="t-l">مدين</th><th class="t-l">دائن</th></tr></thead><tbody>
+      ${DB.trial.map(r=>`<tr><td class="num lbl">${r[0]}</td><td>${r[1]}</td>
+      <td class="t-l num">${r[2]?money(Math.round(r[2]*f),2):'<span class="lbl">—</span>'}</td>
+      <td class="t-l num">${r[3]?money(Math.round(r[3]*f),2):'<span class="lbl">—</span>'}</td></tr>`).join("")}
+      </tbody><tfoot><tr><td colspan="2">الإجمالي</td><td class="t-l num">${money(Math.round(td*f),2)}</td><td class="t-l num">${money(Math.round(tc*f),2)}</td></tr></tfoot></table>
+      <div class="pad" style="border-top:1px solid var(--rule)"><span class="chip pos">الميزان متوازن — الفرق 0.00</span></div></div>`;
+  if(state.tab===2){
+    const rows=[["الإيرادات",0,0],["إيرادات المبيعات",2184000,1],["إيرادات الخدمات",318000,1],["إجمالي الإيرادات",2502000,2],
+      ["التكاليف",0,0],["تكلفة البضاعة المباعة",-1642000,1],["مجمل الربح",860000,2],
+      ["المصروفات التشغيلية",0,0],["رواتب وأجور",-486300,1],["إيجارات",-168000,1],["إهلاك",-64620,1],["مصاريف تشغيلية أخرى",-56970,1],
+      ["صافي الربح قبل الزكاة",84110,3]];
+    return tabs(["كل التقارير","ميزان المراجعة","قائمة الدخل","إقرار الضريبة"])+`
+    <div class="grid g-hero">
+      <div class="panel"><div class="phead"><h2>قائمة الدخل</h2><span class="sub">للفترة المنتهية في 12/09/2026</span></div>
+        <table class="tbl"><tbody>
+        ${rows.map(r=>r[2]===0?`<tr><td colspan="2" style="background:#FAFBF9;font-weight:600;font-size:12.5px">${r[0]}</td></tr>`:
+          `<tr><td style="padding-inline-start:${r[2]===1?28:12}px;font-weight:${r[2]>1?600:400}">${r[0]}</td>
+          <td class="t-l num" style="font-weight:${r[2]>1?600:400};color:${r[0].includes('صافي')?'var(--brand)':'inherit'}">${money(Math.round(r[1]*f),2)}</td></tr>`).join("")}
+        </tbody></table></div>
+      <div class="panel"><div class="phead"><h2>تطور صافي الربح</h2><span class="right lbl">ألف ر.س</span></div>
+        <div class="pad">${bars(DB.months.slice(6).map((m,i)=>[m.slice(0,4),Math.round(DB.profit[6+i]*f)]),190)}</div>
+        <div class="sep"></div>
+        <div class="pad" style="display:flex;justify-content:space-between"><span class="lbl">أفضل شهر</span><b>سبتمبر · ${money(Math.round(212*f))} ألف</b></div>
+      </div>
+    </div>`;
+  }
+  if(state.tab===3) return tabs(["كل التقارير","ميزان المراجعة","قائمة الدخل","إقرار الضريبة"])+`
+    <div class="grid g-main">
+      <div class="panel"><div class="phead"><h2>إقرار ضريبة القيمة المضافة</h2><span class="sub">الربع الثالث 2026 (يوليو — سبتمبر)</span>
+        <div class="right"><button class="btn gold sm" data-toast="تم توليد ملف الإقرار بصيغة هيئة الزكاة والضريبة">توليد ملف الإقرار</button></div></div>
+        <table class="tbl"><thead><tr><th>البند</th><th class="t-l">المبلغ الخاضع</th><th class="t-l">الضريبة</th></tr></thead><tbody>
+        ${[["المبيعات الخاضعة للنسبة الأساسية 15%",742600,111390],["المبيعات الصفرية والمعفاة",18400,0],["المبيعات للدول الخليجية",0,0],
+           ["المشتريات الخاضعة 15%",214600,32190],["استيراد خاضع للاحتساب العكسي",42000,6300]]
+        .map(r=>`<tr><td>${r[0]}</td><td class="t-l num">${money(Math.round(r[1]*f),2)}</td><td class="t-l num">${money(Math.round(r[2]*f),2)}</td></tr>`).join("")}
+        </tbody><tfoot><tr><td>صافي الضريبة المستحقة للهيئة</td><td class="t-l lbl">—</td><td class="t-l num">${money(Math.round(84120*f),2)}</td></tr></tfoot></table></div>
+      <div class="panel"><div class="phead"><h2>إعدادات الضريبة</h2></div>
+        <div class="stack">
+          ${[["النسبة الأساسية","15%"],["نسبة صفرية","0%"],["معفاة","—"],["احتساب عكسي","15%"],["فترة الإقرار","ربع سنوي"],["طريقة الاحتساب","الاستحقاق"]]
+          .map(r=>`<div class="row-i"><span>${r[0]}</span><span class="amt">${r[1]}</span></div>`).join("")}
+        </div></div>
+    </div>`;
+  return tabs(["كل التقارير","ميزان المراجعة","قائمة الدخل","إقرار الضريبة"])+`
+  <div class="panel" style="margin-bottom:14px"><div class="phead"><h2>مركز التقارير</h2><span class="sub">62 تقريرًا — كلها قابلة للفلترة بالفرع والفترة ومركز التكلفة والتصدير Excel/PDF</span></div>
+    <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:0">
+      ${rep.map(g=>`<div style="padding:4px 14px 14px;border-inline-start:1px solid var(--rule-soft)">
+        <b style="font-size:12.5px;display:block;margin:6px 0 8px">${g[0]}</b>
+        ${g[1].map((r,i)=>`<button class="row-i" style="width:100%;border:none;padding:5px 0;font-size:12.5px;color:var(--ink-2);text-align:right"
+          data-tab="${g[0]==='المالية'&&r==='ميزان المراجعة'?1:g[0]==='المالية'&&r==='قائمة الدخل'?2:g[0]==='الضريبة'?3:''}"
+          ${(g[0]==='المالية'&&(r==='ميزان المراجعة'||r==='قائمة الدخل'))||g[0]==='الضريبة'?'':`data-toast="جاري تجهيز تقرير: ${r}"`}>
+          <span style="color:var(--muted)">›</span>${r}</button>`).join("")}
+      </div>`).join("")}
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="panel"><div class="phead"><h2>مقارنة أداء الفروع</h2><span class="right lbl">مبيعات سبتمبر · ألف ر.س</span></div>
+      <div class="pad">${bars([["الرياض",212],["جدة",131],["الدمام",87]],170)}</div></div>
+    <div class="panel"><div class="phead"><h2>تقارير مجدولة</h2><span class="right"><button class="btn ghost sm" data-toast="فُتحت شاشة جدولة تقرير">جدولة تقرير</button></span></div>
+      <div class="stack">
+        ${[["ملخص المبيعات اليومي","كل يوم 11:00 م · بريد + واتساب"],["أرصدة المخزون","كل أحد 08:00 ص · بريد المدير"],["ميزان المراجعة","أول كل شهر · المحاسب القانوني"]]
+        .map(r=>`<div class="row-i"><span class="swatch">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span><div><span>${r[0]}</span><span class="mini">${r[1]}</span></div>
+        <span class="amt chip pos">فعّال</span></div>`).join("")}
+      </div></div>
+  </div>`;
+};
+
+/* ============ الموارد البشرية ============ */
+VIEWS.hr=()=>{
+  const net=e=>e[4]+e[5]-e[6]-Math.round((e[4]+e[5])*.0975);
+  const tot=DB.employees.reduce((s,e)=>s+net(e),0);
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="cells">
+        <div class="cell"><span class="lbl">إجمالي الموظفين</span><b class="num">46</b><span class="lbl">في 6 إدارات</span></div>
+        <div class="cell"><span class="lbl">حاضر اليوم</span><b class="num">41</b><span class="chip pos">89%</span></div>
+        <div class="cell"><span class="lbl">إجازات وغياب</span><b class="num">5</b><span class="chip warn">2 بانتظار الموافقة</span></div>
+        <div class="cell"><span class="lbl">مسير رواتب سبتمبر</span><b class="num">${money(486300)}</b><span class="chip mute">مسودة</span></div>
+      </div></div>
+      <div class="panel"><div class="phead"><h2>مسير رواتب سبتمبر 2026</h2>
+        <div class="right"><button class="btn ghost sm" data-toast="تم توليد ملف بنكي بصيغة WPS">ملف حماية الأجور</button><button class="btn sm" data-toast="اعتُمد المسير وتولّد القيد المحاسبي">اعتماد المسير</button></div></div>
+        <div class="t-scroll"><table class="tbl"><thead><tr><th>الموظف</th><th>الإدارة</th><th class="t-l">الأساسي</th><th class="t-l">البدلات</th><th class="t-l">الخصومات</th><th class="t-l">التأمينات</th><th class="t-l">الصافي</th><th class="t-c">الحضور</th></tr></thead><tbody>
+        ${DB.employees.map(e=>`<tr><td><b style="font-weight:500">${e[1]}</b><span class="mini">${e[0]} · ${e[2]}</span></td><td>${e[3]}</td>
+        <td class="t-l num">${money(e[4],2)}</td><td class="t-l num">${money(e[5],2)}</td>
+        <td class="t-l num" style="color:${e[6]?'var(--red)':'var(--muted)'}">${e[6]?money(e[6],2):'—'}</td>
+        <td class="t-l num lbl">${money(Math.round((e[4]+e[5])*.0975),2)}</td>
+        <td class="t-l num" style="font-weight:600">${money(net(e),2)}</td>
+        <td class="t-c"><span class="chip ${e[7]==='حاضر'?'pos':e[7]==='إجازة'?'mute':'warn'}">${e[7]}</span></td></tr>`).join("")}
+        </tbody><tfoot><tr><td colspan="6">صافي المسير (عيّنة 6 من 46)</td><td class="t-l num">${money(tot,2)}</td><td></td></tr></tfoot></table></div>
+      </div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>الحضور والانصراف</h2><span class="right chip pos">جهاز البصمة متصل</span></div>
+        <div class="stack">
+          ${[["v","41 موظفًا سجّلوا الحضور","آخر مزامنة 08:41 ص"],["g","3 تأخيرات اليوم","خصم تلقائي حسب اللائحة"],["r","حالتا غياب بدون إذن","بانتظار مراجعة المدير"],["","احتساب الإضافي 18 ساعة","تُرحّل لمسير الرواتب"]]
+          .map(r=>`<div class="row-i" style="align-items:flex-start"><span class="swatch ${r[0]}">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span>
+          <div><span>${r[1]}</span><span class="mini">${r[2]}</span></div></div>`).join("")}
+        </div></div>
+      <div class="panel"><div class="phead"><h2>طلبات بانتظارك</h2></div>
+        <div class="stack">
+          ${[["إجازة سنوية — ياسر الحربي","10 أيام · 20/09"],["سلفة — عمر الدوسري","3,000 ر.س على 6 أشهر"],["مستحقات نهاية خدمة","محتسبة آليًا"]]
+          .map(r=>`<div class="row-i"><div><span>${r[0]}</span><span class="mini">${r[1]}</span></div>
+          <span class="amt"><button class="btn sm" data-toast="تمت الموافقة">موافقة</button></span></div>`).join("")}
+        </div></div>
+    </div>
+  </div>`;
+};
+
+/* ============ المشاريع ============ */
+VIEWS.projects=()=>`
+  <div class="grid g2" style="margin-bottom:14px">
+    ${DB.projects.map(p=>{const marg=((p[2]-p[3])/p[2]*100).toFixed(1);
+    return `<div class="panel"><div class="pad">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div><b style="font-size:14px">${p[1]}</b><span class="mini">${p[0]} · ينتهي ${p[6]}</span></div>
+        <span class="chip ${p[5]==='مكتمل'?'pos':'warn'}" style="margin-inline-start:auto">${p[5]}</span>
+      </div>
+      <div style="display:flex;gap:22px;margin:14px 0 10px">
+        <div><span class="lbl">الميزانية</span><b class="num" style="display:block;font-size:15px">${money(p[2])}</b></div>
+        <div><span class="lbl">التكلفة الفعلية</span><b class="num" style="display:block;font-size:15px">${money(p[3])}</b></div>
+        <div><span class="lbl">هامش الربح</span><b class="num" style="display:block;font-size:15px;color:${marg>15?'var(--green)':'var(--red)'}">${marg}%</b></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:5px"><span>نسبة الإنجاز</span><span class="num">${p[4]}%</span></div>
+      <div class="bar"><i class="${p[4]===100?'':'gold'}" style="width:${p[4]}%"></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin:9px 0 5px"><span>استهلاك الميزانية</span><span class="num">${(p[3]/p[2]*100).toFixed(0)}%</span></div>
+      <div class="bar"><i class="${p[3]/p[2]>.95?'red':''}" style="width:${p[3]/p[2]*100}%"></i></div>
+    </div></div>`}).join("")}
+  </div>
+  <div class="grid g-main">
+    <div class="panel"><div class="phead"><h2>تكاليف المشروع PRJ-07 حسب البند</h2><span class="right"><button class="btn ghost sm" data-toast="فُتح تقرير ربحية المشروع">تقرير الربحية</button></span></div>
+      <table class="tbl"><thead><tr><th>البند</th><th class="t-l">الميزانية</th><th class="t-l">الفعلي</th><th class="t-l">الانحراف</th><th class="t-c">النسبة</th></tr></thead><tbody>
+      ${[["مواد وتوريدات",240000,186400],["عمالة وساعات عمل",96000,71200],["مقاولون من الباطن",54000,21400],["مصروفات غير مباشرة",30000,7400]]
+      .map(r=>{const dv=r[1]-r[2];return `<tr><td>${r[0]}</td><td class="t-l num">${money(r[1])}</td><td class="t-l num">${money(r[2])}</td>
+      <td class="t-l num" style="color:${dv<0?'var(--red)':'var(--green)'}">${money(dv)}</td>
+      <td class="t-c" style="width:120px"><div class="bar"><i class="${r[2]/r[1]>.9?'red':''}" style="width:${r[2]/r[1]*100}%"></i></div></td></tr>`}).join("")}
+      </tbody><tfoot><tr><td>الإجمالي</td><td class="t-l num">${money(420000)}</td><td class="t-l num">${money(286400)}</td><td class="t-l num">${money(133600)}</td><td></td></tr></tfoot></table></div>
+    <div class="panel"><div class="phead"><h2>مراكز التكلفة</h2></div>
+      <div class="stack">
+        ${[["CC-01","الإدارة العامة",186400],["CC-02","المبيعات والتسويق",241300],["CC-03","العمليات والتركيب",396800],["CC-04","نقاط البيع",112900],["CC-05","المستودعات",84600]]
+        .map(c=>`<div class="row-i"><span class="lbl num">${c[0]}</span><span>${c[1]}</span><span class="amt num">${money(c[2])}</span></div>`).join("")}
+      </div>
+      <div class="pad" style="border-top:1px solid var(--rule)"><button class="btn ghost" style="width:100%" data-toast="فُتحت مقارنة الميزانية بالفعلي">مقارنة الميزانية بالفعلي</button></div>
+    </div>
+  </div>`;
+
+/* ============ الأصول ============ */
+VIEWS.assets=()=>{
+  const tot=DB.assets.reduce((s,a)=>s+a[3],0), dep=DB.assets.reduce((s,a)=>s+a[7],0);
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="cells">
+        <div class="cell"><span class="lbl">تكلفة الأصول</span><b class="num">${money(tot)}</b><span class="lbl">${DB.assets.length} أصول مسجلة</span></div>
+        <div class="cell"><span class="lbl">مجمع الإهلاك</span><b class="num" style="color:var(--red)">${money(dep)}</b><span class="lbl">حتى 12/09/2026</span></div>
+        <div class="cell"><span class="lbl">القيمة الدفترية</span><b class="num">${money(tot-dep)}</b><span class="chip pos">محدّثة</span></div>
+        <div class="cell"><span class="lbl">إهلاك الشهر</span><b class="num">${money(7180)}</b><span class="chip mute">قيد آلي</span></div>
+      </div></div>
+      <div class="panel"><div class="phead"><h2>سجل الأصول الثابتة</h2>
+        <div class="right"><button class="btn ghost sm" data-toast="تم احتساب إهلاك سبتمبر وتوليد القيد">احتساب الإهلاك</button><button class="btn sm" data-toast="فُتحت شاشة تسجيل أصل">تسجيل أصل</button></div></div>
+        <table class="tbl"><thead><tr><th>الكود</th><th>الأصل</th><th>الفئة</th><th class="t-l">التكلفة</th><th>طريقة الإهلاك</th><th class="t-c">النسبة</th><th>الموقع</th><th class="t-l">القيمة الدفترية</th></tr></thead><tbody>
+        ${DB.assets.map(a=>`<tr><td class="num lbl">${a[0]}</td><td><b style="font-weight:500">${a[1]}</b></td><td>${a[2]}</td>
+        <td class="t-l num">${money(a[3])}</td><td>${a[4]}</td><td class="t-c num">${a[5]}%</td><td>${a[6]}</td>
+        <td class="t-l num" style="font-weight:500">${money(a[3]-a[7])}</td></tr>`).join("")}
+        </tbody></table></div>
+    </div>
+    <div class="panel" style="align-self:start"><div class="phead"><h2>إجراءات الأصل</h2></div>
+      <div class="stack">
+        ${[["نقل أصل بين الفروع","يولّد سند نقل ويحدّث الموقع"],["بيع أصل","يحتسب الربح أو الخسارة آليًا"],["استبعاد / تخريد","يقفل مجمع الإهلاك"],["إعادة تقييم","تعديل القيمة الدفترية بقيد"],["صيانة دورية","جدولة وتنبيه قبل الموعد"]]
+        .map(r=>`<button class="row-i" style="width:100%;text-align:right;border:none;border-bottom:1px solid var(--rule-soft)" data-toast="${r[0]} — فُتحت الشاشة">
+        <span class="swatch">${svg('<path d="M3 21h18M5 21V9l7-5 7 5v12"/>')}</span><div><span>${r[0]}</span><span class="mini">${r[1]}</span></div>
+        <span class="amt lbl">›</span></button>`).join("")}
+      </div></div>
+  </div>`;
+};
+
+/* ============ الإعدادات ============ */
+VIEWS.settings=()=>{
+  const perms=["المبيعات","المشتريات","المخزون","الحسابات","الرواتب","التقارير","الإعدادات"];
+  const roles=[["مدير النظام",[2,2,2,2,2,2,2]],["محاسب",[2,2,1,2,1,2,0]],["مندوب مبيعات",[2,0,1,0,0,1,0]],["أمين مستودع",[1,1,2,0,0,1,0]],["كاشير",[1,0,0,0,0,0,0]]];
+  const mk=v=>v===2?'<span class="chip pos">كامل</span>':v===1?'<span class="chip warn">عرض</span>':'<span class="lbl">—</span>';
+  return `<div class="grid g-main">
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>مصفوفة الصلاحيات</h2><span class="sub">صلاحيات لكل مستخدم وكل فرع على حدة</span>
+        <div class="right"><button class="btn sm" data-toast="فُتحت شاشة إضافة مستخدم">إضافة مستخدم</button></div></div>
+        <table class="tbl"><thead><tr><th>الدور</th>${perms.map(p=>`<th class="t-c">${p}</th>`).join("")}</tr></thead><tbody>
+        ${roles.map(r=>`<tr><td style="font-weight:500">${r[0]}</td>${r[1].map(v=>`<td class="t-c">${mk(v)}</td>`).join("")}</tr>`).join("")}
+        </tbody></table></div>
+      <div class="panel"><div class="phead"><h2>البيانات الأساسية</h2></div>
+        <div class="pad" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
+          <label class="field"><span>اسم المنشأة</span><input value="${DB.org}"></label>
+          <label class="field"><span>الرقم الضريبي</span><input class="num" value="${DB.vat}"></label>
+          <label class="field"><span>العملة الأساسية</span><select><option>ريال سعودي (ر.س)</option><option>درهم إماراتي</option><option>دولار أمريكي</option></select></label>
+          <label class="field"><span>بداية السنة المالية</span><select><option>1 يناير</option><option>1 يوليو</option></select></label>
+          <label class="field"><span>طريقة تسعير المخزون</span><select><option>المتوسط المرجح</option><option>الوارد أولًا صادر أولًا</option></select></label>
+          <label class="field"><span>لغة الواجهة</span><select><option>العربية</option><option>English</option></select></label>
+        </div>
+        <div class="pad" style="border-top:1px solid var(--rule);display:flex;gap:7px"><button class="btn" data-toast="حُفظت الإعدادات">حفظ التغييرات</button><button class="btn ghost" data-toast="تم الرجوع للإعداد الافتراضي">إلغاء</button></div>
+      </div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="panel"><div class="phead"><h2>الفروع والمستودعات</h2></div>
+        <div class="stack">
+          ${DB.branches.map(b=>`<div class="row-i"><span class="swatch">${svg('<path d="M3 21h18M5 21V7l7-4 7 4v14"/>')}</span><div><span>${b.name}</span><span class="mini">صندوق ومخزون مستقل</span></div><span class="amt chip pos">فعّال</span></div>`).join("")}
+          ${DB.stores.map(s=>`<div class="row-i"><span class="swatch v">${svg('<path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/>')}</span><span>${s}</span></div>`).join("")}
+        </div>
+        <div class="pad" style="border-top:1px solid var(--rule)"><button class="btn ghost" style="width:100%" data-toast="فُتحت شاشة إضافة فرع">إضافة فرع أو مستودع</button></div>
+      </div>
+      <div class="panel"><div class="phead"><h2>سجل النشاط</h2></div>
+        <div class="stack">
+          ${[["خالد السالم","اعتمد أمر شراء PO-0451","قبل 12 دقيقة"],["منى الزهراني","رحّلت قيد JV-2026-0910","قبل ساعة"],["نورة المطيري","أغلقت وردية الكاشير","أمس 11:04 م"]]
+          .map(l=>`<div class="row-i"><div><span><b style="font-weight:500">${l[0]}</b> — ${l[1]}</span><span class="mini">${l[2]}</span></div></div>`).join("")}
+        </div></div>
+    </div>
+  </div>`;
+};
+
+/* ============ التفاعل ============ */
+function bindView(){
+  const v=$("#view");
+  v.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{if(b.dataset.tab===""){return}state.tab=+b.dataset.tab;shell()});
+  v.querySelectorAll("[data-toast]").forEach(b=>b.onclick=()=>toast(b.dataset.toast));
+  v.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;shell()});
+  v.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const p=DB.products[+b.dataset.add], l=state.cart.find(x=>x.n===p.n);
+    l?l.q++:state.cart.push({n:p.n,p:p.p,q:1});shell();
+  });
+  v.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{
+    const[i,d]=b.dataset.q.split(",").map(Number);state.cart[i].q+=d;
+    if(state.cart[i].q<1)state.cart.splice(i,1);shell();
+  });
+  v.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{state.cart=[];shell()});
+  v.querySelectorAll("[data-pay]").forEach(b=>b.onclick=()=>{
+    if(!state.cart.length)return toast("أضف صنفًا واحدًا على الأقل قبل الدفع");
+    const sub=state.cart.reduce((s,l)=>s+l.p*l.q,0),disc=Math.round(sub*.02),tot=sub-disc+Math.round((sub-disc)*DB.taxRate);
+    modal(`<div class="modal-h"><b>تم إتمام البيع</b><button onclick="closeModal()">✕</button></div>
+      <div class="pad" style="text-align:center">
+        <div style="font-size:30px;font-weight:600" class="num">${money(tot,2)} <span class="lbl" style="font-size:15px">ر.س</span></div>
+        <span class="chip pos" style="margin-top:6px">${b.dataset.pay}</span>
+        <div class="sep" style="margin:14px 0"></div>
+        <div style="display:grid;gap:5px;font-size:12.5px;text-align:right">
+          <div class="sum-r"><span>رقم الفاتورة</span><b>POS-9922</b></div>
+          <div class="sum-r"><span>عدد الأصناف</span><b class="num">${state.cart.length}</b></div>
+          <div class="sum-r"><span>الكاشير</span><b>نورة سعد</b></div>
+          <div class="sum-r"><span>القيد المحاسبي</span><b>رُحّل تلقائيًا</b></div>
+        </div>
+        <div style="display:flex;gap:7px;margin-top:16px">
+          <button class="btn" style="flex:1" onclick="closeModal();toast('تمت طباعة الإيصال')">طباعة الإيصال</button>
+          <button class="btn ghost" style="flex:1" onclick="closeModal()">فاتورة جديدة</button>
+        </div>
+      </div>`);
+    state.cart=[];shell();
+  });
+  v.querySelectorAll("[data-shift]").forEach(b=>b.onclick=()=>modal(`<div class="modal-h"><b>إغلاق وردية الكاشير #4412</b><button onclick="closeModal()">✕</button></div>
+    <div class="pad"><table class="tbl">
+      <tr><td>رصيد افتتاحي</td><td class="t-l num">1,000.00</td></tr>
+      <tr><td>مبيعات نقدية</td><td class="t-l num">11,380.00</td></tr>
+      <tr><td>مبيعات شبكة</td><td class="t-l num">8,420.00</td></tr>
+      <tr><td>مرتجعات</td><td class="t-l num" style="color:var(--red)">−340.00</td></tr>
+      <tr><td>المتوقع في الدرج</td><td class="t-l num" style="font-weight:600">12,040.00</td></tr>
+    </table>
+    <label class="field" style="margin-top:12px"><span>النقد الفعلي في الدرج</span><input class="num" value="12,040.00"></label>
+    <button class="btn" style="width:100%" onclick="closeModal();toast('أُغلقت الوردية — لا يوجد عجز أو زيادة')">إغلاق الوردية وترحيل القيد</button></div>`));
+  v.querySelectorAll("[data-modal='transfer']").forEach(b=>b.onclick=()=>modal(`<div class="modal-h"><b>تحويل بين المستودعات</b><button onclick="closeModal()">✕</button></div>
+    <div class="pad">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
+        <label class="field"><span>من مستودع</span><select>${DB.stores.map(s=>`<option>${s}</option>`).join("")}</select></label>
+        <label class="field"><span>إلى مستودع</span><select>${DB.stores.slice(1).map(s=>`<option>${s}</option>`).join("")}</select></label>
+      </div>
+      <label class="field"><span>الصنف</span><select>${DB.products.filter(p=>p.s!==null).map(p=>`<option>${p.n}</option>`).join("")}</select></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
+        <label class="field"><span>الكمية</span><input class="num" value="5"></label>
+        <label class="field"><span>تاريخ التحويل</span><input value="12/09/2026"></label>
+      </div>
+      <button class="btn" style="width:100%" onclick="closeModal();toast('تم تنفيذ التحويل TR-0189 وتحديث الأرصدة')">تنفيذ التحويل</button>
+    </div>`));
+  v.querySelectorAll("[data-line]").forEach(inp=>inp.oninput=()=>{
+    const i=+inp.dataset.line,val=Math.max(0,+inp.value||0);
+    state.inv[i][inp.dataset.k]=val;
+    const sel=`[data-line="${i}"][data-k="${inp.dataset.k}"]`;shell();
+    const n=$(sel);if(n){n.focus();n.setSelectionRange?.(n.value.length,n.value.length)}
+  });
+  v.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{state.inv.splice(+b.dataset.del,1);shell()});
+  v.querySelectorAll("[data-addline]").forEach(b=>b.onclick=()=>{
+    const used=state.inv.map(l=>l.i),nx=DB.products.findIndex((p,i)=>!used.includes(i));
+    if(nx<0)return toast("كل الأصناف مضافة للفاتورة");
+    state.inv.push({i:nx,q:1,p:DB.products[nx].p});shell();
+  });
+  v.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>toast("اعتُمدت الفاتورة INV-2026-1185 وتم ترحيل القيد وتحديث المخزون"));
+  v.querySelectorAll("[data-je]").forEach(inp=>inp.oninput=()=>{
+    const i=+inp.dataset.je;state.je[i][inp.dataset.k]=+inp.value||0;
+    const sel=`[data-je="${i}"][data-k="${inp.dataset.k}"]`;shell();
+    const n=$(sel);if(n){n.focus();n.setSelectionRange?.(n.value.length,n.value.length)}
+  });
+  v.querySelectorAll("[data-jeadd]").forEach(b=>b.onclick=()=>{state.je.push({a:"5104 مصاريف تشغيلية",d:0,c:0});shell()});
+  v.querySelectorAll("[data-jedel]").forEach(b=>b.onclick=()=>{state.je.splice(+b.dataset.jedel,1);shell()});
+  v.querySelectorAll("[data-jesave]").forEach(b=>b.onclick=()=>toast("رُحّل القيد JV-2026-0913 إلى دفتر الأستاذ"));
+  const bc=$("#bc");
+  if(bc)bc.onkeydown=e=>{
+    if(e.key!=="Enter")return;
+    const q=bc.value.trim();const p=DB.products.find(x=>x.b===q||x.n.includes(q));
+    if(!p)return toast("لا يوجد صنف بهذا الباركود");
+    const l=state.cart.find(x=>x.n===p.n);l?l.q++:state.cart.push({n:p.n,p:p.p,q:1});shell();$("#bc")?.focus();
+  };
+}
+shell();
+</script>
+
+
+
+</body>
+</html>

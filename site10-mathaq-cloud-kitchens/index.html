@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مذاق هب — نظام شاشات المطابخ السحابية الذكية KDS | Mathaq Hub Cloud Kitchens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            kdsDark: '#0C0F17',
+            kdsColumn: '#141824',
+            kdsCard: '#1C2233',
+            kdsBorder: '#283147',
+            kdsFlame: '#FF5722',
+            kdsSuccess: '#10B981',
+            kdsWarning: '#F59E0B',
+            kdsAlert: '#EF4444'
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'Cairo', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0C0F17;
+      color: #F8FAFC;
+      font-family: 'Cairo', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    .num {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #283147;
+      border-radius: 6px;
+    }
+    .ticket-item.done {
+      text-decoration: line-through;
+      opacity: 0.45;
+    }
+    @keyframes urgentGlow {
+      0%, 100% { border-color: rgba(239, 68, 68, 0.8); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+      50% { border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 0 0px transparent; }
+    }
+    .timer-overdue {
+      animation: urgentGlow 1.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-orange-600 selection:text-white">
+
+  <!-- ==================== TOUCH-SCREEN APP HEADER ==================== -->
+  <header class="bg-[#121622] border-b border-kdsBorder sticky top-0 z-40 px-4 lg:px-6 py-2.5">
+    <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Kitchen Station Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-600/30 flex-shrink-0">
+          <i data-lucide="flame" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-black text-white tracking-tight">مذاق هب KDS • المطبخ السحابي المركزي</h1>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              متصل لحظياً (6 تطبيقات توصيل)
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">فرع العليا - الرياض • تشغيل 8 علامات تجارية افتراضية متزامنة</p>
+        </div>
+      </div>
+
+      <!-- Real-time Metrics Bar -->
+      <div class="hidden md:flex items-center gap-4 text-xs">
+        <div class="bg-kdsColumn px-3.5 py-1.5 rounded-xl border border-kdsBorder flex items-center gap-2">
+          <span class="text-slate-400 text-[11px]">متوسط وقت التحضير:</span>
+          <span class="text-emerald-400 font-bold num text-sm">06:42 د</span>
+        </div>
+        <div class="bg-kdsColumn px-3.5 py-1.5 rounded-xl border border-kdsBorder flex items-center gap-2">
+          <span class="text-slate-400 text-[11px]">الطلبات المنجزة اليوم:</span>
+          <span class="text-orange-400 font-bold num text-sm" id="dispatchedCountDisplay">342 وجبة</span>
+        </div>
+        <div class="bg-kdsColumn px-3.5 py-1.5 rounded-xl border border-kdsBorder flex items-center gap-2">
+          <span class="text-slate-400 text-[11px]">السائقون بانتظار الاستلام:</span>
+          <span class="text-cyan-400 font-bold num text-sm" id="waitingDriversDisplay">4 كباتن</span>
+        </div>
+      </div>
+
+      <!-- Station Controls & Simulation Action -->
+      <div class="flex items-center gap-2">
+        <!-- Audio Mute/Unmute Toggle -->
+        <button id="soundToggleBtn" onclick="toggleSound()" class="p-2 rounded-xl bg-kdsColumn hover:bg-slate-800 border border-kdsBorder text-slate-300 hover:text-white transition flex items-center gap-1 text-xs" title="تفعيل / كتم جرس التنبيهات">
+          <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4 text-emerald-400"></i>
+          <span class="hidden sm:inline text-[11px]" id="soundText">صوت منبه</span>
+        </button>
+
+        <!-- Driver Radar Drawer Trigger -->
+        <button onclick="toggleDriverRadar()" class="px-3 py-2 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 font-bold text-xs transition flex items-center gap-1.5">
+          <i data-lucide="navigation" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>أسطول السائقين</span>
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        </button>
+
+        <!-- Rush Simulator Button -->
+        <button onclick="simulateRushOrders()" class="px-3.5 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-black text-xs transition flex items-center gap-1.5 shadow-lg shadow-orange-600/30 active:scale-95">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span>⚡ وضع الذروة (+3 طلبات)</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- STATION FILTER TABS -->
+    <div class="max-w-[1700px] mx-auto flex items-center justify-between gap-3 pt-2 mt-1 border-t border-kdsBorder/60 text-xs overflow-x-auto">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-[11px] font-bold">محطة العمل الحالية:</span>
+        <button onclick="filterStation('all')" id="station-btn-all" class="station-tab active px-3 py-1 rounded-lg bg-orange-600 text-white font-bold transition">جميع المحطات (الكل)</button>
+        <button onclick="filterStation('grill')" id="station-btn-grill" class="station-tab px-3 py-1 rounded-lg bg-kdsColumn hover:bg-slate-800 text-slate-300 transition">شواية وبرجر (Grill)</button>
+        <button onclick="filterStation('pizza')" id="station-btn-pizza" class="station-tab px-3 py-1 rounded-lg bg-kdsColumn hover:bg-slate-800 text-slate-300 transition">أفران وبيتزا (Pizza)</button>
+        <button onclick="filterStation('fryer')" id="station-btn-fryer" class="station-tab px-3 py-1 rounded-lg bg-kdsColumn hover:bg-slate-800 text-slate-300 transition">قلايات ومقبلات (Sides)</button>
+        <button onclick="filterStation('expo')" id="station-btn-expo" class="station-tab px-3 py-1 rounded-lg bg-kdsColumn hover:bg-slate-800 text-slate-300 transition">التغليف والتسليم (Expo)</button>
+      </div>
+
+      <!-- Digital Clock -->
+      <div class="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-mono">
+        <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500"></i>
+        <span id="liveKitchenClock">16:40:22</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== THREE-COLUMN TOUCH KDS KANBAN ==================== -->
+  <main class="flex-1 max-w-[1700px] mx-auto w-full p-3 sm:p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+    
+    <!-- ================= COLUMN 1: NEW INBOUND ORDERS (AMBER / YELLOW) ================= -->
+    <div class="bg-kdsColumn border border-kdsBorder rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-3.5 bg-amber-950/40 border-b border-amber-900/40 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+          <div>
+            <h2 class="text-sm font-black text-amber-200">1. طلبات واردة جديدة (New Inbound)</h2>
+            <span class="text-[11px] text-amber-400/80">بانتظار تأكيد الطهي والمكونات</span>
+          </div>
+        </div>
+        <span class="text-xs font-mono font-black bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full border border-amber-500/30" id="countNew">2 طلبات</span>
+      </div>
+
+      <div class="flex-1 p-3 space-y-3.5 overflow-y-auto" id="colNew">
+        
+        <!-- Ticket 101 -->
+        <div class="ticket-card bg-kdsCard border border-amber-500/40 rounded-2xl p-4 transition shadow-lg" id="ticket-101" data-station="grill" data-elapsed="145">
+          <!-- Ticket Header -->
+          <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5 mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-[11px] bg-red-600/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> هنقرستيشن
+              </span>
+              <span class="font-mono text-xs font-black text-white">#HG-8192</span>
+            </div>
+            <!-- Live Ticking Elapsed Timer -->
+            <div class="ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              02:25 د
+            </div>
+          </div>
+
+          <!-- Customer & Brand -->
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>العلامة: <b class="text-slate-200">سماش برجر الرياض</b></span>
+            <span>العميل: <b class="text-slate-200">عبدالعزيز ن.</b></span>
+          </div>
+
+          <!-- Interactive Food Items Checklist (Tap to Strike-Through) -->
+          <div class="my-3 space-y-2 text-xs">
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-extrabold text-white text-sm">2x برجر واغيو مدخن كلاسيك</span>
+                <span class="block text-[11px] text-amber-400 font-bold">⚠️ ملاحظة: بدون بصل إطلاقاً • شريحة جبن إضافية</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-bold text-slate-200">1x بطاطس بالجبن والترفل المقرمش</span>
+                <span class="block text-[11px] text-slate-400">صوص كمأة جانبي</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <button onclick="openRecipeModal('واغيو مدخن')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>الوصفة</span>
+            </button>
+            <button onclick="advanceTicket('ticket-101', 'cooking')" class="col-span-2 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md">
+              <i data-lucide="flame" class="w-4 h-4"></i>
+              <span>بدء الطهي (Move to Cook)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ticket 102 -->
+        <div class="ticket-card bg-kdsCard border border-amber-500/40 rounded-2xl p-4 transition shadow-lg" id="ticket-102" data-station="pizza" data-elapsed="70">
+          <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5 mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-[11px] bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> جاهز Jahez
+              </span>
+              <span class="font-mono text-xs font-black text-white">#JH-4401</span>
+            </div>
+            <div class="ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              01:10 د
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>العلامة: <b class="text-slate-200">بيتزا أرتيزان روما</b></span>
+            <span>العميل: <b class="text-slate-200">سارة الشريف</b></span>
+          </div>
+
+          <div class="my-3 space-y-2 text-xs">
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-extrabold text-white text-sm">1x بيتزا ترافل نابولي حطب</span>
+                <span class="block text-[11px] text-emerald-400">عجينة رقيقة متخمرة 48 ساعة</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-bold text-slate-200">2x سلطة كينوا بالأفوكادو وجوز الهند</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <button onclick="openRecipeModal('بيتزا ترافل')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>الوصفة</span>
+            </button>
+            <button onclick="advanceTicket('ticket-102', 'cooking')" class="col-span-2 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md">
+              <i data-lucide="flame" class="w-4 h-4"></i>
+              <span>بدء الطهي (Move to Cook)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= COLUMN 2: IN COOKING & PREP (ORANGE / FLAME) ================= -->
+    <div class="bg-kdsColumn border border-kdsBorder rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-3.5 bg-orange-950/40 border-b border-orange-900/40 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="flame" class="w-5 h-5 text-orange-400 animate-bounce"></i>
+          <div>
+            <h2 class="text-sm font-black text-orange-200">2. قيد التحضير والطهي (Cooking Active)</h2>
+            <span class="text-[11px] text-orange-400/80">المحطات مشغولة بالتحضير الفعلي</span>
+          </div>
+        </div>
+        <span class="text-xs font-mono font-black bg-orange-500/20 text-orange-300 px-3 py-1 rounded-full border border-orange-500/30" id="countCooking">1 طلب</span>
+      </div>
+
+      <div class="flex-1 p-3 space-y-3.5 overflow-y-auto" id="colCooking">
+        
+        <!-- Ticket 103 (Active in oven/grill) -->
+        <div class="ticket-card bg-kdsCard border border-orange-500/50 rounded-2xl p-4 transition shadow-lg" id="ticket-103" data-station="grill" data-elapsed="380">
+          <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5 mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-[11px] bg-purple-600/20 text-purple-400 border border-purple-500/30 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> ذا شفز TheChefz
+              </span>
+              <span class="font-mono text-xs font-black text-white">#TC-9021</span>
+            </div>
+            <!-- Alert Timer: 6+ minutes -->
+            <div class="ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              06:20 د
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>العلامة: <b class="text-slate-200">ستيك هاوس الفاخر</b></span>
+            <span>العميل: <b class="text-slate-200">د. ماجد العتيبي</b></span>
+          </div>
+
+          <div class="my-3 space-y-2 text-xs">
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-extrabold text-white text-sm">3x ريش لحم مقرمش مدخن (Short Ribs)</span>
+                <span class="block text-[11px] text-orange-400">درجة الاستواء: Medium Well</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+
+            <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+              <div>
+                <span class="font-bold text-slate-200">1x باستا ترافل كريمي بالريحان</span>
+              </div>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <button onclick="openRecipeModal('ريش لحم مدخن')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-orange-400"></i>
+              <span>الوصفة</span>
+            </button>
+            <button onclick="advanceTicket('ticket-103', 'ready')" class="col-span-2 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+              <span>جاهز للتسليم (Ready for Driver)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= COLUMN 3: READY FOR DRIVER PICKUP (EMERALD / EXPO) ================= -->
+    <div class="bg-kdsColumn border border-kdsBorder rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-3.5 bg-emerald-950/40 border-b border-emerald-900/40 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="check-check" class="w-5 h-5 text-emerald-400"></i>
+          <div>
+            <h2 class="text-sm font-black text-emerald-200">3. جاهز للتسليم في Expo (Ready for Driver)</h2>
+            <span class="text-[11px] text-emerald-400/80">الطلبات مغلفة وتنتظر كابتن التوصيل</span>
+          </div>
+        </div>
+        <span class="text-xs font-mono font-black bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30" id="countReady">1 طلب</span>
+      </div>
+
+      <div class="flex-1 p-3 space-y-3.5 overflow-y-auto" id="colReady">
+        
+        <!-- Ticket 104 -->
+        <div class="ticket-card bg-kdsCard border border-emerald-500/40 rounded-2xl p-4 transition shadow-lg" id="ticket-104" data-station="expo" data-elapsed="510">
+          <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5 mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-[11px] bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> مرسول Mrsool
+              </span>
+              <span class="font-mono text-xs font-black text-white">#MR-7714</span>
+            </div>
+            <!-- Pickup PIN Badge -->
+            <div class="bg-emerald-500/20 text-emerald-300 font-mono text-xs font-black px-2.5 py-0.5 rounded-lg border border-emerald-500/30">
+              كود الاستلام: 8812
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span>العلامة: <b class="text-slate-200">شاورما السليمانية</b></span>
+            <span>الكابتن: <b class="text-cyan-400">فهد القحطاني (وصل عند النافذة)</b></span>
+          </div>
+
+          <div class="my-3 space-y-1.5 text-xs">
+            <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800 flex justify-between font-bold text-white">
+              <span>2x بوكس شاورما عربي صاج حجم عائلي</span>
+              <span class="text-emerald-400">مغلّف بنجاح ✓</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800 flex justify-between text-slate-300 text-[11px]">
+              <span>ثومية إضافية + صوص دبس الرمان + مخلل حار</span>
+              <span class="text-emerald-400 font-mono">Box #4</span>
+            </div>
+          </div>
+
+          <button onclick="completeTicket('ticket-104')" class="w-full mt-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-2 border border-slate-700">
+            <i data-lucide="truck" class="w-4 h-4 text-cyan-400"></i>
+            <span>تأكيد استلام السائق ومغادرة المطبخ (Hand Over)</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== DRIVER DISPATCH RADAR SLIDE-OVER DRAWER ==================== -->
+  <div id="driverRadarDrawer" class="fixed inset-y-0 left-0 w-full sm:w-96 bg-[#121622] border-r border-kdsBorder shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 border-b border-kdsBorder flex items-center justify-between bg-slate-900/80">
+      <div class="flex items-center gap-2">
+        <i data-lucide="navigation" class="w-5 h-5 text-cyan-400"></i>
+        <h3 class="font-black text-white text-sm">أسطول سائقي التوصيل لحظياً</h3>
+      </div>
+      <button onclick="toggleDriverRadar()" class="p-1 rounded-lg text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Drivers List -->
+    <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="driversListContainer">
+      
+      <!-- Driver 1 -->
+      <div class="p-3.5 bg-kdsCard rounded-xl border border-kdsBorder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            كابتن جاهز: سعد الدوسري
+          </span>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">وصول متوقع: 1 دقيقة</span>
+        </div>
+        <div class="text-slate-400 text-[11px] flex justify-between">
+          <span>الطلب: <b class="text-slate-200">#JH-4401</b></span>
+          <span>المسافة: <b class="text-cyan-400 num">250 متر</b></span>
+        </div>
+        <div class="p-1.5 bg-slate-900/80 rounded-lg flex items-center justify-between text-[11px]">
+          <span class="text-slate-400">كود التحقق عند التسليم:</span>
+          <span class="font-mono font-black text-emerald-400">PIN: 7709</span>
+        </div>
+      </div>
+
+      <!-- Driver 2 -->
+      <div class="p-3.5 bg-kdsCard rounded-xl border border-kdsBorder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            كابتن مرسول: فهد القحطاني
+          </span>
+          <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold">وصل عند النافذة</span>
+        </div>
+        <div class="text-slate-400 text-[11px] flex justify-between">
+          <span>الطلب: <b class="text-slate-200">#MR-7714</b></span>
+          <span>المركبة: <b class="text-slate-300">كامري 2022 (أ ب ج 992)</b></span>
+        </div>
+        <div class="p-1.5 bg-slate-900/80 rounded-lg flex items-center justify-between text-[11px]">
+          <span class="text-slate-400">كود التحقق:</span>
+          <span class="font-mono font-black text-cyan-400">PIN: 8812</span>
+        </div>
+      </div>
+
+      <!-- Driver 3 -->
+      <div class="p-3.5 bg-kdsCard rounded-xl border border-kdsBorder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+            كابتن ذا شفز: ناصر المطيري
+          </span>
+          <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold">في الطريق (4 دقائق)</span>
+        </div>
+        <div class="text-slate-400 text-[11px] flex justify-between">
+          <span>الطلب: <b class="text-slate-200">#TC-9021</b></span>
+          <span>المسافة: <b class="text-purple-400 num">1.2 كم</b></span>
+        </div>
+        <div class="p-1.5 bg-slate-900/80 rounded-lg flex items-center justify-between text-[11px]">
+          <span class="text-slate-400">كود التحقق:</span>
+          <span class="font-mono font-black text-purple-400">PIN: 4520</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== RECIPE / CHEF GUIDE MODAL ==================== -->
+  <div id="recipeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-kdsCard border border-kdsBorder rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="closeRecipeModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center font-black">
+          <i data-lucide="chef-hat" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-white text-base" id="recipeTitle">دليل تحضير الوجبة الشيف</h3>
+          <span class="text-xs text-slate-400">معايير الجودة والسلامة الغذائية</span>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <div>
+          <span class="text-orange-400 font-bold block mb-1">المكونات القياسية:</span>
+          <p id="recipeIngredients">200g لحم واغيو معتق، خبز بريوش محمص بالزبدة، صوص الترفل الخاص، جبنة تشيدر مدخنة.</p>
+        </div>
+        <div>
+          <span class="text-orange-400 font-bold block mb-1">درجة حرارة الطهي:</span>
+          <p>شواية بدرجة 220° مئوية لمدة 3 دقائق لكل وجه.</p>
+        </div>
+        <div>
+          <span class="text-orange-400 font-bold block mb-1">تنبيه الحساسية:</span>
+          <p class="text-amber-300">يحتوي على مشتقات الألبان والسمسم. يمنع إضافة البصل حسب طلب العميل المكتوب.</p>
+        </div>
+      </div>
+
+      <button onclick="closeRecipeModal()" class="w-full mt-4 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs rounded-xl transition">
+        فهمت، العودة للطهي
+      </button>
+    </div>
+  </div>
+
+
+
+  <!-- ==================== SOUND SYNTHESIZER & KDS LOGIC ==================== -->
+  <script>
+    // Audio synthesizer for real kitchen bell chime
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function playKitchenChime(type = 'bell') {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'bell') {
+          // Pleasant high chime ding
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+          osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.8);
+        } else if (type === 'bump') {
+          // Snappy acknowledgment pop
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.4);
+        }
+      } catch (e) {
+        console.warn("Audio Context error:", e);
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+      if (soundEnabled) {
+        icon.className = "w-4 h-4 text-emerald-400";
+        text.textContent = "صوت منبه";
+        playKitchenChime('bell');
+      } else {
+        icon.className = "w-4 h-4 text-slate-500";
+        text.textContent = "كتم الصوت";
+      }
+    }
+
+    // Toggle item line-through strike
+    function toggleItemStrike(itemElement) {
+      itemElement.classList.toggle('done');
+      const icon = itemElement.querySelector('.check-icon');
+      if (itemElement.classList.contains('done')) {
+        icon.setAttribute('data-lucide', 'check-circle-2');
+        icon.className = "w-4 h-4 text-emerald-400 check-icon";
+      } else {
+        icon.setAttribute('data-lucide', 'circle');
+        icon.className = "w-4 h-4 text-slate-500 check-icon";
+      }
+      playKitchenChime('bump');
+      lucide.createIcons();
+    }
+
+    // Advance ticket between columns
+    function advanceTicket(id, targetCol) {
+      const ticket = document.getElementById(id);
+      if (!ticket) return;
+
+      playKitchenChime('bell');
+
+      if (targetCol === 'cooking') {
+        const colCooking = document.getElementById('colCooking');
+        colCooking.insertBefore(ticket, colCooking.firstChild);
+        ticket.className = "ticket-card bg-kdsCard border border-orange-500/50 rounded-2xl p-4 transition shadow-lg";
+        
+        const actionBtn = ticket.querySelector('.col-span-2') || ticket.querySelector('button:last-child');
+        if (actionBtn) {
+          actionBtn.className = "col-span-2 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md";
+          actionBtn.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>جاهز للتسليم (Ready for Driver)</span>`;
+          actionBtn.setAttribute('onclick', `advanceTicket('${id}', 'ready')`);
+        }
+      } else if (targetCol === 'ready') {
+        const colReady = document.getElementById('colReady');
+        colReady.insertBefore(ticket, colReady.firstChild);
+        ticket.className = "ticket-card bg-kdsCard border border-emerald-500/40 rounded-2xl p-4 transition shadow-lg";
+        
+        const actionContainer = ticket.querySelector('.grid') || ticket.querySelector('button').parentElement;
+        if (actionContainer) {
+          actionContainer.outerHTML = `
+            <button onclick="completeTicket('${id}')" class="w-full mt-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-2 border border-slate-700">
+              <i data-lucide="truck" class="w-4 h-4 text-cyan-400"></i>
+              <span>تأكيد استلام السائق ومغادرة المطبخ (Hand Over)</span>
+            </button>
+          `;
+        }
+      }
+
+      updateCounts();
+      lucide.createIcons();
+    }
+
+    let dispatchedCount = 342;
+    function completeTicket(id) {
+      const ticket = document.getElementById(id);
+      if (!ticket) return;
+
+      playKitchenChime('bump');
+      ticket.classList.add('opacity-0', 'scale-90', 'translate-y-4');
+      setTimeout(() => {
+        ticket.remove();
+        dispatchedCount++;
+        document.getElementById('dispatchedCountDisplay').textContent = `${dispatchedCount} وجبة`;
+        updateCounts();
+      }, 250);
+    }
+
+    function updateCounts() {
+      const countNew = document.getElementById('colNew').children.length;
+      const countCooking = document.getElementById('colCooking').children.length;
+      const countReady = document.getElementById('colReady').children.length;
+
+      document.getElementById('countNew').textContent = `${countNew} طلبات`;
+      document.getElementById('countCooking').textContent = `${countCooking} طلبات`;
+      document.getElementById('countReady').textContent = `${countReady} طلبات`;
+    }
+
+    // Live Second-by-Second Timer Ticking
+    setInterval(() => {
+      // Update digital clock
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0];
+      const clockEl = document.getElementById('liveKitchenClock');
+      if (clockEl) clockEl.textContent = timeStr;
+
+      // Increment all ticket timers
+      document.querySelectorAll('.ticket-card').forEach(ticket => {
+        let elapsed = parseInt(ticket.getAttribute('data-elapsed') || "0");
+        elapsed += 1;
+        ticket.setAttribute('data-elapsed', elapsed);
+
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        const timeDisplay = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} د`;
+
+        const timerBadge = ticket.querySelector('.ticket-timer');
+        if (timerBadge) {
+          timerBadge.textContent = timeDisplay;
+          if (elapsed < 300) {
+            timerBadge.className = "ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+            ticket.classList.remove('timer-overdue');
+          } else if (elapsed < 480) {
+            timerBadge.className = "ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            ticket.classList.remove('timer-overdue');
+          } else {
+            // Overdue! Flashing red
+            timerBadge.className = "ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-red-500/30 text-red-300 border border-red-500/50";
+            ticket.classList.add('timer-overdue');
+          }
+        }
+      });
+    }, 1000);
+
+    // Simulate peak rush hour (3 orders at once)
+    function simulateRushOrders() {
+      playKitchenChime('bell');
+      const apps = [
+        { name: "جاهز Jahez", color: "bg-emerald-600/20 text-emerald-400 border-emerald-500/30", prefix: "JH" },
+        { name: "هنقرستيشن", color: "bg-red-600/20 text-red-400 border-red-500/30", prefix: "HG" },
+        { name: "ذا شفز TheChefz", color: "bg-purple-600/20 text-purple-400 border-purple-500/30", prefix: "TC" },
+        { name: "مرسول Mrsool", color: "bg-blue-600/20 text-blue-400 border-blue-500/30", prefix: "MR" },
+        { name: "نينجا Ninja", color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30", prefix: "NJ" }
+      ];
+
+      const dishes = [
+        { title: "2x برجر ترفل مع هالبينو", notes: "بدون مايونيز • صوص إضافي", station: "grill" },
+        { title: "1x بيتزا بيبروني حارة مقرمشة", notes: "مقطعة 8 قطع رقيقة", station: "pizza" },
+        { title: "1x كرسبي تشيكن ستريبس + ويدجز", notes: "صوص الرانش الخاص", station: "fryer" }
+      ];
+
+      const colNew = document.getElementById('colNew');
+
+      dishes.forEach((dish, i) => {
+        setTimeout(() => {
+          const idNum = Math.floor(1000 + Math.random() * 9000);
+          const app = apps[Math.floor(Math.random() * apps.length)];
+          const card = document.createElement('div');
+          const cardId = `ticket-${idNum}`;
+          card.id = cardId;
+          card.setAttribute('data-station', dish.station);
+          card.setAttribute('data-elapsed', '0');
+          card.className = "ticket-card bg-kdsCard border border-amber-500/40 rounded-2xl p-4 transition shadow-lg animate-pulse";
+          card.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5 mb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="font-extrabold text-[11px] ${app.color} border px-2 py-0.5 rounded-lg flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> ${app.name}
+                </span>
+                <span class="font-mono text-xs font-black text-white">#${app.prefix}-${idNum}</span>
+              </div>
+              <div class="ticket-timer font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                00:01 د
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+              <span>العلامة: <b class="text-slate-200">مطبخ بارق السحابي</b></span>
+              <span>العميل: <b class="text-slate-200">عميل جديد #${idNum}</b></span>
+            </div>
+
+            <div class="my-3 space-y-2 text-xs">
+              <div onclick="toggleItemStrike(this)" class="ticket-item cursor-pointer p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800 flex items-center justify-between transition">
+                <div>
+                  <span class="font-extrabold text-white text-sm">${dish.title}</span>
+                  <span class="block text-[11px] text-amber-400 font-bold">⚠️ ${dish.notes}</span>
+                </div>
+                <i data-lucide="circle" class="w-4 h-4 text-slate-500 check-icon"></i>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mt-3">
+              <button onclick="openRecipeModal('${dish.title}')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>الوصفة</span>
+              </button>
+              <button onclick="advanceTicket('${cardId}', 'cooking')" class="col-span-2 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md">
+                <i data-lucide="flame" class="w-4 h-4"></i>
+                <span>بدء الطهي (Move to Cook)</span>
+              </button>
+            </div>
+          `;
+
+          colNew.insertBefore(card, colNew.firstChild);
+          updateCounts();
+          lucide.createIcons();
+          playKitchenChime('bell');
+        }, i * 300);
+      });
+    }
+
+    // Station Filter Tabs
+    function filterStation(station) {
+      document.querySelectorAll('.station-tab').forEach(b => {
+        b.className = "station-tab px-3 py-1 rounded-lg bg-kdsColumn hover:bg-slate-800 text-slate-300 transition";
+      });
+      const activeBtn = document.getElementById(`station-btn-${station}`);
+      if (activeBtn) {
+        activeBtn.className = "station-tab active px-3 py-1 rounded-lg bg-orange-600 text-white font-bold transition";
+      }
+
+      document.querySelectorAll('.ticket-card').forEach(card => {
+        const cardStation = card.getAttribute('data-station');
+        if (station === 'all' || cardStation === station || (station === 'expo' && card.closest('#colReady'))) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Driver Radar Drawer
+    function toggleDriverRadar() {
+      const drawer = document.getElementById('driverRadarDrawer');
+      drawer.classList.toggle('-translate-x-full');
+    }
+
+    // Recipe modal
+    function openRecipeModal(dishName) {
+      document.getElementById('recipeTitle').textContent = `دليل تحضير: ${dishName}`;
+      document.getElementById('recipeModal').classList.remove('hidden');
+    }
+
+    function closeRecipeModal() {
+      document.getElementById('recipeModal').classList.add('hidden');
+    }
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
