@@ -1,0 +1,11 @@
+# Dependencies & Cache
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Vercel & Deployment
+.vercel/
+
+# Local archive backups
+_archive_backup/
